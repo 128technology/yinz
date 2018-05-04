@@ -5,3 +5,12 @@ install:
 - npm install
 script:
 - npm run validate
+deploy:
+  - provider: npm
+    email: cmain@128technology.com
+    skip_cleanup: true
+    api_key:
+      secure: MSZFWZ84AcZpFiW2eyYL9w5zJJ/5BkG0a0Rgn3u6o3+s3eTINZlBMqy8aycyM2S4b9E3fXMHxx4qg9UMM2v7S8nW0BMvL3XiAaExeGY6wsyfufOu3+9JLAyhf2rLO+ZStUO0Sxu+2Buc6z3cL9Daq6adMTy+HvtBNqi/AIHcb32pb3U6Yibe3jvEsA9tKSVCIgP2lxqkndju1tUQBo3900OLnYodCE0gPqvc491H0FdUkCPdngQQAogv5QGclMcXcC3eMAQKV1oeRVk3ZVt8t9J2x1zE39bJ627WljvSCLG2JyFpD8TYMKzRyw3vQB8zfUZTQEy/tl6OuGi/H1b8mszK/BBLmi/wX/sJdhldxZiFmxK5+PvGaP11IslRfZCfOnIaHJ84gLRG1Z2zkCdD8chZoTeMzkqGXBKdML0XML4UrMgOpQrSXRWsFCUWKFg+CGbod9lZwiAj2LJ8UZNQz8skXU20/nxa2tSkfsyIkVg6hIHPf2LUZ9xgld+kQWj4qVu5qm35zotwkna0WUczs+AhEC4uia1MO3hsiTLt4zDN6IbAG2vP7lUMewIruBiu6AgbXZHaX23vbs2ALg0Esz0b2Voow2q2eo0tqJHAUQmqDYtWTI4DXN84PwrbU4fOTUspjgsoOis6pGJbDdT4OAmMv0Ad0eNKEQqH82YD/BA=
+    on:
+      repo: 128technology/yinz
+      branch: master
