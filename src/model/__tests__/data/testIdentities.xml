@@ -1,0 +1,362 @@
+<mock xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="no_export_subconfed" module-prefix="bgp">
+    <yin:base name="bgp-well-known-std-community"/>
+    <yin:description>
+      <yin:text>All NLRI received carrying this community must not be
+advertised to external BGP neighbors - including over confederation
+sub-AS boundaries. This community has a value of 0xFFFFFF03.</yin:text>
+    </yin:description>
+    <yin:reference>
+      <yin:text>RFC1997</yin:text>
+    </yin:reference>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="mpbgp" module-prefix="bgp">
+    <yin:base name="bgp-capability"/>
+    <yin:description>
+      <yin:text>BGP Multi-protocol extensions functionality</yin:text>
+    </yin:description>
+    <yin:reference>
+      <yin:text>RFC2858</yin:text>
+    </yin:reference>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="route-refresh" module-prefix="bgp">
+    <yin:base name="bgp-capability"/>
+    <yin:description>
+      <yin:text>BGP route-refresh functionality</yin:text>
+    </yin:description>
+    <yin:reference>
+      <yin:text>RFC2918</yin:text>
+    </yin:reference>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="no_neighbor" module-prefix="bgp">
+    <yin:base name="bgp-well-known-std-community"/>
+    <yin:description>
+      <yin:text>An autonomous system receiving NLRI tagged with this community
+is advised not to readvertise the NLRI to external bi-lateral
+neighbor autonomous systems. An AS may also filter received NLRI
+from bilateral neighbor sessions when they are tagged with this
+community value</yin:text>
+    </yin:description>
+    <yin:reference>
+      <yin:text>RFC3765</yin:text>
+    </yin:reference>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="no_export" module-prefix="bgp">
+    <yin:base name="bgp-well-known-std-community"/>
+    <yin:description>
+      <yin:text>Do not export NLRI received carrying this community outside
+the bounds of this autonomous system, or this confederation if
+the local autonomous system is a confederation member AS. This
+community has a value of 0xFFFFFF01.</yin:text>
+    </yin:description>
+    <yin:reference>
+      <yin:text>RFC1997</yin:text>
+    </yin:reference>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="asn32" module-prefix="bgp">
+    <yin:base name="bgp-capability"/>
+    <yin:description>
+      <yin:text>BGP 4-byte (32-bit) AS number functionality</yin:text>
+    </yin:description>
+    <yin:reference>
+      <yin:text>RFC6793</yin:text>
+    </yin:reference>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="no_advertise" module-prefix="bgp">
+    <yin:base name="bgp-well-known-std-community"/>
+    <yin:description>
+      <yin:text>All NLRI received carrying this community must not be
+advertised to other BGP neighbors. This community has a value of
+0xFFFFFF02.</yin:text>
+    </yin:description>
+    <yin:reference>
+      <yin:text>RFC1997</yin:text>
+    </yin:reference>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="bgp-capability" module-prefix="bgp">
+    <yin:description>
+      <yin:text>Base identity for a BGP capability</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="add-paths" module-prefix="bgp">
+    <yin:base name="bgp-capability"/>
+    <yin:description>
+      <yin:text>BGP add-paths functionality</yin:text>
+    </yin:description>
+    <yin:reference>
+      <yin:text>draft-ietf-idr-add-paths</yin:text>
+    </yin:reference>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="bgp-well-known-std-community" module-prefix="bgp">
+    <yin:description>
+      <yin:text>Reserved communities within the standard community space
+defined by RFC1997. These communities must fall within the
+range 0x00000000 to 0xFFFFFFFF</yin:text>
+    </yin:description>
+    <yin:reference>
+      <yin:text>RFC1997</yin:text>
+    </yin:reference>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="internet" module-prefix="bgp">
+    <yin:base name="bgp-well-known-std-community"/>
+    <yin:description>
+      <yin:text>A community used by some implementations with the value 0:0
+which represents all possible community values.</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="ipv4-unicast" module-prefix="bgp">
+    <yin:base name="afi-safi-type"/>
+    <yin:description>
+      <yin:text>IPv4 unicast (AFI,SAFI = 1,1)</yin:text>
+    </yin:description>
+    <yin:reference>
+      <yin:text>RFC4760</yin:text>
+    </yin:reference>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="afi-safi-type" module-prefix="bgp">
+    <yin:description>
+      <yin:text>Base identity type for AFI,SAFI tuples for BGP-4</yin:text>
+    </yin:description>
+    <yin:reference>
+      <yin:text>RFC4760 - multiprotocol extensions for BGP-4</yin:text>
+    </yin:reference>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="graceful-restart" module-prefix="bgp">
+    <yin:base name="bgp-capability"/>
+    <yin:description>
+      <yin:text>BGP Graceful restart functionality</yin:text>
+    </yin:description>
+    <yin:reference>
+      <yin:text>RFC4724</yin:text>
+    </yin:reference>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:yang="urn:ietf:params:xml:ns:yang:ietf-yang-types" name="bgp" module-prefix="rt">
+    <yin:base name="rt:routing-protocol"/>
+    <yin:description>
+      <yin:text>bgp routing protocol</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:yang="urn:ietf:params:xml:ns:yang:ietf-yang-types" name="default-instance" module-prefix="rt">
+    <yin:base name="routing-instance-type"/>
+    <yin:description>
+      <yin:text>This identity represents a default routing instance.</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:yang="urn:ietf:params:xml:ns:yang:ietf-yang-types" name="routing-protocol" module-prefix="rt">
+    <yin:description>
+      <yin:text>Base identity from which routing protocol identities are
+derived.</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rt="http://128technology.com/t128/config/routing-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:yang="urn:ietf:params:xml:ns:yang:ietf-yang-types" name="routing-instance-type" module-prefix="rt">
+    <yin:description>
+      <yin:text>Base identity from which identities describing routing
+instance types are derived.
+
+It is primarily intended for discriminating among different
+types of logical routers or router virtualization.</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="set-aggregator" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which sets the bgp aggregator</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="extended-community-filter" module-prefix="rp">
+    <yin:base name="filter-type"/>
+    <yin:description>
+      <yin:text>filter based on the BGP extended community value</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="set-community" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which sets the bgp community attribute</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="nexthop-interface-condition" module-prefix="rp">
+    <yin:base name="condition-type"/>
+    <yin:description>
+      <yin:text>a nexthop interface condition</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="set-atomic-aggregate" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which sets the bgp atomic aggregate attribute</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="condition-type" module-prefix="rp">
+    <yin:description>
+      <yin:text>base condition type</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="set-extended-community" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which sets the bgp extended community attribute</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="filter-type" module-prefix="rp">
+    <yin:description>
+      <yin:text>base filter type</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="filter-on-community" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which filters based on the community</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="modify-metric" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which sets the metric</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="call" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>a flow action calls the given policy</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="peer-condition" module-prefix="rp">
+    <yin:base name="condition-type"/>
+    <yin:description>
+      <yin:text>a peer condition</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="tag-condition" module-prefix="rp">
+    <yin:base name="condition-type"/>
+    <yin:description>
+      <yin:text>a tag condition</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="community-filter" module-prefix="rp">
+    <yin:base name="filter-type"/>
+    <yin:description>
+      <yin:text>filter based on the BGP community value</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="modify-as-path" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which changes the bgp as-path</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="filter-condition" module-prefix="rp">
+    <yin:base name="condition-type"/>
+    <yin:description>
+      <yin:text>a filter condition</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="action-type" module-prefix="rp">
+    <yin:description>
+      <yin:text>base action type</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="as-path-filter" module-prefix="rp">
+    <yin:base name="filter-type"/>
+    <yin:description>
+      <yin:text>filtered based on the BGP AS path</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="set-tag" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which sets the tag</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="origin-condition" module-prefix="rp">
+    <yin:base name="condition-type"/>
+    <yin:description>
+      <yin:text>an origin condition</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="metric-condition" module-prefix="rp">
+    <yin:base name="condition-type"/>
+    <yin:description>
+      <yin:text>a metric condition</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="probability-condition" module-prefix="rp">
+    <yin:base name="condition-type"/>
+    <yin:description>
+      <yin:text>a probablity condition</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="prefix-filter" module-prefix="rp">
+    <yin:base name="filter-type"/>
+    <yin:description>
+      <yin:text>filter based on prefixes within a given range</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="set-bgp-weight" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which sets the bgp weight</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="access-filter" module-prefix="rp">
+    <yin:base name="filter-type"/>
+    <yin:description>
+      <yin:text>filter based on prefixes with the access-filter style</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="set-originator-id" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which sets the originator id</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="set-source" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which sets the source</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="set-next-hop" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which sets the next hop</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="remove-community" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which removes the bgp community attribute</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="continue" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>a flow action that advances to the next (or specified) entry in
+the policy</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="set-origin" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which sets the origin</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="set-metric-type" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which sets the metric-type</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" name="set-local-preference" module-prefix="rp">
+    <yin:base name="action-type"/>
+    <yin:description>
+      <yin:text>an action which sets the bgp local preference</yin:text>
+    </yin:description>
+  </yin:identity>
+  <yin:identity xmlns:is="http://128technology.com/t128/state/interface-state" xmlns:yang="urn:ietf:params:xml:ns:yang:ietf-yang-types" name="interface-type" module-prefix="is">
+    <yin:description>
+      <yin:text>Base identity from which specific interface types are
+derived.</yin:text>
+    </yin:description>
+  </yin:identity>
+</mock>

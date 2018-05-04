@@ -1,0 +1,24 @@
+<yin:leaf-list name="vector" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+  <yin:max-elements value="5"/>
+  <yin:min-elements value="2"/>
+  <yin:ordered-by value="user"/>
+  <yin:type name="t128ext:name-id">
+    <yin:typedef name="name-id">
+      <yin:description>
+        <yin:text>A string identifier which only uses alphanumerics, underscores,
+or dashes, and cannot exceed 63 characters.</yin:text>
+      </yin:description>
+      <yin:type name="string">
+        <yin:pattern value="([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]">
+          <yin:error-message>
+            <yin:value>Must contain only alphanumeric characters or any of the following: _ -</yin:value>
+          </yin:error-message>
+        </yin:pattern>
+        <yin:length value="0..63"/>
+      </yin:type>
+    </yin:typedef>
+  </yin:type>
+  <yin:description>
+    <yin:text>Vector names for path selection.</yin:text>
+  </yin:description>
+</yin:leaf-list>

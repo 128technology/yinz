@@ -1,0 +1,21 @@
+<yin:leaf name="neighborhood" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" xmlns:t128ext="http://128technology.com/t128-extensions">
+    <yin:type name="t128ext:neighborhood-id">
+        <yin:typedef name="neighborhood-id">
+            <yin:description>
+                <yin:text>A string identifier for network neighborhood.</yin:text>
+            </yin:description>
+            <yin:type name="string">
+                <yin:pattern value="([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]">
+                    <yin:error-message>
+                        <yin:value>Must contain only alphanumeric characters, underscores, and dashes</yin:value>
+                    </yin:error-message>
+                </yin:pattern>
+                <yin:length value="0..63"/>
+            </yin:type>
+            <t128ext:suggestionref>/t128:config/authy:authority/authy:security/authy:name</t128ext:suggestionref>
+        </yin:typedef>
+    </yin:type>
+    <yin:description>
+        <yin:text>Neigborhood where tenant members are located.</yin:text>
+    </yin:description>
+</yin:leaf>

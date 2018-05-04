@@ -1,0 +1,20 @@
+<yin:leaf name="rekey-interval" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+    <yin:type name="union">
+        <yin:type name="uint32">
+            <yin:range value="1..720"/>
+        </yin:type>
+        <yin:type name="enumeration">
+            <yin:enum name="never">
+                <yin:description>
+                    <yin:text>Never regenerate security keys</yin:text>
+                </yin:description>
+            </yin:enum>
+        </yin:type>
+    </yin:type>
+    <yin:description>
+        <yin:text>Hours between security key regeneration.
+            Recommended value 24 hours.</yin:text>
+    </yin:description>
+    <yin:units name="hours"/>
+    <yin:default value="never"/>
+</yin:leaf>

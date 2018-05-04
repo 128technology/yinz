@@ -1,0 +1,414 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<yin:module xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions" xmlns:user="http://128technology.com/user" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" name="user" module-prefix="user">
+  <yin:namespace uri="http://128technology.com/user"/>
+  <yin:prefix value="user"/>
+  <yin:organization>
+    <yin:text>128 Technology, Inc.</yin:text>
+  </yin:organization>
+  <yin:contact>
+    <yin:text>128 Technology, Inc.
+Postal: 200 Summit Drive
+        Suite 600
+        Burlington, MA 01803
+        USA
+E-mail: support@128technology.com
+web: www.128technology.com</yin:text>
+  </yin:contact>
+  <yin:description>
+    <yin:text>128T User Configuration</yin:text>
+  </yin:description>
+  <yin:revision date="2017-08-03">
+    <yin:description>
+      <yin:text>Updated the default value for the prompt leaf under pcli-preferences
+to include an uncommitted config mark before the username.</yin:text>
+    </yin:description>
+  </yin:revision>
+  <yin:revision date="2017-01-10">
+    <yin:description>
+      <yin:text>Password fields now use the t128ext:password type.
+Added pcli-preferences and prompt to user attributes.</yin:text>
+    </yin:description>
+  </yin:revision>
+  <yin:revision date="2016-10-25">
+    <yin:description>
+      <yin:text>Initial revision.</yin:text>
+    </yin:description>
+  </yin:revision>
+  <yin:container name="config">
+    <yin:container name="authority">
+      <yin:description>
+        <yin:text>Authority user configuration.</yin:text>
+      </yin:description>
+      <yin:leaf name="name">
+        <yin:type name="t128ext:name-id">
+          <yin:typedef name="name-id">
+            <yin:description>
+              <yin:text>A string identifier which only uses alphanumerics, underscores,
+or dashes, and cannot exceed 63 characters.</yin:text>
+            </yin:description>
+            <yin:type name="string">
+              <yin:pattern value="([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]">
+                <yin:error-message>
+                  <yin:value>Must contain only alphanumeric characters or any of the following: _ -</yin:value>
+                </yin:error-message>
+              </yin:pattern>
+              <yin:length value="0..63"/>
+            </yin:type>
+          </yin:typedef>
+        </yin:type>
+        <yin:description>
+          <yin:text>The identifier for the Authority to which this user
+configuration applies.</yin:text>
+        </yin:description>
+      </yin:leaf>
+      <yin:leaf name="mode">
+        <yin:description>
+          <yin:text>Password policy mode.</yin:text>
+        </yin:description>
+        <yin:type name="enumeration">
+          <yin:enum name="moderate">
+            <yin:description>
+              <yin:text>Moderate mode is the default level of password
+strictness</yin:text>
+            </yin:description>
+          </yin:enum>
+        </yin:type>
+        <yin:default value="moderate"/>
+      </yin:leaf>
+      <yin:list name="role">
+        <yin:key value="name"/>
+        <yin:description>
+          <yin:text>A list of named roles that define a set of rules that
+may be assigned to users.</yin:text>
+        </yin:description>
+        <yin:leaf name="name">
+          <yin:type name="unix-name">
+            <yin:typedef name="unix-name">
+              <yin:type name="string">
+                <yin:length value="1..32"/>
+                <yin:pattern value="[a-z_][a-z0-9_\-]*">
+                  <yin:error-message>
+                    <yin:value>Must begin with a lower case character and contain lower case alphanumeric characters or the following: _ -</yin:value>
+                  </yin:error-message>
+                </yin:pattern>
+              </yin:type>
+            </yin:typedef>
+          </yin:type>
+          <yin:description>
+            <yin:text>A name that represents the role.</yin:text>
+          </yin:description>
+        </yin:leaf>
+        <yin:leaf-list name="rule">
+          <yin:type name="rule-ref">
+            <yin:typedef name="rule-ref">
+              <yin:type name="leafref">
+                <yin:path value="/user:config/user:authority/user:rule/user:name"/>
+                <yin:type name="t128ext:name-id">
+                  <yin:typedef name="name-id">
+                    <yin:description>
+                      <yin:text>A string identifier which only uses alphanumerics, underscores,
+or dashes, and cannot exceed 63 characters.</yin:text>
+                    </yin:description>
+                    <yin:type name="string">
+                      <yin:pattern value="([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]">
+                        <yin:error-message>
+                          <yin:value>Must contain only alphanumeric characters or any of the following: _ -</yin:value>
+                        </yin:error-message>
+                      </yin:pattern>
+                      <yin:length value="0..63"/>
+                    </yin:type>
+                  </yin:typedef>
+                </yin:type>
+              </yin:type>
+              <yin:description>
+                <yin:text>This type is used by other entities that need to reference
+configured rules.</yin:text>
+              </yin:description>
+            </yin:typedef>
+            <yin:type name="t128ext:name-id">
+              <yin:typedef name="name-id">
+                <yin:description>
+                  <yin:text>A string identifier which only uses alphanumerics, underscores,
+or dashes, and cannot exceed 63 characters.</yin:text>
+                </yin:description>
+                <yin:type name="string">
+                  <yin:pattern value="([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]">
+                    <yin:error-message>
+                      <yin:value>Must contain only alphanumeric characters or any of the following: _ -</yin:value>
+                    </yin:error-message>
+                  </yin:pattern>
+                  <yin:length value="0..63"/>
+                </yin:type>
+              </yin:typedef>
+            </yin:type>
+          </yin:type>
+          <yin:description>
+            <yin:text>The rules that apply to this role.</yin:text>
+          </yin:description>
+          <yin:min-elements value="1"/>
+        </yin:leaf-list>
+      </yin:list>
+      <yin:list name="rule">
+        <yin:key value="name"/>
+        <yin:leaf name="name">
+          <yin:type name="t128ext:name-id">
+            <yin:typedef name="name-id">
+              <yin:description>
+                <yin:text>A string identifier which only uses alphanumerics, underscores,
+or dashes, and cannot exceed 63 characters.</yin:text>
+              </yin:description>
+              <yin:type name="string">
+                <yin:pattern value="([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]">
+                  <yin:error-message>
+                    <yin:value>Must contain only alphanumeric characters or any of the following: _ -</yin:value>
+                  </yin:error-message>
+                </yin:pattern>
+                <yin:length value="0..63"/>
+              </yin:type>
+            </yin:typedef>
+          </yin:type>
+          <yin:description>
+            <yin:text>A name that represents the rule.</yin:text>
+          </yin:description>
+        </yin:leaf>
+        <yin:leaf name="access">
+          <yin:description>
+            <yin:text>Whether to allow or deny access to the parameters
+described by this rule.</yin:text>
+          </yin:description>
+          <yin:type name="enumeration">
+            <yin:enum name="allow">
+              <yin:description>
+                <yin:text>Access to the parameter(s) associated with
+this rule is allowed.</yin:text>
+              </yin:description>
+            </yin:enum>
+            <yin:enum name="deny">
+              <yin:description>
+                <yin:text>Access to the parameter(s) associated with
+this rule is denied.</yin:text>
+              </yin:description>
+            </yin:enum>
+          </yin:type>
+        </yin:leaf>
+        <yin:choice name="parameters">
+          <yin:case name="commands">
+            <yin:leaf name="commands">
+              <yin:description>
+                <yin:text>A regular expression that defines a set of
+commands.</yin:text>
+              </yin:description>
+              <yin:type name="string"/>
+            </yin:leaf>
+          </yin:case>
+          <yin:case name="features">
+            <yin:leaf name="features">
+              <yin:description>
+                <yin:text>A group of features to which this rule applies.</yin:text>
+              </yin:description>
+              <yin:type name="bits">
+                <yin:bit name="configure">
+                  <yin:description>
+                    <yin:text>The ability to configure the system.</yin:text>
+                  </yin:description>
+                </yin:bit>
+                <yin:bit name="show-commands">
+                  <yin:description>
+                    <yin:text>The ability to execute commands
+that show system state.</yin:text>
+                  </yin:description>
+                </yin:bit>
+              </yin:type>
+            </yin:leaf>
+          </yin:case>
+        </yin:choice>
+      </yin:list>
+      <yin:list name="router">
+        <yin:key value="name"/>
+        <yin:description>
+          <yin:text>User Account Configuration.</yin:text>
+        </yin:description>
+        <yin:leaf name="name">
+          <yin:type name="t128ext:name-id">
+            <yin:typedef name="name-id">
+              <yin:description>
+                <yin:text>A string identifier which only uses alphanumerics, underscores,
+or dashes, and cannot exceed 63 characters.</yin:text>
+              </yin:description>
+              <yin:type name="string">
+                <yin:pattern value="([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]">
+                  <yin:error-message>
+                    <yin:value>Must contain only alphanumeric characters or any of the following: _ -</yin:value>
+                  </yin:error-message>
+                </yin:pattern>
+                <yin:length value="0..63"/>
+              </yin:type>
+            </yin:typedef>
+          </yin:type>
+          <yin:description>
+            <yin:text>An identifier for the router to which this user
+configuration applies.</yin:text>
+          </yin:description>
+        </yin:leaf>
+        <yin:list name="user">
+          <yin:key value="name"/>
+          <yin:description>
+            <yin:text>A list of users local to this router.</yin:text>
+          </yin:description>
+          <yin:leaf name="name">
+            <yin:description>
+              <yin:text>The name this user will use to authenticate.</yin:text>
+            </yin:description>
+            <yin:type name="unix-name">
+              <yin:typedef name="unix-name">
+                <yin:type name="string">
+                  <yin:length value="1..32"/>
+                  <yin:pattern value="[a-z_][a-z0-9_\-]*">
+                    <yin:error-message>
+                      <yin:value>Must begin with a lower case character and contain lower case alphanumeric characters or the following: _ -</yin:value>
+                    </yin:error-message>
+                  </yin:pattern>
+                </yin:type>
+              </yin:typedef>
+            </yin:type>
+          </yin:leaf>
+          <yin:leaf name="full-name">
+            <yin:description>
+              <yin:text>The user's full name, for display purposes only.</yin:text>
+            </yin:description>
+            <yin:type name="string">
+              <yin:pattern value="[^:,]*">
+                <yin:error-message>
+                  <yin:value>Must not contain colons or commas</yin:value>
+                </yin:error-message>
+              </yin:pattern>
+            </yin:type>
+          </yin:leaf>
+          <yin:leaf name="enabled">
+            <yin:description>
+              <yin:text>Enable or disable this user.</yin:text>
+            </yin:description>
+            <yin:type name="boolean"/>
+            <yin:default value="true"/>
+          </yin:leaf>
+          <yin:leaf name="password">
+            <yin:type name="t128ext:password">
+              <yin:typedef name="password">
+                <yin:description>
+                  <yin:text>A password type that is hidden from the UI. The internal storage
+format is dependent on the individual field.</yin:text>
+                </yin:description>
+                <yin:type name="string"/>
+              </yin:typedef>
+            </yin:type>
+            <yin:description>
+              <yin:text>The password this user will use to authenticate.</yin:text>
+            </yin:description>
+            <yin:mandatory value="true"/>
+            <t128-internal:secure/>
+          </yin:leaf>
+          <yin:leaf-list name="role">
+            <yin:type name="role-ref">
+              <yin:typedef name="role-ref">
+                <yin:type name="leafref">
+                  <yin:path value="/user:config/user:authority/user:role/user:name"/>
+                  <yin:type name="unix-name">
+                    <yin:typedef name="unix-name">
+                      <yin:type name="string">
+                        <yin:length value="1..32"/>
+                        <yin:pattern value="[a-z_][a-z0-9_\-]*">
+                          <yin:error-message>
+                            <yin:value>Must begin with a lower case character and contain lower case alphanumeric characters or the following: _ -</yin:value>
+                          </yin:error-message>
+                        </yin:pattern>
+                      </yin:type>
+                    </yin:typedef>
+                  </yin:type>
+                </yin:type>
+                <yin:description>
+                  <yin:text>This type is used by other entities that need to reference
+configured roles.</yin:text>
+                </yin:description>
+              </yin:typedef>
+              <yin:type name="unix-name">
+                <yin:typedef name="unix-name">
+                  <yin:type name="string">
+                    <yin:length value="1..32"/>
+                    <yin:pattern value="[a-z_][a-z0-9_\-]*">
+                      <yin:error-message>
+                        <yin:value>Must begin with a lower case character and contain lower case alphanumeric characters or the following: _ -</yin:value>
+                      </yin:error-message>
+                    </yin:pattern>
+                  </yin:type>
+                </yin:typedef>
+              </yin:type>
+            </yin:type>
+            <yin:description>
+              <yin:text>A list of roles assigned to the user.</yin:text>
+            </yin:description>
+            <yin:min-elements value="1"/>
+          </yin:leaf-list>
+          <yin:container name="pcli-preferences">
+            <yin:description>
+              <yin:text>The user's PCLI settings.</yin:text>
+            </yin:description>
+            <yin:leaf name="prompt">
+              <yin:description>
+                <yin:text>The templated format string that appears before the user
+is prompted for a command in the PCLI.</yin:text>
+              </yin:description>
+              <yin:type name="string"/>
+              <yin:default value="[top-level![context!({context}) :]:][uncommitted-config!*:]{user}[address!@{address}:][top-level!: ({location})]{privilege} "/>
+              <t128ext:example>{user}@{router}[path! ({path}):]{privilege} </t128ext:example>
+            </yin:leaf>
+          </yin:container>
+        </yin:list>
+      </yin:list>
+    </yin:container>
+  </yin:container>
+  <yin:rpc name="commit-users">
+    <yin:description>
+      <yin:text>Commit pending modifications to user accounts.</yin:text>
+    </yin:description>
+    <yin:input/>
+    <yin:output/>
+  </yin:rpc>
+  <yin:rpc name="discard-user-changes">
+    <yin:description>
+      <yin:text>Discard pending modifications to user accounts.</yin:text>
+    </yin:description>
+    <yin:input/>
+    <yin:output/>
+  </yin:rpc>
+  <yin:rpc name="reset-factory-users">
+    <yin:description>
+      <yin:text>Restore user accounts to factory defaults.</yin:text>
+    </yin:description>
+    <yin:input/>
+    <yin:output/>
+  </yin:rpc>
+  <yin:rpc name="change-user-password">
+    <yin:description>
+      <yin:text>Change user password</yin:text>
+    </yin:description>
+    <yin:output/>
+    <yin:input>
+      <yin:leaf name="password">
+        <yin:type name="t128ext:password">
+          <yin:typedef name="password">
+            <yin:description>
+              <yin:text>A password type that is hidden from the UI. The internal storage
+format is dependent on the individual field.</yin:text>
+            </yin:description>
+            <yin:type name="string"/>
+          </yin:typedef>
+        </yin:type>
+        <yin:description>
+          <yin:text>The user's candidate password to be validated.</yin:text>
+        </yin:description>
+        <yin:mandatory value="true"/>
+        <t128-internal:secure/>
+      </yin:leaf>
+    </yin:input>
+  </yin:rpc>
+</yin:module>

@@ -1,0 +1,35 @@
+<yin:container name="bfd" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+  <yin:description>
+    <yin:text>BFD parameters for sessions between nodes within the router.</yin:text>
+  </yin:description>
+  <yin:presence value="A really good reason"/>
+  <yin:leaf name="state">
+    <yin:type name="enumeration">
+      <yin:enum name="enabled">
+        <yin:description>
+          <yin:text>BFD is enabled on all SLICEs on this router.</yin:text>
+        </yin:description>
+      </yin:enum>
+      <yin:enum name="disabled">
+        <yin:description>
+          <yin:text>BFD is disabled on all SLICEs on this router.</yin:text>
+        </yin:description>
+      </yin:enum>
+    </yin:type>
+    <yin:description>
+      <yin:text>Run BFD on all SLICEs on the router.</yin:text>
+    </yin:description>
+    <yin:default value="enabled"/>
+  </yin:leaf>
+  <yin:leaf name="desired-tx-interval">
+    <yin:type name="uint32">
+      <yin:range value="50..600000"/>
+    </yin:type>
+    <yin:units name="milliseconds"/>
+    <yin:default value="1000"/>
+    <yin:description>
+      <yin:text>Represents the frequency with which BFD asynchronous
+control packets are sent to peer nodes/routers.</yin:text>
+    </yin:description>
+  </yin:leaf>
+</yin:container>

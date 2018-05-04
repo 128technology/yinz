@@ -1,0 +1,50 @@
+{
+  "authority": {
+    "name": "Authority128",
+    "role": [
+      {
+        "name": "admin",
+        "rule": [
+          "admin-configure"
+        ]
+      },
+      {
+        "name": "user",
+        "rule": [
+          "user-show"
+        ]
+      }
+    ],
+    "rule": [
+      {
+        "name": "admin-configure",
+        "access": "allow",
+        "features": "configure"
+      },
+      {
+        "name": "user-show",
+        "access": "allow",
+        "features": "show-commands"
+      }
+    ],
+    "router": [
+      {
+        "name": "Fabric128",
+        "user": [
+          {
+            "name": "admin",
+            "password": "(removed)",
+            "role": [
+              "admin"
+            ],
+            "enabled": true,
+            "pcli-preferences": {
+              "prompt": "[top-level![context!({context}) :]:][uncommitted-config!*:]{user}[address!@{address}:][top-level!: ({location})]{privilege} "
+            }
+          }
+        ]
+      }
+    ],
+    "mode": "moderate"
+  }
+}

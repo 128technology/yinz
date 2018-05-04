@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="124">
+    <data>
+        <user:config xmlns:user="http://128technology.com/user">
+            <user:authority>
+                <user:name>Authority128</user:name>
+                <user:role>
+                    <user:name>admin</user:name>
+                    <user:rule>admin-configure</user:rule>
+                </user:role>
+                <user:role>
+                    <user:name>user</user:name>
+                    <user:rule>user-show</user:rule>
+                </user:role>
+                <user:rule>
+                    <user:name>admin-configure</user:name>
+                    <user:access>allow</user:access>
+                    <user:features>configure</user:features>
+                </user:rule>
+                <user:rule>
+                    <user:name>user-show</user:name>
+                    <user:access>allow</user:access>
+                    <user:features>show-commands</user:features>
+                </user:rule>
+                <user:router>
+                    <user:name>Fabric128</user:name>
+                    <user:user>
+                        <user:name>admin</user:name>
+                        <user:password>(removed)</user:password>
+                        <user:role>admin</user:role>
+                        <user:enabled>true</user:enabled>
+                        <user:pcli-preferences>
+                            <user:prompt>[top-level![context!({context}) :]:][uncommitted-config!*:]{user}[address!@{address}:][top-level!: ({location})]{privilege} </user:prompt>
+                        </user:pcli-preferences>
+                    </user:user>
+                </user:router>
+                <user:mode>moderate</user:mode>
+            </user:authority>
+        </user:config>
+    </data>
+</rpc-reply>

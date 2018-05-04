@@ -1,0 +1,304 @@
+<yin:choice name="type" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+  <yin:case name="service-agent">
+    <yin:leaf name="destination">
+      <yin:type name="inet:ip-address">
+        <yin:typedef name="ip-address">
+          <yin:type name="union">
+            <yin:type name="inet:ipv4-address">
+              <yin:typedef name="ipv4-address">
+                <yin:type name="string">
+                  <yin:pattern value="(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\p{N}\p{L}]+)?"/>
+                </yin:type>
+                <yin:description>
+                  <yin:text>The ipv4-address type represents an IPv4 address in
+dotted-quad notation.  The IPv4 address may include a zone
+index, separated by a % sign.
+
+The zone index is used to disambiguate identical address
+values.  For link-local addresses, the zone index will
+typically be the interface index number or the name of an
+interface.  If the zone index is not present, the default
+zone of the device will be used.
+
+The canonical format for the zone index is the numerical
+format</yin:text>
+                </yin:description>
+              </yin:typedef>
+            </yin:type>
+            <yin:type name="inet:ipv6-address">
+              <yin:typedef name="ipv6-address">
+                <yin:type name="string">
+                  <yin:pattern value="((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\p{N}\p{L}]+)?"/>
+                  <yin:pattern value="(([^:]+:){6}(([^:]+:[^:]+)|(.*\..*)))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)(%.+)?"/>
+                </yin:type>
+                <yin:description>
+                  <yin:text>The ipv6-address type represents an IPv6 address in full,
+mixed, shortened, and shortened-mixed notation.  The IPv6
+address may include a zone index, separated by a % sign.
+
+The zone index is used to disambiguate identical address
+values.  For link-local addresses, the zone index will
+typically be the interface index number or the name of an
+interface.  If the zone index is not present, the default
+zone of the device will be used.
+
+The canonical format of IPv6 addresses uses the textual
+representation defined in Section 4 of RFC 5952.  The
+canonical format for the zone index is the numerical
+format as described in Section 11.2 of RFC 4007.</yin:text>
+                </yin:description>
+                <yin:reference>
+                  <yin:text>RFC 4291: IP Version 6 Addressing Architecture
+RFC 4007: IPv6 Scoped Address Architecture
+RFC 5952: A Recommendation for IPv6 Address Text
+Representation</yin:text>
+                </yin:reference>
+              </yin:typedef>
+            </yin:type>
+          </yin:type>
+          <yin:description>
+            <yin:text>The ip-address type represents an IP address and is IP
+version neutral.  The format of the textual representation
+implies the IP version.  This type supports scoped addresses
+by allowing zone identifiers in the address format.</yin:text>
+          </yin:description>
+          <yin:reference>
+            <yin:text>RFC 4007: IPv6 Scoped Address Architecture</yin:text>
+          </yin:reference>
+        </yin:typedef>
+      </yin:type>
+      <yin:status value="deprecated"/>
+      <yin:description>
+        <yin:text>The address the destination is natted to. When the destination is
+present, this is the address of the server (service agent) for the
+service.</yin:text>
+      </yin:description>
+    </yin:leaf>
+    <yin:leaf name="nat-target">
+      <yin:type name="inet:ip-address">
+        <yin:typedef name="ip-address">
+          <yin:type name="union">
+            <yin:type name="inet:ipv4-address">
+              <yin:typedef name="ipv4-address">
+                <yin:type name="string">
+                  <yin:pattern value="(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\p{N}\p{L}]+)?"/>
+                </yin:type>
+                <yin:description>
+                  <yin:text>The ipv4-address type represents an IPv4 address in
+dotted-quad notation.  The IPv4 address may include a zone
+index, separated by a % sign.
+
+The zone index is used to disambiguate identical address
+values.  For link-local addresses, the zone index will
+typically be the interface index number or the name of an
+interface.  If the zone index is not present, the default
+zone of the device will be used.
+
+The canonical format for the zone index is the numerical
+format</yin:text>
+                </yin:description>
+              </yin:typedef>
+            </yin:type>
+            <yin:type name="inet:ipv6-address">
+              <yin:typedef name="ipv6-address">
+                <yin:type name="string">
+                  <yin:pattern value="((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\p{N}\p{L}]+)?"/>
+                  <yin:pattern value="(([^:]+:){6}(([^:]+:[^:]+)|(.*\..*)))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)(%.+)?"/>
+                </yin:type>
+                <yin:description>
+                  <yin:text>The ipv6-address type represents an IPv6 address in full,
+mixed, shortened, and shortened-mixed notation.  The IPv6
+address may include a zone index, separated by a % sign.
+
+The zone index is used to disambiguate identical address
+values.  For link-local addresses, the zone index will
+typically be the interface index number or the name of an
+interface.  If the zone index is not present, the default
+zone of the device will be used.
+
+The canonical format of IPv6 addresses uses the textual
+representation defined in Section 4 of RFC 5952.  The
+canonical format for the zone index is the numerical
+format as described in Section 11.2 of RFC 4007.</yin:text>
+                </yin:description>
+                <yin:reference>
+                  <yin:text>RFC 4291: IP Version 6 Addressing Architecture
+RFC 4007: IPv6 Scoped Address Architecture
+RFC 5952: A Recommendation for IPv6 Address Text
+Representation</yin:text>
+                </yin:reference>
+              </yin:typedef>
+            </yin:type>
+          </yin:type>
+          <yin:description>
+            <yin:text>The ip-address type represents an IP address and is IP
+version neutral.  The format of the textual representation
+implies the IP version.  This type supports scoped addresses
+by allowing zone identifiers in the address format.</yin:text>
+          </yin:description>
+          <yin:reference>
+            <yin:text>RFC 4007: IPv6 Scoped Address Architecture</yin:text>
+          </yin:reference>
+        </yin:typedef>
+      </yin:type>
+      <yin:description>
+        <yin:text>The address of the server (service agent) that packets are
+forwarded to for the service. The destination is natted to
+this address.</yin:text>
+      </yin:description>
+    </yin:leaf>
+    <yin:list name="next-hop">
+      <yin:key value="node-name interface"/>
+      <yin:description>
+        <yin:text>An instance of the nexthop for the service route.</yin:text>
+      </yin:description>
+      <yin:leaf name="node-name">
+        <yin:type name="leafref">
+          <yin:path value="../../../sys:node/sys:name"/>
+          <yin:type name="t128ext:name-id">
+            <yin:typedef name="name-id">
+              <yin:description>
+                <yin:text>A string identifier which only uses alphanumerics, underscores,
+or dashes, and cannot exceed 63 characters.</yin:text>
+              </yin:description>
+              <yin:type name="string">
+                <yin:pattern value="([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]">
+                  <yin:error-message>
+                    <yin:value>Must contain only alphanumeric characters or any of the following: _ -</yin:value>
+                  </yin:error-message>
+                </yin:pattern>
+                <yin:length value="0..63"/>
+              </yin:type>
+            </yin:typedef>
+          </yin:type>
+        </yin:type>
+        <yin:description>
+          <yin:text>The name of the node on which the interface resides.</yin:text>
+        </yin:description>
+      </yin:leaf>
+      <yin:leaf name="interface">
+        <yin:type name="leafref">
+          <yin:path value="../../../sys:node/sys:device-interface/if:network-interface/if:name"/>
+          <yin:type name="t128ext:name-id">
+            <yin:typedef name="name-id">
+              <yin:description>
+                <yin:text>A string identifier which only uses alphanumerics, underscores,
+or dashes, and cannot exceed 63 characters.</yin:text>
+              </yin:description>
+              <yin:type name="string">
+                <yin:pattern value="([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]">
+                  <yin:error-message>
+                    <yin:value>Must contain only alphanumeric characters or any of the following: _ -</yin:value>
+                  </yin:error-message>
+                </yin:pattern>
+                <yin:length value="0..63"/>
+              </yin:type>
+            </yin:typedef>
+          </yin:type>
+        </yin:type>
+        <yin:description>
+          <yin:text>A reference to the name of a configured network layer
+interface used to reach the destination.</yin:text>
+        </yin:description>
+      </yin:leaf>
+      <yin:leaf name="gateway-ip">
+        <yin:type name="inet:ip-address">
+          <yin:typedef name="ip-address">
+            <yin:type name="union">
+              <yin:type name="inet:ipv4-address">
+                <yin:typedef name="ipv4-address">
+                  <yin:type name="string">
+                    <yin:pattern value="(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\p{N}\p{L}]+)?"/>
+                  </yin:type>
+                  <yin:description>
+                    <yin:text>The ipv4-address type represents an IPv4 address in
+dotted-quad notation.  The IPv4 address may include a zone
+index, separated by a % sign.
+
+The zone index is used to disambiguate identical address
+values.  For link-local addresses, the zone index will
+typically be the interface index number or the name of an
+interface.  If the zone index is not present, the default
+zone of the device will be used.
+
+The canonical format for the zone index is the numerical
+format</yin:text>
+                  </yin:description>
+                </yin:typedef>
+              </yin:type>
+              <yin:type name="inet:ipv6-address">
+                <yin:typedef name="ipv6-address">
+                  <yin:type name="string">
+                    <yin:pattern value="((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\p{N}\p{L}]+)?"/>
+                    <yin:pattern value="(([^:]+:){6}(([^:]+:[^:]+)|(.*\..*)))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)(%.+)?"/>
+                  </yin:type>
+                  <yin:description>
+                    <yin:text>The ipv6-address type represents an IPv6 address in full,
+mixed, shortened, and shortened-mixed notation.  The IPv6
+address may include a zone index, separated by a % sign.
+
+The zone index is used to disambiguate identical address
+values.  For link-local addresses, the zone index will
+typically be the interface index number or the name of an
+interface.  If the zone index is not present, the default
+zone of the device will be used.
+
+The canonical format of IPv6 addresses uses the textual
+representation defined in Section 4 of RFC 5952.  The
+canonical format for the zone index is the numerical
+format as described in Section 11.2 of RFC 4007.</yin:text>
+                  </yin:description>
+                  <yin:reference>
+                    <yin:text>RFC 4291: IP Version 6 Addressing Architecture
+RFC 4007: IPv6 Scoped Address Architecture
+RFC 5952: A Recommendation for IPv6 Address Text
+Representation</yin:text>
+                  </yin:reference>
+                </yin:typedef>
+              </yin:type>
+            </yin:type>
+            <yin:description>
+              <yin:text>The ip-address type represents an IP address and is IP
+version neutral.  The format of the textual representation
+implies the IP version.  This type supports scoped addresses
+by allowing zone identifiers in the address format.</yin:text>
+            </yin:description>
+            <yin:reference>
+              <yin:text>RFC 4007: IPv6 Scoped Address Architecture</yin:text>
+            </yin:reference>
+          </yin:typedef>
+        </yin:type>
+        <yin:description>
+          <yin:text>Gateway ip address of the service route nexthop.</yin:text>
+        </yin:description>
+      </yin:leaf>
+    </yin:list>
+  </yin:case>
+  <yin:case name="peer-service-route">
+    <yin:leaf name="peer">
+      <yin:type name="leafref">
+        <yin:path value="../../authy:peer/authy:name"/>
+        <yin:type name="t128ext:peer-name">
+          <yin:typedef name="peer-name">
+            <yin:description>
+              <yin:text>A string identifier for a peer, which uses alphanumerics, underscores,
+dots, or dashes, and cannot exceed 253 characters.</yin:text>
+            </yin:description>
+            <yin:type name="string">
+              <yin:pattern value="((([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9])?">
+                <yin:error-message>
+                  <yin:value>Must contain only alphanumeric characters or any of the following: - _ .
+(e.g., MyFirst-128T-Router).</yin:value>
+                </yin:error-message>
+              </yin:pattern>
+              <yin:length value="0..253"/>
+            </yin:type>
+          </yin:typedef>
+        </yin:type>
+      </yin:type>
+      <yin:description>
+        <yin:text>Peer router to forward packets to for the service.</yin:text>
+      </yin:description>
+    </yin:leaf>
+  </yin:case>
+</yin:choice>

@@ -1,0 +1,31 @@
+<yin:leaf name="priority" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions">
+    <yin:type name="t128ext:vector-priority">
+        <yin:typedef name="vector-priority">
+            <yin:type name="union">
+                <yin:type name="uint32">
+                    <yin:range value="0..999999999"/>
+                </yin:type>
+                <yin:type name="enumeration">
+                    <yin:enum name="ordered">
+                        <yin:description>
+                            <yin:text>priority value determined by ordinal position</yin:text>
+                        </yin:description>
+                    </yin:enum>
+                    <yin:enum name="never">
+                        <yin:description>
+                            <yin:text>paths with the vector are not used</yin:text>
+                        </yin:description>
+                    </yin:enum>
+                </yin:type>
+            </yin:type>
+            <yin:default value="ordered"/>
+            <t128-codegen:type>string</t128-codegen:type>
+            <yin:description>
+                <yin:text>A type for defining priorities for vector use</yin:text>
+            </yin:description>
+        </yin:typedef>
+    </yin:type>
+    <yin:description>
+        <yin:text>Priority value for the paths with the vector.</yin:text>
+    </yin:description>
+</yin:leaf>

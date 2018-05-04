@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="afd174a0-5215-11e7-b1ea-6b4fbf1cb918">
+  <data>
+    <t128:config xmlns:t128="http://128technology.com/t128" xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:sys="http://128technology.com/t128/config/system-config" xmlns:rt="http://128technology.com/t128/config/routing-config">
+      <authy:authority>
+        <authy:name>Authority128</authy:name>
+        <authy:router>
+          <authy:name>Fabric128</authy:name>
+          <authy:inter-node-security>internal</authy:inter-node-security>
+          <sys:node>
+            <sys:name>TestNode1</sys:name>
+            <sys:role>slice</sys:role>
+            <sys:enabled>true</sys:enabled>
+          </sys:node>
+          <rt:routing>
+            <rt:type>rt:default-instance</rt:type>
+            <rt:routing-protocol>
+              <rt:type>rt:bgp</rt:type>
+            </rt:routing-protocol>
+          </rt:routing>
+        </authy:router>
+      </authy:authority>
+    </t128:config>
+  </data>
+</rpc-reply>

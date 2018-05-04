@@ -1,0 +1,10 @@
+<yin:leaf name="qp-value" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+  <yin:type name="uint32"/>
+  <yin:mandatory value="true"/>
+  <yin:description>
+    <yin:text>Quality points value that represents the 'quality' of the
+the link to the adjacent router. Used for selecting egress
+interface based on the service class required minimum quality
+points.</yin:text>
+  </yin:description>
+</yin:leaf>

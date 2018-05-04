@@ -1,0 +1,64 @@
+<yin:list name="peer" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" xmlns:t128ext="http://128technology.com/t128-extensions">
+  <yin:key value="name otherKey"/>
+  <yin:unique tag="authority-name router-name"/>
+  <yin:unique tag="id"/>
+  <yin:max-elements value="5"/>
+  <yin:min-elements value="2"/>
+  <yin:ordered-by value="user"/>
+  <yin:description>
+    <yin:text>Defines the properties associated with peer 128T routers.
+The peer may be another router in the same authority or a
+router in a different authority</yin:text>
+  </yin:description>
+  <yin:leaf name="name">
+    <yin:type name="t128ext:peer-name">
+      <yin:typedef name="peer-name">
+        <yin:description>
+          <yin:text>A string identifier for a peer, which uses alphanumerics, underscores,
+dots, or dashes, and cannot exceed 253 characters.</yin:text>
+        </yin:description>
+        <yin:type name="string">
+          <yin:pattern value="((([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9])?">
+            <yin:error-message>
+              <yin:value>Must contain only alphanumeric characters or any of the following: - _ .
+(e.g., MyFirst-128T-Router).</yin:value>
+            </yin:error-message>
+          </yin:pattern>
+          <yin:length value="0..253"/>
+        </yin:type>
+      </yin:typedef>
+    </yin:type>
+    <t128ext:help>key identifier</t128ext:help>
+    <yin:description>
+      <yin:text>An arbitrary name that represents the properties associated
+with the peer router. Typically this will be the name of the
+authority or the value of the name field in the peer's
+router configuration.</yin:text>
+    </yin:description>
+  </yin:leaf>
+  <yin:leaf name="otherKey">
+    <yin:type name="string"/>
+  </yin:leaf>
+  <yin:leaf-list name="service-filter">
+    <yin:status value="obsolete"/>
+    <yin:type name="t128ext:qsn">
+      <yin:typedef name="qsn">
+        <yin:description>
+          <yin:text>Qualified Service Name in the form: tenant[.authority][/[service-group/]service]</yin:text>
+        </yin:description>
+        <yin:type name="string">
+          <yin:pattern value="((([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.?)(/([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]/?)*">
+            <yin:error-message>
+              <yin:value>Must contain only alphanumeric characters or any of the following: / . _ -
+Required format: 'Tenant[.Authority[/ServiceGroup[/Service]]]'. No forward slash-delimited segment can exceed 62 characters.(e.g., Engineering.Authority128/Video/private_conferencing).</yin:value>
+            </yin:error-message>
+          </yin:pattern>
+          <yin:length value="1..1024"/>
+        </yin:type>
+      </yin:typedef>
+    </yin:type>
+    <yin:description>
+      <yin:text>Qualified service names to include from peer router.</yin:text>
+    </yin:description>
+  </yin:leaf-list>
+</yin:list>

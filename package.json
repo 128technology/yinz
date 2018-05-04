@@ -1,0 +1,50 @@
+{
+  "name": "@128technology/yinz",
+  "version": "4.0.1",
+  "description": "A module for injesting a YIN datamodel and handling instance data.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "mocha --compilers ts:ts-node/register 'src/__tests__/setup.ts' 'src/**/__tests__/*.ts'",
+    "lint": "tslint --project . src/**/*.ts src/**/*-test.ts",
+    "validate": "npm run lint && npm run test",
+    "clean": "rm -rf dist",
+    "init": "mkdir dist",
+    "prebuild": "npm run clean && npm run init",
+    "build": "tsc -d",
+    "example": "npm run build && node examples/index.js",
+    "prepublishOnly": "npm run build",
+    "format": "prettier --print-width 120 --single-quote --trailing-comma none --write \"src/**/*.ts\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/128technology/yinz.git"
+  },
+  "author": "128 Technology",
+  "license": "MIT",
+  "dependencies": {
+    "@types/lazy.js": "^0.3.28",
+    "lazy.js": "^0.5.0",
+    "libxmljs": "^0.18.4",
+    "lodash": "^4.17.5"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.1",
+    "@types/chai-xml": "^0.3.1",
+    "@types/lodash": "^4.14.105",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^8.0.56",
+    "chai": "^3.5.0",
+    "chai-xml": "^0.3.1",
+    "mocha": "^3.2.0",
+    "prettier": "^1.12.0",
+    "ts-node": "^5.0.1",
+    "tslint": "^5.9.1",
+    "tslint-config-prettier": "^1.10.0",
+    "tslint-plugin-prettier": "^1.2.0",
+    "typescript": "^2.8.1"
+  },
+  "files": [
+    "dist"
+  ]
+}

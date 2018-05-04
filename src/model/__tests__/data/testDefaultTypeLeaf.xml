@@ -1,0 +1,15 @@
+<yin:leaf name="test" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+  <yin:type name="t128ext:name-id">
+    <yin:typedef name="name-id">
+      <yin:default value="moocow"/>
+      <yin:type name="string">
+        <yin:pattern value="([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]">
+          <yin:error-message>
+            <yin:value>Must contain only alphanumeric characters or any of the following: _ -</yin:value>
+          </yin:error-message>
+        </yin:pattern>
+        <yin:length value="0..63"/>
+      </yin:type>
+    </yin:typedef>
+  </yin:type>
+</yin:leaf>
