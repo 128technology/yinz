@@ -8,6 +8,7 @@ import DataModelInstance, {
   LeafInstance,
   LeafListInstance,
   ListInstance,
+  ListChildInstance,
   Path
 } from './instance';
 
@@ -25,6 +26,7 @@ export {
   LeafListInstance,
   List,
   ListInstance,
+  ListChildInstance,
   Model,
   Path,
   Type,
