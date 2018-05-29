@@ -1,6 +1,7 @@
 import DataModel, { Case, Choice, Container, Leaf, LeafList, List, Model } from './model';
 import * as Types from './types';
 import { Type } from './types';
+import { OrderedBy } from './enum';
 
 import DataModelInstance, {
   ContainerInstance,
@@ -28,6 +29,7 @@ export {
   ListInstance,
   ListChildInstance,
   Model,
+  OrderedBy,
   Path,
   Type,
   Types
