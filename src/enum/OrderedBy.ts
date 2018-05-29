@@ -1,6 +1,6 @@
 enum OrderedBy {
-  system,
-  user
+  system = 'system',
+  user = 'user'
 }
 
 export default OrderedBy;
