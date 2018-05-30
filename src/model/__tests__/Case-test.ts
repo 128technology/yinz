@@ -13,6 +13,9 @@ describe('Case', () => {
   const implicitCaseText = fs.readFileSync(path.join(__dirname, './data/testLeaf.xml'), 'utf-8');
   const implicitCase = xmlUtil.toElement(implicitCaseText);
 
+  const emptyCaseText = fs.readFileSync(path.join(__dirname, './data/testEmptyCase.xml'), 'utf-8');
+  const emptyCase = xmlUtil.toElement(emptyCaseText);
+
   const mockChoice = {} as Choice;
 
   it('should construct explicit cases', () => {
@@ -33,9 +36,21 @@ describe('Case', () => {
     expect(theCase.name).to.equal('qp-value');
   });
 
-  it('should constructi children for implicit cases', () => {
+  it('should construct children for implicit cases', () => {
     const theCase = new Case(implicitCase, mockChoice);
 
     expect(theCase.children.get('qp-value')).to.be.an.instanceOf(Leaf);
+  });
+
+  it('determine if case is not empty', () => {
+    const theCase = new Case(explicitCase, mockChoice);
+
+    expect(theCase.isEmpty()).to.equal(false);
+  });
+
+  it('determine if case is empty', () => {
+    const theCase = new Case(emptyCase, mockChoice);
+
+    expect(theCase.isEmpty()).to.equal(true);
   });
 });

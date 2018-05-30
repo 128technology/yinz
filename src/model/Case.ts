@@ -2,10 +2,11 @@ import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
 
+import { EmptyType } from '../types';
 import { Whenable } from './mixins';
 import { IWhen } from './mixins/Whenable';
 import { buildChildren, buildChild } from './util/childBuilder';
-import { Model, Choice } from './';
+import { Model, Choice, Leaf } from './';
 
 export default class Case implements Whenable {
   public name: string;
@@ -32,6 +33,15 @@ export default class Case implements Whenable {
     [...this.children.values()].forEach(child => {
       child.choiceCase = this;
     });
+  }
+
+  public isEmpty() {
+    if (this.children.size === 1) {
+      const singleChild = Array.from(this.children.values())[0];
+      return singleChild instanceof Leaf && singleChild.getResolvedType() instanceof EmptyType;
+    } else {
+      return false;
+    }
   }
 
   private buildChildrenFromCase(el: Element, parentModel?: Model) {

@@ -13,6 +13,9 @@ describe('Choice Model', () => {
   const mandatoryModelText = fs.readFileSync(path.join(__dirname, './data/testMandatoryChoice.xml'), 'utf-8');
   const mandatoryModel = xmlUtil.toElement(mandatoryModelText);
 
+  const emptyModelText = fs.readFileSync(path.join(__dirname, './data/testChoiceEmptyCases.xml'), 'utf-8');
+  const emptyModel = xmlUtil.toElement(emptyModelText);
+
   it('should get initalized', () => {
     const choice = new Choice(model);
 
@@ -50,5 +53,14 @@ describe('Choice Model', () => {
     const choice = new Choice(mandatoryModel);
 
     expect(choice.mandatory).to.equal(true);
+  });
+
+  it('should get empty cases', () => {
+    const choice = new Choice(emptyModel);
+
+    const { emptyCases } = choice;
+
+    expect(emptyCases).to.have.lengthOf(1);
+    expect(emptyCases[0].name).to.equal('im-empty');
   });
 });
