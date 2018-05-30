@@ -57,6 +57,10 @@ export default class Choice implements Statement, Whenable {
     return this.cases.map(theCase => theCase.name);
   }
 
+  public get emptyCases() {
+    return this.cases.filter(theCase => theCase.isEmpty());
+  }
+
   private buildCases(el: Element, parentModel?: Model) {
     return el
       .childNodes()
