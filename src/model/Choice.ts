@@ -1,7 +1,7 @@
 import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
-import { Visibility } from '../enum';
+import { Visibility, Status } from '../enum';
 
 import { Statement, Whenable } from './mixins';
 import { MandatoryParser } from './parsers';
@@ -28,6 +28,7 @@ export default class Choice implements Statement, Whenable {
   public otherProps: Map<string, string | boolean>;
   public parentModel: Model;
   public path: string;
+  public status: Status;
   public visibility: Visibility | null;
   public when: IWhen[];
   public hasWhenAncestorOrSelf: boolean;

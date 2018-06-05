@@ -3,7 +3,7 @@ import { Element } from 'libxmljs';
 
 import xmlUtil, { yinNS, t128InternalNS } from '../../../__tests__/xmlUtil';
 import applyMixins from '../../../util/applyMixins';
-import { Visibility } from '../../../enum';
+import { Visibility, Status } from '../../../enum';
 import ns from '../../../util/ns';
 
 import { Statement } from '../';
@@ -17,6 +17,7 @@ describe('Statement Mixin', () => {
     public otherProps: Map<string, string | boolean>;
     public parentModel: Model;
     public path: string;
+    public status: Status;
     public isPrototype: boolean;
     public isVisible: boolean;
     public getName: (camelCase?: boolean) => string;
@@ -126,6 +127,12 @@ dots, or dashes, and cannot exceed 253 characters (similar to domain-name).</yin
     const statement = new Test(withoutDescription);
 
     expect(statement.path).to.equal('name');
+  });
+
+  it('should have a status', () => {
+    const statement = new Test(withoutDescription);
+
+    expect(statement.status).to.equal(Status.current);
   });
 
   it('should determine its visibility if specified', () => {

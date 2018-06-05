@@ -2,9 +2,9 @@ import * as _ from 'lodash';
 import { Element } from 'libxmljs';
 
 import { isVisible } from '../../enum/Visibility';
-import { Visibility } from '../../enum';
+import { Visibility, Status } from '../../enum';
 
-import { DescriptionParser, VisibilityParser, PropertiesParser, NamespacesParser } from '../parsers';
+import { DescriptionParser, VisibilityParser, PropertiesParser, NamespacesParser, StatusParser } from '../parsers';
 import { Model, Case } from '../';
 
 export default class Statement {
@@ -13,6 +13,7 @@ export default class Statement {
   public description: string;
   public otherProps: Map<string, string | boolean>;
   public parentModel: Model;
+  public status: Status;
   public visibility: Visibility | null;
   public choiceCase: Case;
 
@@ -23,6 +24,7 @@ export default class Statement {
 
     this.description = DescriptionParser.parse(el);
     this.visibility = VisibilityParser.parse(el);
+    this.status = StatusParser.parse(el);
 
     this.otherProps = PropertiesParser.parse(el);
   }
