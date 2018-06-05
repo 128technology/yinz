@@ -46,6 +46,10 @@ export default class Statement {
       : _.get(this, 'parentModel.isPrototype', false);
   }
 
+  get isObsolete(): boolean {
+    return this.status !== null ? this.status === Status.obsolete : _.get(this, 'parentModel.isObsolete', false);
+  }
+
   public getName(camelCase = false) {
     return camelCase ? _.camelCase(this.name) : this.name;
   }
