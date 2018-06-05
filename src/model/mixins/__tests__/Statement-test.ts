@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { Element } from 'libxmljs';
 
-import xmlUtil, { yinNS } from '../../../__tests__/xmlUtil';
+import xmlUtil, { yinNS, t128InternalNS } from '../../../__tests__/xmlUtil';
 import applyMixins from '../../../util/applyMixins';
 import { Visibility } from '../../../enum';
 import ns from '../../../util/ns';
@@ -17,6 +17,7 @@ describe('Statement Mixin', () => {
     public otherProps: Map<string, string | boolean>;
     public parentModel: Model;
     public path: string;
+    public isPrototype: boolean;
     public isVisible: boolean;
     public getName: (camelCase?: boolean) => string;
     public choiceCase: Case;
@@ -82,6 +83,13 @@ dots, or dashes, and cannot exceed 253 characters (similar to domain-name).</yin
       <t128ext:help>key identifier</t128ext:help>
     </yin:leaf>
   `);
+
+  const prototype = xmlUtil.toElement(`
+    <yin:leaf name="name" ${yinNS} ${t128InternalNS}>
+      <yin:type name="string" />
+      <t128-internal:visibility>prototype</t128-internal:visibility>
+    </yin:leaf>
+  `);
   /* tslint:enable:max-line-length */
 
   const withKebabCase = xmlUtil.toElement(`
@@ -142,6 +150,24 @@ dots, or dashes, and cannot exceed 253 characters (similar to domain-name).</yin
     const statement = new Test(withoutDescription);
 
     expect(statement.isVisible).to.equal(true);
+  });
+
+  it('should determine if it is not a prototype', () => {
+    const statement = new Test(withoutDescription);
+
+    expect(statement.isPrototype).to.equal(false);
+  });
+
+  it('should determine if it is a prototype', () => {
+    const statement = new Test(prototype);
+
+    expect(statement.isPrototype).to.equal(true);
+  });
+
+  it('should defer to its ancestor to determine if it is a prototype', () => {
+    const statement = new Test(withoutDescription, { isPrototype: true } as Leaf);
+
+    expect(statement.isPrototype).to.equal(true);
   });
 
   it('should get its name as camel case', () => {
