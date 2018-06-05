@@ -18,6 +18,7 @@ describe('Statement Mixin', () => {
     public parentModel: Model;
     public path: string;
     public status: Status;
+    public isObsolete: boolean;
     public isPrototype: boolean;
     public isVisible: boolean;
     public getName: (camelCase?: boolean) => string;
@@ -55,6 +56,7 @@ dots, or dashes, and cannot exceed 253 characters (similar to domain-name).</yin
       </yin:type>
       <t128ext:help>key identifier</t128ext:help>
       <t128ext:test/>
+      <yin:status>current</yin:status>
       <t128-internal:visibility>visible</t128-internal:visibility>
       <yin:description>
         <yin:text>An arbitrary, unique name for the tenant, used to reference
@@ -89,6 +91,13 @@ dots, or dashes, and cannot exceed 253 characters (similar to domain-name).</yin
     <yin:leaf name="name" ${yinNS} ${t128InternalNS}>
       <yin:type name="string" />
       <t128-internal:visibility>prototype</t128-internal:visibility>
+    </yin:leaf>
+  `);
+
+  const obsolete = xmlUtil.toElement(`
+    <yin:leaf name="name" ${yinNS}>
+      <yin:type name="string" />
+      <yin:status>obsolete</yin:status>
     </yin:leaf>
   `);
   /* tslint:enable:max-line-length */
@@ -130,9 +139,27 @@ dots, or dashes, and cannot exceed 253 characters (similar to domain-name).</yin
   });
 
   it('should have a status', () => {
-    const statement = new Test(withoutDescription);
+    const statement = new Test(withDescription);
 
     expect(statement.status).to.equal(Status.current);
+  });
+
+  it('should determine if a field itself is obsolete', () => {
+    const statement = new Test(obsolete);
+
+    expect(statement.isObsolete).to.equal(true);
+  });
+
+  it('should determine if a field is obsolete if it has an obsolete ancestor', () => {
+    const statement = new Test(withoutDescription, { isObsolete: true } as Leaf);
+
+    expect(statement.isObsolete).to.equal(true);
+  });
+
+  it('should determine if a field is not obsolete', () => {
+    const statement = new Test(withoutDescription);
+
+    expect(statement.isObsolete).to.equal(false);
   });
 
   it('should determine its visibility if specified', () => {

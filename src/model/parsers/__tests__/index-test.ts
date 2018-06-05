@@ -83,7 +83,7 @@ describe('Model Parsers', () => {
         <mock ${yinNS} />
       `);
 
-      expect(Parsers.StatusParser.parse(el)).to.equal(Status.current);
+      expect(Parsers.StatusParser.parse(el)).to.equal(null);
     });
   });
 
