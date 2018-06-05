@@ -41,9 +41,7 @@ export default class Statement {
   get isPrototype(): boolean {
     return this.visibility !== null
       ? this.visibility === Visibility.prototype
-      : this.parentModel
-        ? this.parentModel.isPrototype
-        : false;
+      : _.get(this, 'parentModel.isPrototype', false);
   }
 
   public getName(camelCase = false) {
