@@ -47,4 +47,4 @@ const statsModelOptions = {
 
 const statsModel = new DataModel(statsModelOptions);
 
-console.log('Stats Model', util.inspect(statsModel, { depth: null }));
+console.log('Stats Model', statsModel);
