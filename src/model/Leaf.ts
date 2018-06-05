@@ -16,6 +16,7 @@ export default class Leaf implements Statement, Searchable, Typed, Whenable, Wit
   public default: string;
   public description: string;
   public identities: Identities;
+  public isPrototype: boolean;
   public isVisible: boolean;
   public mandatory: boolean;
   public modelType: string;

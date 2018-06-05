@@ -19,6 +19,7 @@ export default class Choice implements Statement, Whenable {
   public children: Map<string, Model>;
   public choiceCase: Case;
   public description: string;
+  public isPrototype: boolean;
   public isVisible: boolean;
   public mandatory: boolean;
   public modelType: string;

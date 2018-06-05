@@ -38,6 +38,14 @@ export default class Statement {
     return this.visibility !== null ? isVisible(this.visibility) : _.get(this, 'parentModel.isVisible', true);
   }
 
+  get isPrototype(): boolean {
+    return this.visibility !== null
+      ? this.visibility === Visibility.prototype
+      : this.parentModel
+        ? this.parentModel.isPrototype
+        : false;
+  }
+
   public getName(camelCase = false) {
     return camelCase ? _.camelCase(this.name) : this.name;
   }

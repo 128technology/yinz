@@ -24,6 +24,7 @@ export default class List implements ListLike, Statement, Searchable, Whenable {
   public choices: Map<string, Choice>;
   public description: string;
   public identities: Identities;
+  public isPrototype: boolean;
   public isVisible: boolean;
   public keys: Set<string>;
   public maxElements: number;

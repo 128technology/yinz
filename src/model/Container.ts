@@ -17,6 +17,7 @@ export default class Container implements Statement, Searchable, Whenable {
   public choices: Map<string, Choice>;
   public description: string;
   public identities: Identities;
+  public isPrototype: boolean;
   public isVisible: boolean;
   public modelType: string;
   public name: string;

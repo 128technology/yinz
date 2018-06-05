@@ -1,7 +1,8 @@
 export enum Visibility {
   visible = 'visible',
   hidden = 'hidden',
-  advanced = 'advanced'
+  advanced = 'advanced',
+  prototype = 'prototype'
 }
 
 export function isVisible(visibility: Visibility) {
