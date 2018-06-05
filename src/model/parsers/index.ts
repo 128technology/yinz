@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { Element, Namespace } from 'libxmljs';
 
 import ns from '../../util/ns';
-import { OrderedBy, Visibility } from '../../enum';
+import { OrderedBy, Visibility, Status } from '../../enum';
 import ContextNode, { enumValueOf } from '../../enum/ContextNode';
 import { tokens } from '../../util/xPathParser';
 
@@ -16,6 +16,13 @@ export class VisibilityParser {
   public static parse(el: Element): Visibility | null {
     const visibleElem = el.get('./t128-internal:visibility', ns);
     return visibleElem ? Visibility[visibleElem.text() as keyof typeof Visibility] : null;
+  }
+}
+
+export class StatusParser {
+  public static parse(el: Element): Status {
+    const statusElem = el.get('./yin:status', ns);
+    return statusElem ? Status[statusElem.text() as keyof typeof Status] : Status.current;
   }
 }
 

@@ -2,7 +2,7 @@ import { Element } from 'libxmljs';
 import * as _ from 'lodash';
 
 import applyMixins from '../util/applyMixins';
-import { Visibility } from '../enum';
+import { Visibility, Status } from '../enum';
 import { LeafInstance, Instance } from '../instance';
 import { Type, DerivedType } from '../types';
 
@@ -25,6 +25,7 @@ export default class Leaf implements Statement, Typed, Whenable, WithIdentities,
   public otherProps: Map<string, string | boolean>;
   public parentModel: Model;
   public path: string;
+  public status: Status;
   public type: Type;
   public visibility: Visibility | null;
   public when: IWhen[];

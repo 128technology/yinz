@@ -1,7 +1,7 @@
 import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
-import { OrderedBy, Visibility } from '../enum';
+import { OrderedBy, Visibility, Status } from '../enum';
 import { LeafListInstance, Instance } from '../instance/index';
 import { Type } from '../types';
 
@@ -25,6 +25,7 @@ export default class LeafList implements ListLike, Statement, Typed, Whenable, W
   public otherProps: Map<string, string | boolean>;
   public parentModel: Model;
   public path: string;
+  public status: Status;
   public type: Type;
   public visibility: Visibility | null;
   public when: IWhen[];

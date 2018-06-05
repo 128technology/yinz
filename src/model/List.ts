@@ -3,7 +3,7 @@ import { Element } from 'libxmljs';
 import applyMixins from '../util/applyMixins';
 import ns from '../util/ns';
 import { ListInstance, Instance } from '../instance';
-import { OrderedBy, Visibility } from '../enum';
+import { OrderedBy, Visibility, Status } from '../enum';
 
 import { Statement, ListLike, Whenable, WithRegistry } from './mixins';
 import { IWhen } from './mixins/Whenable';
@@ -36,6 +36,7 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
   public otherProps: Map<string, string | boolean>;
   public parentModel: Model;
   public path: string;
+  public status: Status;
   public visibility: Visibility | null;
   public when: IWhen[];
   public hasWhenAncestorOrSelf: boolean;
