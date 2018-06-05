@@ -24,6 +24,7 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
   public choices: Map<string, Choice>;
   public description: string;
   public identities: Identities;
+  public isObsolete: boolean;
   public isPrototype: boolean;
   public isVisible: boolean;
   public keys: Set<string>;

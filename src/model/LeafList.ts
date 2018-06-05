@@ -13,6 +13,7 @@ export default class LeafList implements ListLike, Statement, Typed, Whenable, W
   public choiceCase: Case;
   public description: string;
   public identities: Identities;
+  public isObsolete: boolean;
   public isPrototype: boolean;
   public isVisible: boolean;
   public keys: Set<string>;

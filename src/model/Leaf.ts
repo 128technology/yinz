@@ -16,6 +16,7 @@ export default class Leaf implements Statement, Typed, Whenable, WithIdentities,
   public default: string;
   public description: string;
   public identities: Identities;
+  public isObsolete: boolean;
   public isPrototype: boolean;
   public isVisible: boolean;
   public mandatory: boolean;
