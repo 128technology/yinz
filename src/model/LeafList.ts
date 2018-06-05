@@ -13,6 +13,7 @@ export default class LeafList implements ListLike, Statement, Searchable, Typed,
   public choiceCase: Case;
   public description: string;
   public identities: Identities;
+  public isPrototype: boolean;
   public isVisible: boolean;
   public keys: Set<string>;
   public maxElements: number;
