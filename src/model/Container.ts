@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 
 import applyMixins from '../util/applyMixins';
 import { ContainerInstance, Instance } from '../instance';
-import { Visibility } from '../enum';
+import { Visibility, Status } from '../enum';
 
 import { PresenceParser } from './parsers';
 import { Statement, Searchable, Whenable } from './mixins';
@@ -25,6 +25,7 @@ export default class Container implements Statement, Searchable, Whenable {
   public otherProps: Map<string, string | boolean>;
   public parentModel: Model;
   public path: string;
+  public status: Status;
   public presence: string;
   public visibility: Visibility | null;
   public when: IWhen[];

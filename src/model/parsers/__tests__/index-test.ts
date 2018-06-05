@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import xmlUtil, { yinNS, t128InternalNS } from '../../../__tests__/xmlUtil';
-import { Visibility, OrderedBy, ContextNode } from '../../../enum';
+import { Visibility, OrderedBy, ContextNode, Status } from '../../../enum';
 import ns from '../../../util/ns';
 
 import * as Parsers from '../';
@@ -44,6 +44,46 @@ describe('Model Parsers', () => {
       `);
 
       expect(Parsers.VisibilityParser.parse(el)).to.equal(null);
+    });
+  });
+
+  describe('Status Parser', () => {
+    it('should parse current nodes', () => {
+      const el = xmlUtil.toElement(`
+        <mock ${yinNS}>
+          <yin:status>current</yin:status>
+        </mock>
+      `);
+
+      expect(Parsers.StatusParser.parse(el)).to.equal(Status.current);
+    });
+
+    it('should parse deprecated nodes', () => {
+      const el = xmlUtil.toElement(`
+        <mock ${yinNS}>
+          <yin:status>deprecated</yin:status>
+        </mock>
+      `);
+
+      expect(Parsers.StatusParser.parse(el)).to.equal(Status.deprecated);
+    });
+
+    it('should parse obsolete nodes', () => {
+      const el = xmlUtil.toElement(`
+        <mock ${yinNS}>
+          <yin:status>obsolete</yin:status>
+        </mock>
+      `);
+
+      expect(Parsers.StatusParser.parse(el)).to.equal(Status.obsolete);
+    });
+
+    it('should parse nodes with no status', () => {
+      const el = xmlUtil.toElement(`
+        <mock ${yinNS} />
+      `);
+
+      expect(Parsers.StatusParser.parse(el)).to.equal(Status.current);
     });
   });
 
