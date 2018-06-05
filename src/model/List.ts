@@ -5,12 +5,12 @@ import ns from '../util/ns';
 import { ListInstance, Instance } from '../instance';
 import { OrderedBy, Visibility } from '../enum';
 
-import { Statement, ListLike, Searchable, Whenable } from './mixins';
+import { Statement, ListLike, Whenable, WithRegistry } from './mixins';
 import { IWhen } from './mixins/Whenable';
 import { buildChildren } from './util/childBuilder';
 import { Model, Case, Choice, Identities } from './';
 
-export default class List implements ListLike, Statement, Searchable, Whenable {
+export default class List implements ListLike, Statement, Whenable, WithRegistry {
   private static getKeys(el: Element) {
     const keyString = el
       .get('./yin:key', ns)
@@ -44,8 +44,7 @@ export default class List implements ListLike, Statement, Searchable, Whenable {
   public addStatementProps: (el: Element, parentModel: Model) => void;
   public addWhenableProps: (el: Element) => void;
   public getName: (camelCase?: boolean) => string;
-  public handleNoMatch: () => void;
-  public isMatch: (segments: string[]) => boolean;
+  public register: (parentModel: Model, thisModel: Model | Choice) => void;
 
   constructor(el: Element, parentModel?: Model, identities?: Identities) {
     this.modelType = 'list';
@@ -59,6 +58,8 @@ export default class List implements ListLike, Statement, Searchable, Whenable {
     const { children, choices } = buildChildren(el, this);
     this.children = children;
     this.choices = choices;
+
+    this.register(parentModel, this);
   }
 
   public hasChild(name: string) {
@@ -80,19 +81,6 @@ export default class List implements ListLike, Statement, Searchable, Whenable {
   public buildInstance(config: Element, parent?: Instance) {
     return new ListInstance(this, config, parent);
   }
-
-  public getModelForPath(segments: string[]): Model | Choice {
-    if (this.isMatch(segments)) {
-      return this;
-    } else if (this.children.has(segments[0])) {
-      const firstSegment = segments.shift();
-      return this.children.get(firstSegment).getModelForPath(segments);
-    } else if (this.choices.has(segments[0]) && segments.length === 1) {
-      return this.choices.get(segments[0]);
-    }
-
-    this.handleNoMatch();
-  }
 }
 
-applyMixins(List, [ListLike, Statement, Searchable, Whenable]);
+applyMixins(List, [ListLike, Statement, Whenable, WithRegistry]);

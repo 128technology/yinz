@@ -3,12 +3,12 @@ import { Element } from 'libxmljs';
 import applyMixins from '../util/applyMixins';
 import { Visibility } from '../enum';
 
-import { Statement, Whenable } from './mixins';
+import { Statement, Whenable, WithRegistry } from './mixins';
 import { MandatoryParser } from './parsers';
 import { IWhen } from './mixins/Whenable';
 import { Model, Case } from './';
 
-export default class Choice implements Statement, Whenable {
+export default class Choice implements Statement, Whenable, WithRegistry {
   private static CASE_TYPES = new Set(['case', 'leaf', 'leaf-list', 'list', 'container']);
 
   private static isCase(el: Element) {
@@ -35,6 +35,7 @@ export default class Choice implements Statement, Whenable {
   public addStatementProps: (el: Element, parentModel: Model) => void;
   public addWhenableProps: (el: Element) => void;
   public getName: (camelCase?: boolean) => string;
+  public register: (parentModel: Model, thisModel: Model | Choice) => void;
 
   constructor(el: Element, parentModel?: Model) {
     this.modelType = 'choice';
@@ -52,6 +53,8 @@ export default class Choice implements Statement, Whenable {
         }
       }.bind(this)()
     );
+
+    this.register(parentModel, this);
   }
 
   public get caseNames() {
@@ -70,4 +73,4 @@ export default class Choice implements Statement, Whenable {
   }
 }
 
-applyMixins(Choice, [Statement, Whenable]);
+applyMixins(Choice, [Statement, Whenable, WithRegistry]);

@@ -6,12 +6,12 @@ import { ContainerInstance, Instance } from '../instance';
 import { Visibility } from '../enum';
 
 import { PresenceParser } from './parsers';
-import { Statement, Searchable, Whenable } from './mixins';
+import { Statement, Whenable, WithRegistry } from './mixins';
 import { IWhen } from './mixins/Whenable';
 import { buildChildren } from './util/childBuilder';
-import { Model, Case, Choice, Identities } from './';
+import { Model, Case, Choice, Identities, ModelRegistry } from './';
 
-export default class Container implements Statement, Searchable, Whenable {
+export default class Container implements Statement, Whenable, WithRegistry {
   public children: Map<string, Model>;
   public choiceCase: Case;
   public choices: Map<string, Choice>;
@@ -19,6 +19,7 @@ export default class Container implements Statement, Searchable, Whenable {
   public identities: Identities;
   public isPrototype: boolean;
   public isVisible: boolean;
+  public modelRegistry: ModelRegistry;
   public modelType: string;
   public name: string;
   public ns: [string, string];
@@ -33,20 +34,26 @@ export default class Container implements Statement, Searchable, Whenable {
   public addStatementProps: (el: Element, parentModel: Model) => void;
   public addWhenableProps: (el: Element) => void;
   public getName: (camelCase?: boolean) => string;
-  public handleNoMatch: () => void;
-  public isMatch: (segments: string[]) => boolean;
+  public register: (parentModel: Model, thisModel: Model | Choice) => void;
 
-  constructor(el: Element, parentModel?: Model, identities?: Identities) {
+  constructor(el: Element, parentModel?: Model, identities?: Identities, modelRegistry?: ModelRegistry) {
     this.modelType = 'container';
     this.addStatementProps(el, parentModel);
     this.addWhenableProps(el);
     this.identities = identities;
+    this.modelRegistry = modelRegistry;
 
     const { children, choices } = buildChildren(el, this);
     this.children = children;
     this.choices = choices;
 
     this.presence = PresenceParser.parse(el);
+
+    if (this.modelRegistry) {
+      this.modelRegistry.addModel(this);
+    } else {
+      this.register(parentModel, this);
+    }
   }
 
   public isPresenceContainer() {
@@ -72,19 +79,6 @@ export default class Container implements Statement, Searchable, Whenable {
   public buildInstance(config: Element, parent?: Instance) {
     return new ContainerInstance(this, config, parent);
   }
-
-  public getModelForPath(segments: string[]): Model | Choice {
-    if (this.isMatch(segments)) {
-      return this;
-    } else if (this.children.has(segments[0])) {
-      const firstSegment = segments.shift();
-      return this.children.get(firstSegment).getModelForPath(segments);
-    } else if (this.choices.has(segments[0]) && segments.length === 1) {
-      return this.choices.get(segments[0]);
-    }
-
-    this.handleNoMatch();
-  }
 }
 
-applyMixins(Container, [Statement, Searchable, Whenable]);
+applyMixins(Container, [Statement, Whenable, WithRegistry]);

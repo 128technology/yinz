@@ -7,11 +7,11 @@ import { LeafInstance, Instance } from '../instance';
 import { Type, DerivedType } from '../types';
 
 import { MandatoryParser, DefaultParser } from './parsers';
-import { Statement, Searchable, Typed, Whenable, WithIdentities } from './mixins';
+import { Statement, Typed, Whenable, WithIdentities, WithRegistry } from './mixins';
 import { IWhen } from './mixins/Whenable';
-import { List, Model, Case, Identities } from './';
+import { List, Model, Case, Identities, Choice } from './';
 
-export default class Leaf implements Statement, Searchable, Typed, Whenable, WithIdentities {
+export default class Leaf implements Statement, Typed, Whenable, WithIdentities, WithRegistry {
   public choiceCase: Case;
   public default: string;
   public description: string;
@@ -35,8 +35,7 @@ export default class Leaf implements Statement, Searchable, Typed, Whenable, Wit
   public addTypeProps: (el: Element, identities: Identities) => void;
   public addWhenableProps: (el: Element) => void;
   public getName: (camelCase?: boolean) => string;
-  public handleNoMatch: () => void;
-  public isMatch: (segments: string[]) => boolean;
+  public register: (parentModel: Model, thisModel: Model | Choice) => void;
 
   constructor(el: Element, parentModel?: Model) {
     this.modelType = 'leaf';
@@ -47,6 +46,8 @@ export default class Leaf implements Statement, Searchable, Typed, Whenable, Wit
 
     this.mandatory = MandatoryParser.parse(el);
     this.parseDefault(el);
+
+    this.register(parentModel, this);
   }
 
   get isKey() {
@@ -59,14 +60,6 @@ export default class Leaf implements Statement, Searchable, Typed, Whenable, Wit
 
   public buildInstance(config: Element, parent?: Instance) {
     return new LeafInstance(this, config, parent);
-  }
-
-  public getModelForPath(segments: string[]): Model {
-    if (this.isMatch(segments)) {
-      return this;
-    }
-
-    this.handleNoMatch();
   }
 
   public getResolvedType() {
@@ -84,4 +77,4 @@ export default class Leaf implements Statement, Searchable, Typed, Whenable, Wit
   }
 }
 
-applyMixins(Leaf, [Statement, Searchable, Typed, Whenable, WithIdentities]);
+applyMixins(Leaf, [Statement, Typed, Whenable, WithIdentities, WithRegistry]);

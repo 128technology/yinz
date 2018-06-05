@@ -3,10 +3,10 @@ import { Element } from 'libxmljs';
 import ns from '../util/ns';
 
 import { NamespacesParser } from './parsers';
-import { Container, Model, Choice, Identities } from './';
+import { Container, Model, Choice, Identities, ModelRegistry } from './';
 
-function parseConsolidatedModel(modelXML: Element, identities: Identities) {
-  const rootContainer = new Container(modelXML, undefined, identities);
+function parseConsolidatedModel(modelXML: Element, identities: Identities, modelRegistry: ModelRegistry) {
+  const rootContainer = new Container(modelXML, undefined, identities, modelRegistry);
 
   const root = new Map();
   root.set(rootContainer.name, rootContainer);
@@ -23,6 +23,7 @@ export default class DataModel {
   public root: Map<string, Container>;
   public identities: Identities;
   public namespaces: { [s: string]: string };
+  public modelRegistry: ModelRegistry;
 
   constructor(options: IOptions) {
     const { modelElement, rootPath } = options;
@@ -31,18 +32,16 @@ export default class DataModel {
 
     this.identities = new Identities(modelElement);
     this.namespaces = NamespacesParser.parse(modelElement);
-    this.root = parseConsolidatedModel(rootEl, this.identities);
+    this.modelRegistry = new ModelRegistry();
+
+    this.root = parseConsolidatedModel(rootEl, this.identities, this.modelRegistry);
   }
 
   public getModelForPath(path: string): Model | Choice {
-    const segments = path.split('.');
-
-    if (segments.length > 0 && this.root.has(segments[0])) {
-      const head = segments.shift();
-
-      return this.root.get(head).getModelForPath(segments);
+    if (this.modelRegistry.registry.has(path)) {
+      return this.modelRegistry.registry.get(path);
     } else {
-      throw new Error(`Path must have at least one segment and start with ${[...this.root.keys()][0]}.`);
+      throw new Error(`Model not found for path ${path}`);
     }
   }
 }
