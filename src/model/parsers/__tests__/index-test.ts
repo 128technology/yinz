@@ -51,7 +51,7 @@ describe('Model Parsers', () => {
     it('should parse current nodes', () => {
       const el = xmlUtil.toElement(`
         <mock ${yinNS}>
-          <yin:status>current</yin:status>
+          <yin:status value="current" />
         </mock>
       `);
 
@@ -61,7 +61,7 @@ describe('Model Parsers', () => {
     it('should parse deprecated nodes', () => {
       const el = xmlUtil.toElement(`
         <mock ${yinNS}>
-          <yin:status>deprecated</yin:status>
+          <yin:status value="deprecated" />
         </mock>
       `);
 
@@ -71,7 +71,7 @@ describe('Model Parsers', () => {
     it('should parse obsolete nodes', () => {
       const el = xmlUtil.toElement(`
         <mock ${yinNS}>
-          <yin:status>obsolete</yin:status>
+          <yin:status value="obsolete" />
         </mock>
       `);
 

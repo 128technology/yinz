@@ -56,7 +56,7 @@ dots, or dashes, and cannot exceed 253 characters (similar to domain-name).</yin
       </yin:type>
       <t128ext:help>key identifier</t128ext:help>
       <t128ext:test/>
-      <yin:status>current</yin:status>
+      <yin:status value="current" />
       <t128-internal:visibility>visible</t128-internal:visibility>
       <yin:description>
         <yin:text>An arbitrary, unique name for the tenant, used to reference
@@ -97,7 +97,7 @@ dots, or dashes, and cannot exceed 253 characters (similar to domain-name).</yin
   const obsolete = xmlUtil.toElement(`
     <yin:leaf name="name" ${yinNS}>
       <yin:type name="string" />
-      <yin:status>obsolete</yin:status>
+      <yin:status value="obsolete" />
     </yin:leaf>
   `);
   /* tslint:enable:max-line-length */
