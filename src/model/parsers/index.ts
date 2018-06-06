@@ -22,7 +22,7 @@ export class VisibilityParser {
 export class StatusParser {
   public static parse(el: Element): Status {
     const statusElem = el.get('./yin:status', ns);
-    return statusElem ? Status[statusElem.text() as keyof typeof Status] : null;
+    return statusElem ? Status[statusElem.attr('value').value() as keyof typeof Status] : null;
   }
 }
 
