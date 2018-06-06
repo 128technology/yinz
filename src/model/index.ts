@@ -7,6 +7,7 @@ import Leaf from './Leaf';
 import LeafList from './LeafList';
 import List from './List';
 import Model from './Model';
+import ModelRegistry from './ModelRegistry';
 
-export { Case, Choice, Container, Identities, Leaf, LeafList, List, Model };
+export { Case, Choice, Container, Identities, Leaf, LeafList, List, Model, ModelRegistry };
 export default DataModel;

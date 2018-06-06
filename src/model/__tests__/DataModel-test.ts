@@ -80,15 +80,13 @@ describe('Data Model', () => {
       rootPath: '//yin:container[@name="stats"]'
     };
 
-    it('should parse a data model', () => {
-      const dataModel = new DataModel(options);
+    const dataModel = new DataModel(options);
 
+    it('should parse a data model', () => {
       expect(dataModel.root.size).to.equal(1);
     });
 
     it('should get the model for a given path', () => {
-      const dataModel = new DataModel(options);
-
       const model = dataModel.getModelForPath('stats.session.flow.add.failure');
 
       expect(model.name).to.equal('failure');

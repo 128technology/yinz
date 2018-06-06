@@ -5,11 +5,11 @@ import { OrderedBy, Visibility, Status } from '../enum';
 import { LeafListInstance, Instance } from '../instance/index';
 import { Type } from '../types';
 
-import { ListLike, Statement, Searchable, Typed, Whenable, WithIdentities } from './mixins';
+import { ListLike, Statement, Typed, Whenable, WithIdentities, WithRegistry } from './mixins';
 import { IWhen } from './mixins/Whenable';
-import { Model, Case, Identities } from './';
+import { Model, Case, Identities, Choice } from './';
 
-export default class LeafList implements ListLike, Statement, Searchable, Typed, Whenable, WithIdentities {
+export default class LeafList implements ListLike, Statement, Typed, Whenable, WithIdentities, WithRegistry {
   public choiceCase: Case;
   public description: string;
   public identities: Identities;
@@ -38,8 +38,7 @@ export default class LeafList implements ListLike, Statement, Searchable, Typed,
   public addTypeProps: (el: Element, identities: Identities) => void;
   public addWhenableProps: (el: Element) => void;
   public getName: (camelCase?: boolean) => string;
-  public handleNoMatch: () => void;
-  public isMatch: (segments: string[]) => boolean;
+  public register: (parentModel: Model, thisModel: Model | Choice) => void;
 
   constructor(el: Element, parentModel?: Model) {
     this.modelType = 'leafList';
@@ -48,19 +47,13 @@ export default class LeafList implements ListLike, Statement, Searchable, Typed,
     this.addListLikeProps(el);
     this.addTypeProps(el, this.identities);
     this.addWhenableProps(el);
+
+    this.register(parentModel, this);
   }
 
   public buildInstance(config: Element, parent?: Instance) {
     return new LeafListInstance(this, config, parent);
   }
-
-  public getModelForPath(segments: string[]): Model {
-    if (this.isMatch(segments)) {
-      return this;
-    }
-
-    this.handleNoMatch();
-  }
 }
 
-applyMixins(LeafList, [ListLike, Statement, Searchable, Typed, Whenable, WithIdentities]);
+applyMixins(LeafList, [ListLike, Statement, Typed, Whenable, WithIdentities, WithRegistry]);
