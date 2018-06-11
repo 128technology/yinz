@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import { Element } from 'libxmljs';
 
 import { ContextNode } from '../enum';
@@ -14,7 +15,7 @@ import {
   findBestCandidate
 } from './util';
 import { DerivedType, LeafRefType } from '../types';
-import DataModel, { Model, List, Leaf } from '../model';
+import DataModel, { Model, List, Leaf, Choice } from '../model';
 
 export default class DataModelInstance {
   public rawInstance: Element;
@@ -66,18 +67,20 @@ export default class DataModelInstance {
       return true;
     }
 
-    const xPath = getPathXPath(path);
+    // TODO: Handle when on choices where the immediate parent is not data
+    const searchPath = model instanceof Choice ? _.initial(path) : path;
+    const xPath = getPathXPath(searchPath);
 
     let exists = true;
     try {
-      this.getInstance(path);
+      this.getInstance(searchPath);
     } catch (e) {
       exists = false;
     }
 
     let instance = this.rawInstance;
     if (!exists) {
-      instance = addEmptyTree(path, this.model, instance);
+      instance = addEmptyTree(searchPath, this.model, instance);
     }
 
     let instanceRoot = instance.get(xPath);

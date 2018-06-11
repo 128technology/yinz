@@ -408,7 +408,6 @@
           <sys:id>1</sys:id>
           <sys:device-interface>
             <sys:name>DevIntf1</sys:name>
-            <sys:id>1</sys:id>
             <sys:pci-address>0000:00:00.0</sys:pci-address>
             <if:network-interface>
               <if:name>NetIntf1</if:name>
@@ -422,12 +421,10 @@
           <sys:role>combo</sys:role>
           <sys:device-interface>
             <sys:name>DevInt1</sys:name>
-            <sys:id>1</sys:id>
             <sys:pci-address>0000:00:00.0</sys:pci-address>
           </sys:device-interface>
           <sys:device-interface>
             <sys:name>DevInt2</sys:name>
-            <sys:id>2</sys:id>
             <if:network-interface xmlns:if="http://128technology.com/t128/config/interface-config">
               <if:name>NetIntf1</if:name>
               <if:global-id>2</if:global-id>
