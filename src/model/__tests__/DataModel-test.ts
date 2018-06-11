@@ -26,7 +26,7 @@ describe('Data Model', () => {
 
       expect(dataModel.namespaces).to.deep.equal({
         al: 'http://128technology.com/t128/analytics',
-        alarm: 'http://128technology.com/t128/state/alarms',
+        alarm: 'http://128technology.com/t128/config/alarm-config',
         as: 'http://128technology.com/t128/state/asset-state',
         authy: 'http://128technology.com/t128/config/authority-config',
         bc: 'http://128technology.com/t128/state/backup-config',
@@ -37,12 +37,14 @@ describe('Data Model', () => {
         er: 'http://128technology.com/t128/event-records',
         if: 'http://128technology.com/t128/config/interface-config',
         is: 'http://128technology.com/t128/state/interface-state',
+        ldap: 'http://128technology.com/t128/state/ldap-state',
         nis: 'http://128technology.com/t128/state/network-interface-state',
         ns: 'http://128technology.com/t128/state/node-state',
         pf: 'http://128technology.com/t128/packet-forwarding',
         pps: 'http://128technology.com/t128/state/peer-path-state',
         ps: 'http://128technology.com/t128/state/platform-state',
         rp: 'http://128technology.com/t128/config/routing-policy-config',
+        rs: 'http://128technology.com/t128/state/router-state',
         rt: 'http://128technology.com/t128/config/routing-config',
         sks: 'http://128technology.com/t128/state/security-key-state',
         ss: 'http://128technology.com/t128/state/system-state',

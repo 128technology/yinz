@@ -12,7 +12,7 @@
             <sys:role>combo</sys:role>
             <sys:enabled>true</sys:enabled>
             <sys:device-interface>
-              <sys:id>0</sys:id>
+              <sys:name>0</sys:name>
               <sys:type>ethernet</sys:type>
             </sys:device-interface>
           </sys:node>

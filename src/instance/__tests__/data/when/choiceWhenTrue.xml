@@ -1,0 +1,17 @@
+<t128:config xmlns:t128="http://128technology.com/t128" xmlns:authy="http://128technology.com/t128/config/authority-config">
+  <authy:authority>
+    <authy:name>Authority128</authy:name>
+    <routing xmlns="http://128technology.com/t128/config/routing-policy-config">
+      <rp:policy xmlns:rp="http://128technology.com/t128/config/routing-policy-config">
+        <rp:name>foo</rp:name>
+        <rp:statement>
+          <rp:name>test</rp:name>
+          <rp:action>
+            <rp:type>rp:set-community</rp:type>
+          </rp:action>
+          <rp:policy>accept</rp:policy>
+        </rp:statement>
+      </rp:policy>
+    </routing>
+  </authy:authority>
+</t128:config>

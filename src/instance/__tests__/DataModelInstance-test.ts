@@ -295,7 +295,7 @@ describe('Data Model Instance', () => {
             { name: 'authority' },
             { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
             { name: 'node', keys: [{ key: 'name', value: 'TestNode1' }] },
-            { name: 'device-interface', keys: [{ key: 'id', value: '1' }] },
+            { name: 'device-interface', keys: [{ key: 'name', value: 'DevIntf1' }] },
             { name: 'network-interface', keys: [{ key: 'name', value: 'NetIntf1' }] },
             { name: 'name' }
           ];
@@ -323,7 +323,7 @@ describe('Data Model Instance', () => {
             { name: 'authority' },
             { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
             { name: 'node', keys: [{ key: 'name', value: 'TestNode2' }] },
-            { name: 'device-interface', keys: [{ key: 'id', value: '2' }] },
+            { name: 'device-interface', keys: [{ key: 'name', value: 'DevInt2' }] },
             { name: 'network-interface', keys: [{ key: 'name', value: 'NetIntf1' }] },
             { name: 'name' }
           ];
@@ -390,7 +390,7 @@ describe('Data Model Instance', () => {
         { name: 'authority' },
         { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
         { name: 'node', keys: [{ key: 'name', value: 'TestNode1' }] },
-        { name: 'device-interface', keys: [{ key: 'id', value: '0' }] },
+        { name: 'device-interface', keys: [{ key: 'name', value: '0' }] },
         { name: 'pppoe' },
         { name: 'user-name' }
       ];
@@ -405,7 +405,7 @@ describe('Data Model Instance', () => {
         { name: 'authority' },
         { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
         { name: 'node', keys: [{ key: 'name', value: 'TestNode1' }] },
-        { name: 'device-interface', keys: [{ key: 'id', value: '0' }] },
+        { name: 'device-interface', keys: [{ key: 'name', value: '0' }] },
         { name: 'pppoe' },
         { name: 'user-name' }
       ];
@@ -465,6 +465,36 @@ describe('Data Model Instance', () => {
         { name: 'routing', keys: [{ key: 'type', value: 'rt:default-instance' }] },
         { name: 'routing-protocol', keys: [{ key: 'type', value: 'rt:foo' }] },
         { name: 'local-as' }
+      ];
+
+      const result = dataModelInstance.evaluateWhenCondition(whenPath);
+      expect(result).to.equal(false);
+    });
+
+    it('should handle a true when condition on a choice', () => {
+      const dataModelInstance = getInstance('./data/when/choiceWhenTrue.xml');
+      const whenPath = [
+        { name: 'authority' },
+        { name: 'routing' },
+        { name: 'policy', keys: [{ key: 'name', value: 'foo' }] },
+        { name: 'statement', keys: [{ key: 'name', value: 'test' }] },
+        { name: 'action', keys: [{ key: 'type', value: 'rp:set-community' }] },
+        { name: 'set-community-type' }
+      ];
+
+      const result = dataModelInstance.evaluateWhenCondition(whenPath);
+      expect(result).to.equal(true);
+    });
+
+    it('should handle a false when condition on a choice', () => {
+      const dataModelInstance = getInstance('./data/when/choiceWhenFalse.xml');
+      const whenPath = [
+        { name: 'authority' },
+        { name: 'routing' },
+        { name: 'policy', keys: [{ key: 'name', value: 'foo' }] },
+        { name: 'statement', keys: [{ key: 'name', value: 'test' }] },
+        { name: 'action', keys: [{ key: 'type', value: 'rp:call' }] },
+        { name: 'set-community-type' }
       ];
 
       const result = dataModelInstance.evaluateWhenCondition(whenPath);
