@@ -5,16 +5,17 @@ import { Element } from 'libxmljs';
 import applyMixins from '../util/applyMixins';
 import { Container } from '../model';
 
-import Searchable from './mixins/Searchable';
+import { Searchable, WithAttributes } from './mixins';
 import { Path, Instance, ListInstance, LeafListInstance } from './';
 
-export default class ContainerInstance implements Searchable {
+export default class ContainerInstance implements Searchable, WithAttributes {
   public model: Container;
   public config: Element;
   public parent: Instance;
   public children: Map<string, Instance>;
   public activeChoices: Map<string, string>;
 
+  public customAttributes: Map<string, string>;
   public getPath: () => Path;
   public isTryingToMatchMe: (path: Path) => boolean;
   public isMatch: (path: Path) => boolean;
@@ -84,4 +85,4 @@ export default class ContainerInstance implements Searchable {
   }
 }
 
-applyMixins(ContainerInstance, [Searchable]);
+applyMixins(ContainerInstance, [Searchable, WithAttributes]);
