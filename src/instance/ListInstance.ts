@@ -4,19 +4,20 @@ import { Element } from 'libxmljs';
 import applyMixins from '../util/applyMixins';
 import { List } from '../model';
 
-import Searchable from './mixins/Searchable';
+import { Searchable, WithAttributes } from './mixins';
 import { Path, Instance, ListChildInstance, LeafInstance } from './';
 import { isKeyedSegment } from './Path';
 
 // Comma separated string of key values
 export type Key = string;
 
-export default class ListInstance implements Searchable {
+export default class ListInstance implements Searchable, WithAttributes {
   public children: Map<Key, ListChildInstance>;
   public config: Element;
   public parent: Instance;
   public model: List;
 
+  public customAttributes: Map<string, string>;
   public getPath: () => Path;
   public isTryingToMatchMe: (path: Path) => boolean;
   public isMatch: (path: Path) => boolean;
@@ -79,4 +80,4 @@ export default class ListInstance implements Searchable {
   }
 }
 
-applyMixins(ListInstance, [Searchable]);
+applyMixins(ListInstance, [Searchable, WithAttributes]);

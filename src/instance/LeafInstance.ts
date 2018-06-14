@@ -3,15 +3,16 @@ import { Element } from 'libxmljs';
 import applyMixins from '../util/applyMixins';
 import { Leaf } from '../model';
 
-import Searchable from './mixins/Searchable';
+import { Searchable, WithAttributes } from './mixins';
 import { Path, Instance } from './';
 
-export default class LeafInstance implements Searchable {
+export default class LeafInstance implements Searchable, WithAttributes {
   public model: Leaf;
   public config: Element;
   public parent: Instance;
   public value: string;
 
+  public customAttributes: Map<string, string>;
   public getPath: () => Path;
   public isTryingToMatchMe: (path: Path) => boolean;
   public isMatch: (path: Path) => boolean;
@@ -49,4 +50,4 @@ export default class LeafInstance implements Searchable {
   }
 }
 
-applyMixins(LeafInstance, [Searchable]);
+applyMixins(LeafInstance, [Searchable, WithAttributes]);
