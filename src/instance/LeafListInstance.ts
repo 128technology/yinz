@@ -3,16 +3,14 @@ import { Element } from 'libxmljs';
 import applyMixins from '../util/applyMixins';
 import { LeafList } from '../model';
 
-import { Searchable, WithAttributes } from './mixins';
-import { Path, Instance } from './';
+import { Searchable } from './mixins';
+import { Path, Instance, Visitor, LeafListChildInstance } from './';
 
-export default class LeafListInstance implements Searchable, WithAttributes {
+export default class LeafListInstance implements Searchable {
   public model: LeafList;
-  public config: Element;
   public parent: Instance;
-  public values: string[];
+  public children: LeafListChildInstance[];
 
-  public customAttributes: Map<string, string>;
   public getPath: () => Path;
   public isTryingToMatchMe: (path: Path) => boolean;
   public isMatch: (path: Path) => boolean;
@@ -20,24 +18,23 @@ export default class LeafListInstance implements Searchable, WithAttributes {
 
   constructor(model: LeafList, config: Element, parent?: Instance) {
     this.model = model;
-    this.config = config;
     this.parent = parent;
-    this.values = [];
+    this.children = [];
 
     this.add(config);
   }
 
   public add(config: Element) {
-    this.values.push(config.text());
+    this.children.push(new LeafListChildInstance(this.model, config, this));
   }
 
-  public getConvertedValues() {
-    return this.values.map(value => this.model.type.serialize(value));
+  public get values() {
+    return this.children.map(child => child.value);
   }
 
   public toJSON(camelCase = false): object {
     return {
-      [this.model.getName(camelCase)]: this.getConvertedValues()
+      [this.model.getName(camelCase)]: this.values
     };
   }
 
@@ -48,6 +45,14 @@ export default class LeafListInstance implements Searchable, WithAttributes {
 
     this.handleNoMatch();
   }
+
+  public visit(visitor: Visitor) {
+    visitor(this);
+
+    this.children.forEach(child => {
+      child.visit(visitor);
+    });
+  }
 }
 
-applyMixins(LeafListInstance, [Searchable, WithAttributes]);
+applyMixins(LeafListInstance, [Searchable]);

@@ -4,7 +4,7 @@ import applyMixins from '../util/applyMixins';
 import { Leaf } from '../model';
 
 import { Searchable, WithAttributes } from './mixins';
-import { Path, Instance } from './';
+import { Path, Instance, Visitor } from './';
 
 export default class LeafInstance implements Searchable, WithAttributes {
   public model: Leaf;
@@ -43,6 +43,10 @@ export default class LeafInstance implements Searchable, WithAttributes {
     }
 
     this.handleNoMatch();
+  }
+
+  public visit(visitor: Visitor) {
+    visitor(this);
   }
 
   private injestConfig(config: Element) {

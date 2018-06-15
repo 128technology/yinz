@@ -6,7 +6,7 @@ import applyMixins from '../util/applyMixins';
 import { List } from '../model';
 
 import { Searchable, WithAttributes } from './mixins';
-import { Path, Instance, LeafInstance, ListInstance, LeafListInstance } from './';
+import { Path, Instance, LeafInstance, ListInstance, LeafListInstance, Visitor } from './';
 
 export type ChoiceName = string;
 export type SelectedCaseName = string;
@@ -89,6 +89,14 @@ export default class ListChildInstance implements Searchable, WithAttributes {
     }
 
     this.handleNoMatch();
+  }
+
+  public visit(visitor: Visitor) {
+    visitor(this);
+
+    Array.from(this.instance.values()).forEach(child => {
+      child.visit(visitor);
+    });
   }
 }
 

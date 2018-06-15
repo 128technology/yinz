@@ -7,9 +7,10 @@ import DataModelInstance, {
   ContainerInstance,
   Instance,
   LeafInstance,
+  LeafListChildInstance,
   LeafListInstance,
-  ListInstance,
   ListChildInstance,
+  ListInstance,
   Path
 } from './instance';
 
@@ -24,10 +25,11 @@ export {
   Leaf,
   LeafInstance,
   LeafList,
+  LeafListChildInstance,
   LeafListInstance,
   List,
-  ListInstance,
   ListChildInstance,
+  ListInstance,
   Model,
   OrderedBy,
   Path,
