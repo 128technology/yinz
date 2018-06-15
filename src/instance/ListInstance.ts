@@ -4,20 +4,18 @@ import { Element } from 'libxmljs';
 import applyMixins from '../util/applyMixins';
 import { List } from '../model';
 
-import { Searchable, WithAttributes } from './mixins';
-import { Path, Instance, ListChildInstance, LeafInstance } from './';
+import { Searchable } from './mixins';
+import { Path, Instance, ListChildInstance, LeafInstance, Visitor } from './';
 import { isKeyedSegment } from './Path';
 
 // Comma separated string of key values
 export type Key = string;
 
-export default class ListInstance implements Searchable, WithAttributes {
+export default class ListInstance implements Searchable {
   public children: Map<Key, ListChildInstance>;
-  public config: Element;
   public parent: Instance;
   public model: List;
 
-  public customAttributes: Map<string, string>;
   public getPath: () => Path;
   public isTryingToMatchMe: (path: Path) => boolean;
   public isMatch: (path: Path) => boolean;
@@ -25,9 +23,9 @@ export default class ListInstance implements Searchable, WithAttributes {
 
   constructor(model: List, config: Element, parent?: Instance) {
     this.model = model;
-    this.config = config;
     this.parent = parent;
     this.children = new Map();
+
     this.add(config);
   }
 
@@ -78,6 +76,14 @@ export default class ListInstance implements Searchable, WithAttributes {
 
     this.handleNoMatch();
   }
+
+  public visit(visitor: Visitor) {
+    visitor(this);
+
+    Array.from(this.children.values()).forEach(child => {
+      child.visit(visitor);
+    });
+  }
 }
 
-applyMixins(ListInstance, [Searchable, WithAttributes]);
+applyMixins(ListInstance, [Searchable]);

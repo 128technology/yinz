@@ -5,7 +5,7 @@ import { ContextNode } from '../enum';
 
 import Path from './Path';
 import Instance from './Instance';
-import { ContainerInstance, LeafInstance } from './';
+import { ContainerInstance, LeafInstance, Visitor } from './';
 import {
   addEmptyTree,
   getPathXPath,
@@ -207,5 +207,11 @@ export default class DataModelInstance {
     } else {
       throw new Error('Path length must be greater than 0.');
     }
+  }
+
+  public visit(visitor: Visitor) {
+    Array.from(this.root.values()).forEach(child => {
+      child.visit(visitor);
+    });
   }
 }

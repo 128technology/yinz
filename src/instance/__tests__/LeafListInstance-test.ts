@@ -35,12 +35,6 @@ describe('Leaf List Instance', () => {
     expect(instance.values).to.deep.equal(['foo', 'bar']);
   });
 
-  it('should get a value with the converted type', () => {
-    const instance = new LeafListInstance(leafListModel, mockConfigXML);
-
-    expect(instance.getConvertedValues()).to.deep.equal(['foo']);
-  });
-
   it('should serialize to JSON', () => {
     const instance = new LeafListInstance(leafListModel, mockConfigXML);
 

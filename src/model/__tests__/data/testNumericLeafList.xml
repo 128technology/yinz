@@ -1,0 +1,3 @@
+<yin:leaf-list name="numbers" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+  <yin:type name="int32" />
+</yin:leaf-list>

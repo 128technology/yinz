@@ -6,7 +6,7 @@ import applyMixins from '../util/applyMixins';
 import { Container } from '../model';
 
 import { Searchable, WithAttributes } from './mixins';
-import { Path, Instance, ListInstance, LeafListInstance } from './';
+import { Path, Instance, ListInstance, LeafListInstance, Visitor } from './';
 
 export default class ContainerInstance implements Searchable, WithAttributes {
   public model: Container;
@@ -55,6 +55,14 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     }
 
     this.handleNoMatch();
+  }
+
+  public visit(visitor: Visitor) {
+    visitor(this);
+
+    Array.from(this.children.values()).forEach(child => {
+      child.visit(visitor);
+    });
   }
 
   private injestConfig(config: Element) {
