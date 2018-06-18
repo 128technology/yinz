@@ -4,7 +4,7 @@ import applyMixins from '../util/applyMixins';
 import { LeafList } from '../model';
 
 import { WithAttributes } from './mixins';
-import { Instance, Visitor, Path, LeafListInstance } from './';
+import { Visitor, Path, LeafListInstance } from './';
 
 export default class LeafListChildInstance implements WithAttributes {
   public model: LeafList;
