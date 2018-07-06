@@ -3,7 +3,7 @@ import { Element } from 'libxmljs';
 import ns from '../util/ns';
 
 import { NamespacesParser } from './parsers';
-import { Container, Model, Choice, Identities, ModelRegistry } from './';
+import { Container, Model, Choice, Identities, ModelRegistry, Visitor } from './';
 
 function parseConsolidatedModel(modelXML: Element, identities: Identities, modelRegistry: ModelRegistry) {
   const rootContainer = new Container(modelXML, undefined, identities, modelRegistry);
@@ -42,6 +42,12 @@ export default class DataModel {
       return this.modelRegistry.registry.get(path);
     } else {
       throw new Error(`Model not found for path ${path}`);
+    }
+  }
+
+  public visit(visitor: Visitor) {
+    for (const value of this.root.values()) {
+      value.visit(visitor);
     }
   }
 }

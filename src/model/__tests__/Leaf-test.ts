@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as sinon from 'sinon';
 
 import xmlUtil, { yinNS } from '../../__tests__/xmlUtil';
 
@@ -86,6 +87,14 @@ describe('Leaf Model', () => {
     const leaf = new Leaf(mandatoryModel);
 
     expect(leaf.default).to.equal(undefined);
+  });
+
+  it('visits itself', () => {
+    const spy = sinon.spy();
+    const leaf = new Leaf(model);
+    leaf.visit(spy);
+
+    expect(spy.firstCall.args[0]).to.equal(leaf);
   });
 
   describe('type traversal', () => {

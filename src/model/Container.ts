@@ -9,7 +9,7 @@ import { PresenceParser } from './parsers';
 import { Statement, Whenable, WithRegistry } from './mixins';
 import { IWhen } from './mixins/Whenable';
 import { buildChildren } from './util/childBuilder';
-import { Model, Case, Choice, Identities, ModelRegistry } from './';
+import { Model, Case, Choice, Identities, ModelRegistry, Visitor } from './';
 
 export default class Container implements Statement, Whenable, WithRegistry {
   public children: Map<string, Model>;
@@ -24,7 +24,7 @@ export default class Container implements Statement, Whenable, WithRegistry {
   public modelType: string;
   public name: string;
   public ns: [string, string];
-  public otherProps: Map<string, string | boolean>;
+  public otherProps: Map<string, string | boolean> = new Map();
   public parentModel: Model;
   public path: string;
   public status: Status;
@@ -80,6 +80,20 @@ export default class Container implements Statement, Whenable, WithRegistry {
 
   public buildInstance(config: Element, parent?: Instance) {
     return new ContainerInstance(this, config, parent);
+  }
+
+  public visit(visitor: Visitor) {
+    visitor(this);
+
+    for (const value of this.choices.values()) {
+      value.visit(visitor);
+    }
+
+    for (const value of this.children.values()) {
+      if (!value.choiceCase) {
+        value.visit(visitor);
+      }
+    }
   }
 }
 
