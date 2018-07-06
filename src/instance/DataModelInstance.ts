@@ -106,7 +106,6 @@ export default class DataModelInstance {
   }
 
   public evaluateXPath(path: Path, xPath: string) {
-    const model = this.model.getModelForPath(path.map(({ name }) => name).join('.'));
     const targetXPath = getPathXPath(path);
 
     let exists = true;
