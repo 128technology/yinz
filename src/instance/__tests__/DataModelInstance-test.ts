@@ -157,6 +157,17 @@ describe('Data Model Instance', () => {
       });
     });
 
+    describe('#evaluateXPath()', () => {
+      it('evaluate an XPath at a Path', () => {
+        const result = dataModelInstance.evaluateXPath(
+          [{ name: 'authority' }],
+          './svc:session-type[svc:name = "HTTP"]/svc:name'
+        );
+
+        expect(result[0].text()).to.equal('HTTP');
+      });
+    });
+
     describe('#resolveLeafRefPath()', () => {
       describe('absolute leafrefs', () => {
         it('should follow reference to leafref', () => {

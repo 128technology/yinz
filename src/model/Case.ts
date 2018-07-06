@@ -6,12 +6,13 @@ import { EmptyType } from '../types';
 import { Whenable } from './mixins';
 import { IWhen } from './mixins/Whenable';
 import { buildChildren, buildChild } from './util/childBuilder';
-import { Model, Choice, Leaf } from './';
+import { Model, Choice, Leaf, Visitor } from './';
 
 export default class Case implements Whenable {
   public name: string;
   public children: Map<string, Model>;
   public modelType: string;
+  public otherProps: Map<string, string | boolean> = new Map();
   public parentChoice: Choice;
   public when: IWhen[];
   public hasWhenAncestorOrSelf: boolean;
@@ -41,6 +42,14 @@ export default class Case implements Whenable {
       return singleChild instanceof Leaf && singleChild.getResolvedType() instanceof EmptyType;
     } else {
       return false;
+    }
+  }
+
+  public visit(visitor: Visitor) {
+    visitor(this);
+
+    for (const value of this.children.values()) {
+      value.visit(visitor);
     }
   }
 

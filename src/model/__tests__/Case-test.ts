@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as sinon from 'sinon';
 
 import xmlUtil from '../../__tests__/xmlUtil';
 
@@ -52,5 +53,21 @@ describe('Case', () => {
     const theCase = new Case(emptyCase, mockChoice);
 
     expect(theCase.isEmpty()).to.equal(true);
+  });
+
+  it('visits itself', () => {
+    const spy = sinon.spy();
+    const theCase = new Case(explicitCase, mockChoice);
+    theCase.visit(spy);
+
+    expect(spy.firstCall.args[0]).to.equal(theCase);
+  });
+
+  it('visits children', () => {
+    const spy = sinon.spy();
+    const theCase = new Case(explicitCase, mockChoice);
+    theCase.visit(spy);
+
+    expect(spy.callCount).to.equal(2);
   });
 });

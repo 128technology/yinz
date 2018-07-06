@@ -6,7 +6,7 @@ import { Visibility, Status } from '../enum';
 import { Statement, Whenable, WithRegistry } from './mixins';
 import { MandatoryParser } from './parsers';
 import { IWhen } from './mixins/Whenable';
-import { Model, Case } from './';
+import { Model, Case, Visitor } from './';
 
 export default class Choice implements Statement, Whenable, WithRegistry {
   private static CASE_TYPES = new Set(['case', 'leaf', 'leaf-list', 'list', 'container']);
@@ -26,7 +26,7 @@ export default class Choice implements Statement, Whenable, WithRegistry {
   public modelType: string;
   public name: string;
   public ns: [string, string];
-  public otherProps: Map<string, string | boolean>;
+  public otherProps: Map<string, string | boolean> = new Map();
   public parentModel: Model;
   public path: string;
   public status: Status;
@@ -65,6 +65,14 @@ export default class Choice implements Statement, Whenable, WithRegistry {
 
   public get emptyCases() {
     return this.cases.filter(theCase => theCase.isEmpty());
+  }
+
+  public visit(visitor: Visitor) {
+    visitor(this);
+
+    this.cases.forEach(theCase => {
+      theCase.visit(visitor);
+    });
   }
 
   private buildCases(el: Element, parentModel?: Model) {

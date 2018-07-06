@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as sinon from 'sinon';
 
 import xmlUtil from '../../__tests__/xmlUtil';
 import { OrderedBy } from '../../enum';
@@ -96,5 +97,21 @@ describe('List Model', () => {
     const list = new List(model);
 
     expect(list.orderedBy).to.equal(OrderedBy.user);
+  });
+
+  it('visits itself', () => {
+    const spy = sinon.spy();
+    const list = new List(model);
+    list.visit(spy);
+
+    expect(spy.firstCall.args[0]).to.equal(list);
+  });
+
+  it('visits children', () => {
+    const spy = sinon.spy();
+    const list = new List(model);
+    list.visit(spy);
+
+    expect(spy.callCount).to.equal(3);
   });
 });

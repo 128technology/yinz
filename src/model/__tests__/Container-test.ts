@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as sinon from 'sinon';
 
 import xmlUtil from '../../__tests__/xmlUtil';
 
@@ -12,6 +13,9 @@ describe('Container Model', () => {
 
   const presenceModelText = fs.readFileSync(path.join(__dirname, './data/testPresenceContainer.xml'), 'utf-8');
   const presenceModel = xmlUtil.toElement(presenceModelText);
+
+  const withChoiceText = fs.readFileSync(path.join(__dirname, './data/testContainerWithChoice.xml'), 'utf-8');
+  const withChoice = xmlUtil.toElement(withChoiceText);
 
   it('should get initalized', () => {
     const container = new Container(model);
@@ -80,5 +84,29 @@ describe('Container Model', () => {
     const container = new Container(model);
 
     expect([...container.getChildren().keys()]).to.deep.equal(['state', 'desired-tx-interval']);
+  });
+
+  it('visits itself', () => {
+    const spy = sinon.spy();
+    const container = new Container(model);
+    container.visit(spy);
+
+    expect(spy.firstCall.args[0]).to.equal(container);
+  });
+
+  it('visits children', () => {
+    const spy = sinon.spy();
+    const container = new Container(model);
+    container.visit(spy);
+
+    expect(spy.callCount).to.equal(3);
+  });
+
+  it('ignores case children and lets the Choice and Case visit them', () => {
+    const spy = sinon.spy();
+    const container = new Container(withChoice);
+    container.visit(spy);
+
+    expect(spy.callCount).to.equal(12);
   });
 });

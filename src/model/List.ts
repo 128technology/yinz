@@ -8,7 +8,7 @@ import { OrderedBy, Visibility, Status } from '../enum';
 import { Statement, ListLike, Whenable, WithRegistry } from './mixins';
 import { IWhen } from './mixins/Whenable';
 import { buildChildren } from './util/childBuilder';
-import { Model, Case, Choice, Identities } from './';
+import { Model, Case, Choice, Identities, Visitor } from './';
 
 export default class List implements ListLike, Statement, Whenable, WithRegistry {
   private static getKeys(el: Element) {
@@ -34,7 +34,7 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
   public name: string;
   public ns: [string, string];
   public orderedBy: OrderedBy;
-  public otherProps: Map<string, string | boolean>;
+  public otherProps: Map<string, string | boolean> = new Map();
   public parentModel: Model;
   public path: string;
   public status: Status;
@@ -82,6 +82,20 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
 
   public buildInstance(config: Element, parent?: Instance) {
     return new ListInstance(this, config, parent);
+  }
+
+  public visit(visitor: Visitor) {
+    visitor(this);
+
+    for (const value of this.choices.values()) {
+      value.visit(visitor);
+    }
+
+    for (const value of this.children.values()) {
+      if (!value.choiceCase) {
+        value.visit(visitor);
+      }
+    }
   }
 }
 

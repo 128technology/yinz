@@ -9,7 +9,7 @@ import { Type, DerivedType } from '../types';
 import { MandatoryParser, DefaultParser } from './parsers';
 import { Statement, Typed, Whenable, WithIdentities, WithRegistry } from './mixins';
 import { IWhen } from './mixins/Whenable';
-import { List, Model, Case, Identities, Choice } from './';
+import { List, Model, Case, Identities, Choice, Visitor } from './';
 
 export default class Leaf implements Statement, Typed, Whenable, WithIdentities, WithRegistry {
   public choiceCase: Case;
@@ -23,7 +23,7 @@ export default class Leaf implements Statement, Typed, Whenable, WithIdentities,
   public modelType: string;
   public name: string;
   public ns: [string, string];
-  public otherProps: Map<string, string | boolean>;
+  public otherProps: Map<string, string | boolean> = new Map();
   public parentModel: Model;
   public path: string;
   public status: Status;
@@ -66,6 +66,10 @@ export default class Leaf implements Statement, Typed, Whenable, WithIdentities,
 
   public getResolvedType() {
     return this.type instanceof DerivedType ? this.type.baseType : this.type;
+  }
+
+  public visit(visitor: Visitor) {
+    visitor(this);
   }
 
   private parseDefault(el: Element) {

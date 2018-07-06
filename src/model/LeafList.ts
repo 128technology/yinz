@@ -7,7 +7,7 @@ import { Type } from '../types';
 
 import { ListLike, Statement, Typed, Whenable, WithIdentities, WithRegistry } from './mixins';
 import { IWhen } from './mixins/Whenable';
-import { Model, Case, Identities, Choice } from './';
+import { Model, Case, Identities, Choice, Visitor } from './';
 
 export default class LeafList implements ListLike, Statement, Typed, Whenable, WithIdentities, WithRegistry {
   public choiceCase: Case;
@@ -23,7 +23,7 @@ export default class LeafList implements ListLike, Statement, Typed, Whenable, W
   public name: string;
   public ns: [string, string];
   public orderedBy: OrderedBy;
-  public otherProps: Map<string, string | boolean>;
+  public otherProps: Map<string, string | boolean> = new Map();
   public parentModel: Model;
   public path: string;
   public status: Status;
@@ -53,6 +53,10 @@ export default class LeafList implements ListLike, Statement, Typed, Whenable, W
 
   public buildInstance(config: Element, parent?: Instance) {
     return new LeafListInstance(this, config, parent);
+  }
+
+  public visit(visitor: Visitor) {
+    visitor(this);
   }
 }
 

@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as sinon from 'sinon';
 
 import xmlUtil from '../../__tests__/xmlUtil';
 import { OrderedBy } from '../../enum';
@@ -44,5 +45,13 @@ describe('Leaf List Model', () => {
     const leafList = new LeafList(model);
 
     expect(leafList.orderedBy).to.equal(OrderedBy.user);
+  });
+
+  it('visits itself', () => {
+    const spy = sinon.spy();
+    const leafList = new LeafList(model);
+    leafList.visit(spy);
+
+    expect(spy.firstCall.args[0]).to.equal(leafList);
   });
 });

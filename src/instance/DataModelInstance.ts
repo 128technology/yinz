@@ -105,6 +105,25 @@ export default class DataModelInstance {
     return true;
   }
 
+  public evaluateXPath(path: Path, xPath: string) {
+    const model = this.model.getModelForPath(path.map(({ name }) => name).join('.'));
+    const targetXPath = getPathXPath(path);
+
+    let exists = true;
+    try {
+      this.getInstance(path);
+    } catch (e) {
+      exists = false;
+    }
+
+    let instance = this.rawInstance;
+    if (!exists) {
+      instance = addEmptyTree(path, this.model, instance);
+    }
+
+    return instance.get(targetXPath).find(xPath, this.model.namespaces);
+  }
+
   public evaluateLeafRef(path: Path) {
     const model = this.model.getModelForPath(path.map(({ name }) => name).join('.'));
     if (model instanceof Leaf && model.getResolvedType() instanceof LeafRefType) {
