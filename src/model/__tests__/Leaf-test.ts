@@ -77,6 +77,12 @@ describe('Leaf Model', () => {
     expect(leaf.default).to.equal('0');
   });
 
+  it('should have units', () => {
+    const leaf = new Leaf(model);
+
+    expect(leaf.units).to.equal('points');
+  });
+
   it('should have a default value from a derived type', () => {
     const leaf = new Leaf(defaultedModel);
 

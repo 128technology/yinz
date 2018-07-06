@@ -66,6 +66,14 @@ export class MandatoryParser {
   }
 }
 
+export class UnitsParser {
+  public static parse(el: Element) {
+    const unitsEl = el.get('./yin:units', ns);
+
+    return unitsEl ? unitsEl.attr('name').value() : null;
+  }
+}
+
 export class DefaultParser {
   public static parse(el: Element) {
     const defaultEl = el.get('./yin:default', ns);
