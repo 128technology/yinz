@@ -1,13 +1,12 @@
 import { expect } from 'chai';
 import { Element } from 'libxmljs';
 
-import xmlUtil, { yinNS, t128InternalNS } from '../../../__tests__/xmlUtil';
+import xmlUtil, { yinNS } from '../../../__tests__/xmlUtil';
 import applyMixins from '../../../util/applyMixins';
 import { Type } from '../../../types';
-import ns from '../../../util/ns';
 
 import { WithUnits, Typed } from '../';
-import { Leaf, Model, Case, Identities } from '../../';
+import { Identities } from '../../';
 
 describe('With Units Mixin', () => {
   class Test implements WithUnits, Typed {

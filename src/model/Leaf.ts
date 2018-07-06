@@ -6,7 +6,7 @@ import { Visibility, Status } from '../enum';
 import { LeafInstance, Instance } from '../instance';
 import { Type, DerivedType } from '../types';
 
-import { MandatoryParser, DefaultParser, UnitsParser } from './parsers';
+import { MandatoryParser, DefaultParser } from './parsers';
 import { Statement, Typed, Whenable, WithIdentities, WithRegistry, WithUnits } from './mixins';
 import { IWhen } from './mixins/Whenable';
 import { List, Model, Case, Identities, Choice, Visitor } from './';
