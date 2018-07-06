@@ -5,13 +5,15 @@ import { OrderedBy, Visibility, Status } from '../enum';
 import { LeafListInstance, Instance } from '../instance/index';
 import { Type } from '../types';
 
-import { ListLike, Statement, Typed, Whenable, WithIdentities, WithRegistry } from './mixins';
+import { ListLike, Statement, Typed, Whenable, WithIdentities, WithRegistry, WithUnits } from './mixins';
 import { IWhen } from './mixins/Whenable';
 import { Model, Case, Identities, Choice, Visitor } from './';
 
-export default class LeafList implements ListLike, Statement, Typed, Whenable, WithIdentities, WithRegistry {
+export default class LeafList implements ListLike, Statement, Typed, Whenable, WithIdentities, WithRegistry, WithUnits {
   public choiceCase: Case;
+  public definedUnits: string;
   public description: string;
+  public hasWhenAncestorOrSelf: boolean;
   public identities: Identities;
   public isObsolete: boolean;
   public isPrototype: boolean;
@@ -28,10 +30,11 @@ export default class LeafList implements ListLike, Statement, Typed, Whenable, W
   public path: string;
   public status: Status;
   public type: Type;
+  public units: string;
   public visibility: Visibility | null;
   public when: IWhen[];
-  public hasWhenAncestorOrSelf: boolean;
 
+  public addDefinedUnits: (el: Element) => void;
   public addIdentityProps: (parentModel: Model) => void;
   public addListLikeProps: (el: Element) => void;
   public addStatementProps: (el: Element, parentModel: Model) => void;
@@ -47,6 +50,7 @@ export default class LeafList implements ListLike, Statement, Typed, Whenable, W
     this.addListLikeProps(el);
     this.addTypeProps(el, this.identities);
     this.addWhenableProps(el);
+    this.addDefinedUnits(el);
 
     this.register(parentModel, this);
   }
@@ -60,4 +64,4 @@ export default class LeafList implements ListLike, Statement, Typed, Whenable, W
   }
 }
 
-applyMixins(LeafList, [ListLike, Statement, Typed, Whenable, WithIdentities, WithRegistry]);
+applyMixins(LeafList, [ListLike, Statement, Typed, Whenable, WithIdentities, WithRegistry, WithUnits]);

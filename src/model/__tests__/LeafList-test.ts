@@ -47,6 +47,12 @@ describe('Leaf List Model', () => {
     expect(leafList.orderedBy).to.equal(OrderedBy.user);
   });
 
+  it('should get units', () => {
+    const leafList = new LeafList(model);
+
+    expect(leafList.units).to.equal('kittens');
+  });
+
   it('visits itself', () => {
     const spy = sinon.spy();
     const leafList = new LeafList(model);

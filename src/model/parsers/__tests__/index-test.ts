@@ -213,6 +213,26 @@ describe('Model Parsers', () => {
     });
   });
 
+  describe('Units Parser', () => {
+    it('should parse nodes with units', () => {
+      const el = xmlUtil.toElement(`
+        <mock ${yinNS}>
+          <yin:units name="seconds"/>
+        </mock>
+      `);
+
+      expect(Parsers.UnitsParser.parse(el)).to.equal('seconds');
+    });
+
+    it('should parse nodes without units', () => {
+      const el = xmlUtil.toElement(`
+        <mock ${yinNS} />
+      `);
+
+      expect(Parsers.UnitsParser.parse(el)).to.equal(null);
+    });
+  });
+
   describe('When Parser', () => {
     it('should add prefixes', () => {
       const el = xmlUtil.toElement(`

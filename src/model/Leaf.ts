@@ -6,15 +6,17 @@ import { Visibility, Status } from '../enum';
 import { LeafInstance, Instance } from '../instance';
 import { Type, DerivedType } from '../types';
 
-import { MandatoryParser, DefaultParser } from './parsers';
-import { Statement, Typed, Whenable, WithIdentities, WithRegistry } from './mixins';
+import { MandatoryParser, DefaultParser, UnitsParser } from './parsers';
+import { Statement, Typed, Whenable, WithIdentities, WithRegistry, WithUnits } from './mixins';
 import { IWhen } from './mixins/Whenable';
 import { List, Model, Case, Identities, Choice, Visitor } from './';
 
-export default class Leaf implements Statement, Typed, Whenable, WithIdentities, WithRegistry {
+export default class Leaf implements Statement, Typed, Whenable, WithIdentities, WithRegistry, WithUnits {
   public choiceCase: Case;
   public default: string;
+  public definedUnits: string;
   public description: string;
+  public hasWhenAncestorOrSelf: boolean;
   public identities: Identities;
   public isObsolete: boolean;
   public isPrototype: boolean;
@@ -28,14 +30,15 @@ export default class Leaf implements Statement, Typed, Whenable, WithIdentities,
   public path: string;
   public status: Status;
   public type: Type;
+  public units: string;
   public visibility: Visibility | null;
   public when: IWhen[];
-  public hasWhenAncestorOrSelf: boolean;
 
   public addIdentityProps: (parentModel: Model) => void;
   public addStatementProps: (el: Element, parentModel: Model) => void;
   public addTypeProps: (el: Element, identities: Identities) => void;
   public addWhenableProps: (el: Element) => void;
+  public addDefinedUnits: (el: Element) => void;
   public getName: (camelCase?: boolean) => string;
   public register: (parentModel: Model, thisModel: Model | Choice) => void;
 
@@ -45,6 +48,7 @@ export default class Leaf implements Statement, Typed, Whenable, WithIdentities,
     this.addIdentityProps(parentModel);
     this.addTypeProps(el, this.identities);
     this.addWhenableProps(el);
+    this.addDefinedUnits(el);
 
     this.mandatory = MandatoryParser.parse(el);
     this.parseDefault(el);
@@ -83,4 +87,4 @@ export default class Leaf implements Statement, Typed, Whenable, WithIdentities,
   }
 }
 
-applyMixins(Leaf, [Statement, Typed, Whenable, WithIdentities, WithRegistry]);
+applyMixins(Leaf, [Statement, Typed, Whenable, WithIdentities, WithRegistry, WithUnits]);

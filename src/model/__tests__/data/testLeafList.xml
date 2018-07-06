@@ -2,6 +2,7 @@
   <yin:max-elements value="5"/>
   <yin:min-elements value="2"/>
   <yin:ordered-by value="user"/>
+  <yin:units name="kittens"/>
   <yin:type name="t128ext:name-id">
     <yin:typedef name="name-id">
       <yin:description>
