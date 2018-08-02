@@ -16,6 +16,7 @@ export default class LeafList implements ListLike, Statement, Typed, Whenable, W
   public hasWhenAncestorOrSelf: boolean;
   public identities: Identities;
   public isObsolete: boolean;
+  public isDeprecated: boolean;
   public isPrototype: boolean;
   public isVisible: boolean;
   public keys: Set<string>;

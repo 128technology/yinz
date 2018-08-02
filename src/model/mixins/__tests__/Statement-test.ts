@@ -19,6 +19,7 @@ describe('Statement Mixin', () => {
     public path: string;
     public status: Status;
     public isObsolete: boolean;
+    public isDeprecated: boolean;
     public isPrototype: boolean;
     public isVisible: boolean;
     public getName: (camelCase?: boolean) => string;
@@ -100,6 +101,13 @@ dots, or dashes, and cannot exceed 253 characters (similar to domain-name).</yin
       <yin:status value="obsolete" />
     </yin:leaf>
   `);
+
+  const deprecated = xmlUtil.toElement(`
+    <yin:leaf name="name" ${yinNS}>
+      <yin:type name="string" />
+      <yin:status value="deprecated" />
+    </yin:leaf>
+  `);
   /* tslint:enable:max-line-length */
 
   const withKebabCase = xmlUtil.toElement(`
@@ -160,6 +168,24 @@ dots, or dashes, and cannot exceed 253 characters (similar to domain-name).</yin
     const statement = new Test(withoutDescription);
 
     expect(statement.isObsolete).to.equal(false);
+  });
+
+  it('should determine if a field itself is deprecated', () => {
+    const statement = new Test(deprecated);
+
+    expect(statement.isDeprecated).to.equal(true);
+  });
+
+  it('should determine if a field is deprecated if it has a deprecated ancestor', () => {
+    const statement = new Test(withoutDescription, { isDeprecated: true } as Leaf);
+
+    expect(statement.isDeprecated).to.equal(true);
+  });
+
+  it('should determine if a field is not deprecated', () => {
+    const statement = new Test(withoutDescription);
+
+    expect(statement.isDeprecated).to.equal(false);
   });
 
   it('should determine its visibility if specified', () => {
