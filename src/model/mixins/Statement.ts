@@ -50,6 +50,10 @@ export default class Statement {
     return this.status !== null ? this.status === Status.obsolete : _.get(this, 'parentModel.isObsolete', false);
   }
 
+  get isDeprecated(): boolean {
+    return this.status !== null ? this.status === Status.deprecated : _.get(this, 'parentModel.isDeprecated', false);
+  }
+
   public getName(camelCase = false) {
     return camelCase ? _.camelCase(this.name) : this.name;
   }

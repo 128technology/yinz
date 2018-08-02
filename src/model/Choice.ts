@@ -20,6 +20,7 @@ export default class Choice implements Statement, Whenable, WithRegistry {
   public choiceCase: Case;
   public description: string;
   public isObsolete: boolean;
+  public isDeprecated: boolean;
   public isPrototype: boolean;
   public isVisible: boolean;
   public mandatory: boolean;
