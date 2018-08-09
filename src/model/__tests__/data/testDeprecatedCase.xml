@@ -1,0 +1,28 @@
+<yin:case name="peer-service-route" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+  <yin:status value="deprecated" />
+  <yin:leaf name="peer">
+    <yin:type name="leafref">
+      <yin:path value="../../authy:peer/authy:name"/>
+      <yin:type name="t128ext:peer-name">
+        <yin:typedef name="peer-name">
+          <yin:description>
+            <yin:text>A string identifier for a peer, which uses alphanumerics, underscores,
+dots, or dashes, and cannot exceed 253 characters.</yin:text>
+          </yin:description>
+          <yin:type name="string">
+            <yin:pattern value="((([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*([a-zA-Z0-9]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9])?">
+              <yin:error-message>
+                <yin:value>Must contain only alphanumeric characters or any of the following: - _ .
+(e.g., MyFirst-128T-Router).</yin:value>
+              </yin:error-message>
+            </yin:pattern>
+            <yin:length value="0..253"/>
+          </yin:type>
+        </yin:typedef>
+      </yin:type>
+    </yin:type>
+    <yin:description>
+      <yin:text>Peer router to forward packets to for the service.</yin:text>
+    </yin:description>
+  </yin:leaf>
+</yin:case>

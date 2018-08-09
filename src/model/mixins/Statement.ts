@@ -36,22 +36,51 @@ export default class Statement {
   }
 
   get isVisible(): boolean {
-    // If this config node did not define visibility, defer to it's parent.
-    return this.visibility !== null ? isVisible(this.visibility) : _.get(this, 'parentModel.isVisible', true);
+    if (this.visibility !== null) {
+      return isVisible(this.visibility);
+    } else {
+      if (this.choiceCase) {
+        return this.choiceCase.isVisible;
+      } else {
+        return _.get(this, 'parentModel.isVisible', true);
+      }
+    }
   }
 
   get isPrototype(): boolean {
-    return this.visibility !== null
-      ? this.visibility === Visibility.prototype
-      : _.get(this, 'parentModel.isPrototype', false);
+    if (this.visibility !== null) {
+      return this.visibility === Visibility.prototype;
+    } else {
+      if (this.choiceCase) {
+        return this.choiceCase.isPrototype;
+      } else {
+        return _.get(this, 'parentModel.isPrototype', false);
+      }
+    }
   }
 
   get isObsolete(): boolean {
-    return this.status !== null ? this.status === Status.obsolete : _.get(this, 'parentModel.isObsolete', false);
+    if (this.status !== null) {
+      return this.status === Status.obsolete;
+    } else {
+      if (this.choiceCase) {
+        return this.choiceCase.isObsolete;
+      } else {
+        return _.get(this, 'parentModel.isObsolete', false);
+      }
+    }
   }
 
   get isDeprecated(): boolean {
-    return this.status !== null ? this.status === Status.deprecated : _.get(this, 'parentModel.isDeprecated', false);
+    if (this.status !== null) {
+      return this.status === Status.deprecated;
+    } else {
+      if (this.choiceCase) {
+        return this.choiceCase.isDeprecated;
+      } else {
+        return _.get(this, 'parentModel.isDeprecated', false);
+      }
+    }
   }
 
   public getName(camelCase = false) {
