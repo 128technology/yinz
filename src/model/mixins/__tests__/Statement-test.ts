@@ -152,82 +152,125 @@ dots, or dashes, and cannot exceed 253 characters (similar to domain-name).</yin
     expect(statement.status).to.equal(Status.current);
   });
 
-  it('should determine if a field itself is obsolete', () => {
-    const statement = new Test(obsolete);
+  describe('#isObsolete()', () => {
+    it('should determine if a field itself is obsolete', () => {
+      const statement = new Test(obsolete);
 
-    expect(statement.isObsolete).to.equal(true);
+      expect(statement.isObsolete).to.equal(true);
+    });
+
+    it('should determine if a field is obsolete if it has an obsolete ancestor', () => {
+      const statement = new Test(withoutDescription, { isObsolete: true } as Leaf);
+
+      expect(statement.isObsolete).to.equal(true);
+    });
+
+    it('should determine if a field is obsolete if it is in an obsolete case', () => {
+      const statement = new Test(withoutDescription);
+      statement.choiceCase = { isObsolete: true } as Case;
+
+      expect(statement.isObsolete).to.equal(true);
+    });
+
+    it('should determine if a field is not obsolete', () => {
+      const statement = new Test(withoutDescription);
+
+      expect(statement.isObsolete).to.equal(false);
+    });
   });
 
-  it('should determine if a field is obsolete if it has an obsolete ancestor', () => {
-    const statement = new Test(withoutDescription, { isObsolete: true } as Leaf);
+  describe('#isDeprecated()', () => {
+    it('should determine if a field itself is deprecated', () => {
+      const statement = new Test(deprecated);
 
-    expect(statement.isObsolete).to.equal(true);
+      expect(statement.isDeprecated).to.equal(true);
+    });
+
+    it('should determine if a field is deprecated if it has a deprecated ancestor', () => {
+      const statement = new Test(withoutDescription, { isDeprecated: true } as Leaf);
+
+      expect(statement.isDeprecated).to.equal(true);
+    });
+
+    it('should determine if a field is deprecated if it is in an deprecated case', () => {
+      const statement = new Test(withoutDescription);
+      statement.choiceCase = { isDeprecated: true } as Case;
+
+      expect(statement.isDeprecated).to.equal(true);
+    });
+
+    it('should determine if a field is not deprecated', () => {
+      const statement = new Test(withoutDescription);
+
+      expect(statement.isDeprecated).to.equal(false);
+    });
   });
 
-  it('should determine if a field is not obsolete', () => {
-    const statement = new Test(withoutDescription);
+  describe('#isVisible()', () => {
+    it('should determine its visibility if specified', () => {
+      const statement = new Test(withDescription);
 
-    expect(statement.isObsolete).to.equal(false);
+      expect(statement.isVisible).to.equal(true);
+    });
+
+    it('should determine its visibility if not specified and parent case hidden', () => {
+      const statement = new Test(withoutDescription);
+      statement.choiceCase = { isVisible: false } as Case;
+
+      expect(statement.isVisible).to.equal(false);
+    });
+
+    it('should determine its visibility if not specified and parent case visible', () => {
+      const statement = new Test(withoutDescription);
+      statement.choiceCase = { isVisible: true } as Case;
+
+      expect(statement.isVisible).to.equal(true);
+    });
+
+    it('should determine its visibility if not specified and parent hidden', () => {
+      const statement = new Test(withoutDescription, { isVisible: false } as Leaf);
+
+      expect(statement.isVisible).to.equal(false);
+    });
+
+    it('should determine its visibility if not specified and parent visible', () => {
+      const statement = new Test(withoutDescription, { isVisible: true } as Leaf);
+
+      expect(statement.isVisible).to.equal(true);
+    });
+
+    it('should determine its visibility if not specified and parent not specified', () => {
+      const statement = new Test(withoutDescription);
+
+      expect(statement.isVisible).to.equal(true);
+    });
   });
 
-  it('should determine if a field itself is deprecated', () => {
-    const statement = new Test(deprecated);
+  describe('#isPrototype()', () => {
+    it('should determine if it is not a prototype', () => {
+      const statement = new Test(withoutDescription);
 
-    expect(statement.isDeprecated).to.equal(true);
-  });
+      expect(statement.isPrototype).to.equal(false);
+    });
 
-  it('should determine if a field is deprecated if it has a deprecated ancestor', () => {
-    const statement = new Test(withoutDescription, { isDeprecated: true } as Leaf);
+    it('should determine if it is a prototype', () => {
+      const statement = new Test(prototype);
 
-    expect(statement.isDeprecated).to.equal(true);
-  });
+      expect(statement.isPrototype).to.equal(true);
+    });
 
-  it('should determine if a field is not deprecated', () => {
-    const statement = new Test(withoutDescription);
+    it('should defer to its case if in a choice to determine if it is a prototype', () => {
+      const statement = new Test(withoutDescription);
+      statement.choiceCase = { isPrototype: true } as Case;
 
-    expect(statement.isDeprecated).to.equal(false);
-  });
+      expect(statement.isPrototype).to.equal(true);
+    });
 
-  it('should determine its visibility if specified', () => {
-    const statement = new Test(withDescription);
+    it('should defer to its ancestor to determine if it is a prototype', () => {
+      const statement = new Test(withoutDescription, { isPrototype: true } as Leaf);
 
-    expect(statement.isVisible).to.equal(true);
-  });
-
-  it('should determine its visibility if not specified and parent hidden', () => {
-    const statement = new Test(withoutDescription, { isVisible: false } as Leaf);
-
-    expect(statement.isVisible).to.equal(false);
-  });
-
-  it('should determine its visibility if not specified and parent visible', () => {
-    const statement = new Test(withoutDescription, { isVisible: true } as Leaf);
-
-    expect(statement.isVisible).to.equal(true);
-  });
-
-  it('should determine its visibility if not specified and parent not specified', () => {
-    const statement = new Test(withoutDescription);
-
-    expect(statement.isVisible).to.equal(true);
-  });
-
-  it('should determine if it is not a prototype', () => {
-    const statement = new Test(withoutDescription);
-
-    expect(statement.isPrototype).to.equal(false);
-  });
-
-  it('should determine if it is a prototype', () => {
-    const statement = new Test(prototype);
-
-    expect(statement.isPrototype).to.equal(true);
-  });
-
-  it('should defer to its ancestor to determine if it is a prototype', () => {
-    const statement = new Test(withoutDescription, { isPrototype: true } as Leaf);
-
-    expect(statement.isPrototype).to.equal(true);
+      expect(statement.isPrototype).to.equal(true);
+    });
   });
 
   it('should get its name as camel case', () => {

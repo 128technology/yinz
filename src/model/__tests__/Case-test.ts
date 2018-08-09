@@ -17,6 +17,15 @@ describe('Case', () => {
   const emptyCaseText = fs.readFileSync(path.join(__dirname, './data/testEmptyCase.xml'), 'utf-8');
   const emptyCase = xmlUtil.toElement(emptyCaseText);
 
+  const deprecatedCaseText = fs.readFileSync(path.join(__dirname, './data/testDeprecatedCase.xml'), 'utf-8');
+  const deprecatedCase = xmlUtil.toElement(deprecatedCaseText);
+
+  const obsoleteCaseText = fs.readFileSync(path.join(__dirname, './data/testObsoleteCase.xml'), 'utf-8');
+  const obsoleteCase = xmlUtil.toElement(obsoleteCaseText);
+
+  const prototypeCaseText = fs.readFileSync(path.join(__dirname, './data/testPrototypeCase.xml'), 'utf-8');
+  const prototypeCase = xmlUtil.toElement(prototypeCaseText);
+
   const mockChoice = {} as Choice;
 
   it('should construct explicit cases', () => {
@@ -53,6 +62,24 @@ describe('Case', () => {
     const theCase = new Case(emptyCase, mockChoice);
 
     expect(theCase.isEmpty()).to.equal(true);
+  });
+
+  it('determine if case is deprecated', () => {
+    const theCase = new Case(deprecatedCase, mockChoice);
+
+    expect(theCase.isDeprecated).to.equal(true);
+  });
+
+  it('determine if case is obsolete', () => {
+    const theCase = new Case(obsoleteCase, mockChoice);
+
+    expect(theCase.isObsolete).to.equal(true);
+  });
+
+  it('determine if case is a prototype', () => {
+    const theCase = new Case(prototypeCase, mockChoice);
+
+    expect(theCase.isPrototype).to.equal(true);
   });
 
   it('visits itself', () => {
