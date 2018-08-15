@@ -1,6 +1,8 @@
 import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
+import { Status } from '../enum';
+import { StatusParser } from '../model/parsers';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import ns from '../util/ns';
 import { SerializationReturnType } from '../enum/SerializationType';
@@ -28,7 +30,13 @@ export default class EnumerationType implements Named, RequiredField, StringSeri
   }
 
   public parseType(el: Element) {
-    this.options = el.find('./yin:enum', ns).map(enumEl => enumEl.attr('name').value());
+    this.options = el
+      .find('./yin:enum', ns)
+      .filter(enumEl => {
+        const enumStatus = StatusParser.parse(enumEl);
+        return enumStatus !== Status.obsolete;
+      })
+      .map(enumEl => enumEl.attr('name').value());
   }
 }
 
