@@ -11,6 +11,15 @@ describe('Enumeration Type', () => {
     </type>
   `);
 
+  const obsoleteTypeEl = xmlUtil.toElement(`
+    <type ${yinNS} name="enumeration">
+      <yin:enum name="foo">
+        <yin:status value="obsolete" />
+      </yin:enum>
+      <yin:enum name="bar" />
+    </type>
+  `);
+
   it('should match a enumeration type', () => {
     const name = typeEl.attr('name').value();
 
@@ -33,6 +42,12 @@ describe('Enumeration Type', () => {
     const type = new EnumerationType(typeEl);
 
     expect(type.options).to.deep.equal(['foo', 'bar']);
+  });
+
+  it('should filter out obsolete options', () => {
+    const type = new EnumerationType(obsoleteTypeEl);
+
+    expect(type.options).to.deep.equal(['bar']);
   });
 
   it('should serialize', () => {
