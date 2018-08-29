@@ -1,0 +1,17 @@
+<t128:config xmlns:t128="http://128technology.com/t128"
+  xmlns:authy="http://128technology.com/t128/config/authority-config"
+  xmlns:rt="http://128technology.com/t128/config/foo"
+  xmlns:bgp="http://128technology.com/t128/config/bar">
+  <authy:authority>
+    <authy:name>Authority128</authy:name>
+    <authy:router>
+      <authy:name>athens</authy:name>
+      <rt:routing xmlns:rt="http://128technology.com/t128/config/routing-config">
+        <rt:type>rt:default-instance</rt:type>
+        <rt:routing-protocol>
+          <rt:type>rt:foo</rt:type>
+        </rt:routing-protocol>
+      </rt:routing>
+    </authy:router>
+  </authy:authority>
+</t128:config>

@@ -511,6 +511,40 @@ describe('Data Model Instance', () => {
       const result = dataModelInstance.evaluateWhenCondition(whenPath);
       expect(result).to.equal(false);
     });
+
+    it('should handle a choice where a parent node has a true when clause', () => {
+      const dataModelInstance = getInstance('./data/when/choiceWhenParentTrue.xml');
+      const whenPath = [
+        { name: 'authority' },
+        { name: 'router', keys: [{ key: 'name', value: 'athens' }] },
+        { name: 'routing', keys: [{ key: 'type', value: 'rt:default-instance' }] },
+        { name: 'routing-protocol', keys: [{ key: 'type', value: 'rt:bgp' }] },
+        { name: 'neighbor', keys: [{ key: 'neighbor-address', value: '1.1.1.1' }] },
+        { name: 'transport' },
+        { name: 'local-address' },
+        { name: 'source' }
+      ];
+
+      const result = dataModelInstance.evaluateWhenCondition(whenPath);
+      expect(result).to.equal(true);
+    });
+
+    it('should handle a choice where a parent node has a false when clause', () => {
+      const dataModelInstance = getInstance('./data/when/choiceWhenParentFalse.xml');
+      const whenPath = [
+        { name: 'authority' },
+        { name: 'router', keys: [{ key: 'name', value: 'athens' }] },
+        { name: 'routing', keys: [{ key: 'type', value: 'rt:default-instance' }] },
+        { name: 'routing-protocol', keys: [{ key: 'type', value: 'rt:foo' }] },
+        { name: 'neighbor', keys: [{ key: 'neighbor-address', value: '1.1.1.1' }] },
+        { name: 'transport' },
+        { name: 'local-address' },
+        { name: 'source' }
+      ];
+
+      const result = dataModelInstance.evaluateWhenCondition(whenPath);
+      expect(result).to.equal(false);
+    });
   });
 
   describe('LeafRef Evaluation', () => {
