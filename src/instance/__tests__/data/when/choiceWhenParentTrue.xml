@@ -1,0 +1,35 @@
+<t128:config xmlns:t128="http://128technology.com/t128"
+  xmlns:authy="http://128technology.com/t128/config/authority-config"
+  xmlns:rt="http://128technology.com/t128/config/foo"
+  xmlns:bgp="http://128technology.com/t128/config/bar">
+  <authy:authority>
+    <authy:name>Authority128</authy:name>
+    <authy:router>
+      <authy:name>athens</authy:name>
+      <rt:routing xmlns:rt="http://128technology.com/t128/config/routing-config">
+        <rt:type>rt:default-instance</rt:type>
+        <rt:routing-protocol>
+          <rt:type>rt:bgp</rt:type>
+          <bgp:neighbor xmlns:bgp="http://128technology.com/t128/config/bgp-config">
+            <bgp:neighbor-address>1.1.1.1</bgp:neighbor-address>
+            <bgp:shutdown>false</bgp:shutdown>
+            <bgp:timers>
+              <bgp:hold-time>90</bgp:hold-time>
+              <bgp:keepalive-interval>30</bgp:keepalive-interval>
+              <bgp:connect-retry>30</bgp:connect-retry>
+              <bgp:minimum-advertisement-interval>30</bgp:minimum-advertisement-interval>
+            </bgp:timers>
+            <bgp:transport>
+              <bgp:passive-mode>false</bgp:passive-mode>
+            </bgp:transport>
+            <bgp:outbound-policy-advertise>true</bgp:outbound-policy-advertise>
+            <bgp:neighbor-policy>
+              <bgp:outbound-policy-advertise>true</bgp:outbound-policy-advertise>
+              <bgp:outbound-policy-transit>true</bgp:outbound-policy-transit>
+            </bgp:neighbor-policy>
+          </bgp:neighbor>
+        </rt:routing-protocol>
+      </rt:routing>
+    </authy:router>
+  </authy:authority>
+</t128:config>

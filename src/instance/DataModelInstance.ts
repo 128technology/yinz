@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { Element } from 'libxmljs';
 
 import { ContextNode } from '../enum';
@@ -61,26 +60,29 @@ export default class DataModelInstance {
     }
   }
 
+  /*
+   * TODO: Currently does not consider ancestral whens on deeply nested choice children, in practice this
+   * doesn't matter is almost all cases because if a choice itself has a when which is false, then no case
+   * can be set, and thus the children could never be displayed.
+   */
   public evaluateWhenCondition(path: Path) {
     const model = this.model.getModelForPath(path.map(({ name }) => name).join('.'));
     if (!model.hasWhenAncestorOrSelf) {
       return true;
     }
 
-    // TODO: Handle when on choices where the immediate parent is not data
-    const searchPath = model instanceof Choice ? _.initial(path) : path;
-    const xPath = getPathXPath(searchPath);
+    const xPath = getPathXPath(path);
 
     let exists = true;
     try {
-      this.getInstance(searchPath);
+      this.getInstance(path);
     } catch (e) {
       exists = false;
     }
 
     let instance = this.rawInstance;
     if (!exists) {
-      instance = addEmptyTree(searchPath, this.model, instance);
+      instance = addEmptyTree(path, this.model, instance);
     }
 
     let instanceRoot = instance.get(xPath);
@@ -89,7 +91,8 @@ export default class DataModelInstance {
       if (modelRoot.when) {
         for (const when of modelRoot.when) {
           const { condition, context } = when;
-          const contextNode = context === ContextNode.parent ? instanceRoot.parent() : instanceRoot;
+          const contextNode =
+            context === ContextNode.parent || modelRoot instanceof Choice ? instanceRoot.parent() : instanceRoot;
           const result = contextNode.get(condition, this.model.namespaces);
 
           if (!result) {
