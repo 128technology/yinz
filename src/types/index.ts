@@ -28,6 +28,8 @@ export type Type =
   | StringType
   | UnionType;
 
+export type BuiltInType = Exclude<Type, DerivedType>;
+
 export {
   BinaryType,
   BitsType,
