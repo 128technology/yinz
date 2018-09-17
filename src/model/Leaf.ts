@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import applyMixins from '../util/applyMixins';
 import { Visibility, Status } from '../enum';
 import { LeafInstance, Instance } from '../instance';
-import { Type, DerivedType } from '../types';
+import { Type, DerivedType, BuiltInType } from '../types';
 
 import { MandatoryParser, DefaultParser } from './parsers';
 import { Statement, Typed, Whenable, WithIdentities, WithRegistry, WithUnits } from './mixins';
@@ -69,7 +69,7 @@ export default class Leaf implements Statement, Typed, Whenable, WithIdentities,
     return new LeafInstance(this, config, parent);
   }
 
-  public getResolvedType() {
+  public getResolvedType(): BuiltInType {
     return this.type instanceof DerivedType ? this.type.builtInType : this.type;
   }
 
