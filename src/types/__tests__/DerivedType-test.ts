@@ -124,6 +124,12 @@ describe('Derived Type', () => {
     expect(type.default).to.equal('baz');
   });
 
+  it('should parse a nested built in type', () => {
+    const type = new DerivedType(nestedDerivedType);
+
+    expect(type.builtInType.type).to.equal('string');
+  });
+
   it('should make the outer most default win', () => {
     const type = new DerivedType(nestedDerivedTypeMultipleDefault);
 

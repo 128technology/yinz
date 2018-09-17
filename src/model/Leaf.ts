@@ -70,7 +70,7 @@ export default class Leaf implements Statement, Typed, Whenable, WithIdentities,
   }
 
   public getResolvedType() {
-    return this.type instanceof DerivedType ? this.type.baseType : this.type;
+    return this.type instanceof DerivedType ? this.type.builtInType : this.type;
   }
 
   public visit(visitor: Visitor) {

@@ -7,7 +7,7 @@ import { Identities } from '../model';
 import { SerializationReturnType } from '../enum/SerializationType';
 
 import TypeParser from './util/TypeParser';
-import { Type } from './';
+import { Type, BuiltInType } from './';
 import { Named, Traversable } from './mixins';
 
 export default class DerivedType implements Named, Traversable {
@@ -32,6 +32,10 @@ export default class DerivedType implements Named, Traversable {
     this.parseUnits(typeDefEl);
     this.parseDefault(typeDefEl);
     this.parseSuggestionRef(typeDefEl);
+  }
+
+  public get builtInType(): BuiltInType {
+    return this.baseType instanceof DerivedType ? this.baseType.builtInType : this.baseType;
   }
 
   public parseDefault(typeDefEl: Element) {
