@@ -6,7 +6,7 @@ import * as sinon from 'sinon';
 import xmlUtil, { yinNS } from '../../__tests__/xmlUtil';
 
 import { Leaf, List } from '../';
-import { UnionType, DerivedType } from '../../types';
+import { UnionType, DerivedType, EnumerationMemberType } from '../../types';
 
 describe('Leaf Model', () => {
   const modelText = fs.readFileSync(path.join(__dirname, './data/testLeaf.xml'), 'utf-8');
@@ -119,7 +119,17 @@ describe('Leaf Model', () => {
         type: 'union',
         types: [
           { type: 'uint32', range: { ranges: [{ min: 1, max: 720 }] } },
-          { type: 'enumeration', options: ['never'] }
+          {
+            type: 'enumeration',
+            members: new Map([
+              [
+                'never',
+                {
+                  description: 'Never regenerate security keys'
+                }
+              ]
+            ])
+          }
         ]
       };
       expect(leaf.type).to.deep.equal(expectedType);
@@ -139,7 +149,23 @@ describe('Leaf Model', () => {
           type: 'union',
           types: [
             { type: 'uint32', range: { ranges: [{ min: 0, max: 999999999 }] } },
-            { type: 'enumeration', options: ['ordered', 'never'] }
+            {
+              type: 'enumeration',
+              members: new Map([
+                [
+                  'ordered',
+                  {
+                    description: 'priority value determined by ordinal position'
+                  }
+                ],
+                [
+                  'never',
+                  {
+                    description: 'paths with the vector are not used'
+                  }
+                ]
+              ])
+            }
           ]
         },
         default: 'ordered',

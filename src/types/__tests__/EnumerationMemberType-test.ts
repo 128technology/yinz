@@ -32,13 +32,13 @@ describe('Enumeration Member Type', () => {
 
   it('should default status to `current`', () => {
     const type = new EnumerationMemberType(typeElEmpty);
-    
+
     expect(type.status).to.equal('current');
   });
 
   it('should set missing fields to null', () => {
     const type = new EnumerationMemberType(typeElEmpty);
-    
+
     expect(type.description).to.equal(null);
     expect(type.value).to.equal(null);
     expect(type.reference).to.equal(null);
