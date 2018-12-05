@@ -1,12 +1,11 @@
 import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
-import { Status } from '../enum';
-import { StatusParser } from '../model/parsers';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import ns from '../util/ns';
 import { SerializationReturnType } from '../enum/SerializationType';
 
+import EnumerationMemberType from './EnumerationMemberType';
 import { Named, RequiredField, StringSerialize } from './mixins';
 
 const TYPE = BuiltInType.enumeration;
@@ -17,11 +16,17 @@ export default class EnumerationType implements Named, RequiredField, StringSeri
   }
 
   public type: string;
-  public options: string[];
+  public members: Map<string, EnumerationMemberType>;
 
   public serialize: (val: string) => SerializationReturnType;
   public addNamedProps: (el: Element) => void;
   public validateRequiredFields: (el: Element, fields: string[], type: string) => void;
+
+  get options() {
+    return Array.from(this.members.entries())
+      .filter(([key, member]) => member.isObsolete())
+      .map(([key]) => key);
+  }
 
   constructor(el: Element) {
     this.addNamedProps(el);
@@ -30,13 +35,12 @@ export default class EnumerationType implements Named, RequiredField, StringSeri
   }
 
   public parseType(el: Element) {
-    this.options = el
+    this.members = el
       .find('./yin:enum', ns)
-      .filter(enumEl => {
-        const enumStatus = StatusParser.parse(enumEl);
-        return enumStatus !== Status.obsolete;
-      })
-      .map(enumEl => enumEl.attr('name').value());
+      .reduce(
+        (acc, enumEl) => acc.set(enumEl.attr('name').value(), new EnumerationMemberType(enumEl)),
+        new Map<string, EnumerationMemberType>()
+      );
   }
 }
 
