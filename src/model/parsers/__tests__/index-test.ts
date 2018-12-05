@@ -153,6 +153,32 @@ describe('Model Parsers', () => {
     });
   });
 
+  describe('Reference Parser', () => {
+    it('should parse min elements nodes', () => {
+      const el = xmlUtil.toElement(`
+        <mock ${yinNS}>
+          <yin:reference>
+            <yin:text>RFC1997</yin:text>
+          </yin:reference>
+        </mock>
+      `);
+
+      expect(Parsers.ReferenceParser.parse(el)).to.equal('RFC1997');
+    });
+
+    it('should convert newlines to spaces', () => {
+      const el = xmlUtil.toElement(`
+        <mock ${yinNS}>
+          <yin:reference>
+            <yin:text>RFC\npoos.</yin:text>
+          </yin:reference>
+        </mock>
+      `);
+
+      expect(Parsers.ReferenceParser.parse(el)).to.equal('RFC poos.');
+    });
+  });
+
   describe('Ordered By Parser', () => {
     it('should parse user nodes', () => {
       const el = xmlUtil.toElement(`
