@@ -24,7 +24,7 @@ export default class EnumerationType implements Named, RequiredField, StringSeri
 
   get options() {
     return Array.from(this.members.entries())
-      .filter(([key, member]) => member.isObsolete())
+      .filter(([key, member]) => !member.isObsolete())
       .map(([key]) => key);
   }
 

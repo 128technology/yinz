@@ -2,7 +2,7 @@ import { Element } from 'libxmljs';
 
 import ns from '../util/ns';
 import { Status } from '../enum';
-import { StatusParser } from '../model/parsers';
+import * as Parsers from '../model/parsers';
 
 export default class EnumerationMemberType {
   public isObsolete = () => this.status === Status.obsolete;
@@ -17,17 +17,14 @@ export default class EnumerationMemberType {
   }
 
   public parseType(enumEl: Element) {
-    this.status = StatusParser.parse(enumEl) || Status.current;
-    this.description = this.parseOptionalMember(enumEl, 'description');
-    this.reference = this.parseOptionalMember(enumEl, 'reference');
-    this.value = parseInt(this.parseOptionalMember(enumEl, 'value'));
+    this.status = Parsers.StatusParser.parse(enumEl) || Status.current;
+    this.description = Parsers.DescriptionParser.parse(enumEl);
+    this.reference = Parsers.ReferenceParser.parse(enumEl);
+    this.value = this.parseValue(enumEl);
   }
 
-  private parseOptionalMember(enumEl: Element, nodeName: string) {
-    const member = enumEl.get(`./yin:${nodeName}`, ns);
-
-    if (member && member.attr('value')) {
-      return member.attr('value').value();
-    }
+  public parseValue(enumEl: Element) {
+    const valueEl = enumEl.get('./yin:value', ns);
+    return valueEl && valueEl.attr('value') ? parseInt(valueEl.attr('value').value()) : null;
   }
 }

@@ -1,16 +1,30 @@
 import { expect } from 'chai';
 
 import xmlUtil, { yinNS } from '../../__tests__/xmlUtil';
+import EnumerationMemberType from '../EnumerationMemberType';
 import { EnumerationType } from '../';
 
 describe('Enumeration Type', () => {
   const typeEl = xmlUtil.toElement(`
     <type ${yinNS} name="enumeration">
       <yin:enum name="foo">
-        <yin:description value="foo description" />
+        <yin:description>
+          <yin:text>This is a foo description.</yin:text>
+        </yin:description>
+        <yin:value value="0" />
+        <yin:reference>
+          <yin:text>This is a foo reference.</yin:text>
+        </yin:reference>
+        <yin:status value="deprecated" />
       </yin:enum>
       <yin:enum name="bar">
-        <yin:description value="bar description" />
+        <yin:description>
+          <yin:text>This is a bar description.</yin:text>
+        </yin:description>
+        <yin:value value="1" />
+        <yin:reference>
+          <yin:text>This is a foo reference.</yin:text>
+        </yin:reference>
       </yin:enum>
     </type>
   `);
@@ -44,25 +58,36 @@ describe('Enumeration Type', () => {
 
   it('should parse members', () => {
     const type = new EnumerationType(typeEl);
-
-    expect(type.members).to.deep.equal(
-      new Map([
-        [
-          'foo',
-          {
-            description: 'foo description',
-            status: 'current'
-          }
-        ],
-        [
-          'bar',
-          {
-            description: 'bar description',
-            status: 'current'
-          }
-        ]
-      ])
+    const fooMember = new EnumerationMemberType(
+      xmlUtil.toElement(`
+        <yin:enum ${yinNS} name="foo">
+          <yin:description>
+            <yin:text>This is a foo description.</yin:text>
+          </yin:description>
+          <yin:value>0</yin:value>
+          <yin:reference>
+            <yin:text>This is a foo reference.</yin:text>
+          </yin:reference>
+          <yin:status value="deprecated" />
+        </yin:enum>
+      `)
     );
+
+    const barMember = new EnumerationMemberType(
+      xmlUtil.toElement(`
+        <yin:enum ${yinNS} name="bar">
+          <yin:description>
+            <yin:text>This is a bar description.</yin:text>
+          </yin:description>
+          <yin:value>1</yin:value>
+          <yin:reference>
+            <yin:text>This is a foo reference.</yin:text>
+          </yin:reference>
+        </yin:enum>
+      `)
+    );
+
+    expect(type.members).to.deep.equal(new Map([['foo', fooMember], ['bar', barMember]]));
   });
 
   it('should parse member options', () => {
