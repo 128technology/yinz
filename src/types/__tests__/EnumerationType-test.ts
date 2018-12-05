@@ -6,8 +6,12 @@ import { EnumerationType } from '../';
 describe('Enumeration Type', () => {
   const typeEl = xmlUtil.toElement(`
     <type ${yinNS} name="enumeration">
-      <yin:enum name="foo" />
-      <yin:enum name="bar" />
+      <yin:enum name="foo">
+        <yin:description value="foo description" />
+      </yin:enum>
+      <yin:enum name="bar">
+        <yin:description value="bar description" />
+      </yin:enum>
     </type>
   `);
 
@@ -38,7 +42,30 @@ describe('Enumeration Type', () => {
     expect(type.type).to.equal('enumeration');
   });
 
-  it('should parse options', () => {
+  it('should parse members', () => {
+    const type = new EnumerationType(typeEl);
+
+    expect(type.members).to.deep.equal(
+      new Map([
+        [
+          'foo',
+          {
+            description: 'foo description',
+            status: 'current'
+          }
+        ],
+        [
+          'bar',
+          {
+            description: 'bar description',
+            status: 'current'
+          }
+        ]
+      ])
+    );
+  });
+
+  it('should parse member options', () => {
     const type = new EnumerationType(typeEl);
 
     expect(type.options).to.deep.equal(['foo', 'bar']);
