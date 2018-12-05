@@ -5,8 +5,6 @@ import { Status } from '../enum';
 import * as Parsers from '../model/parsers';
 
 export default class EnumerationMemberType {
-  public isObsolete = () => this.status === Status.obsolete;
-
   public description: string;
   public value: number;
   public reference: string;
@@ -23,8 +21,10 @@ export default class EnumerationMemberType {
     this.value = this.parseValue(enumEl);
   }
 
+  public isObsolete = () => this.status === Status.obsolete;
+
   public parseValue(enumEl: Element) {
     const valueEl = enumEl.get('./yin:value', ns);
-    return valueEl && valueEl.attr('value') ? parseInt(valueEl.attr('value').value()) : null;
+    return valueEl && valueEl.attr('value') ? parseInt(valueEl.attr('value').value(), 10) : null;
   }
 }

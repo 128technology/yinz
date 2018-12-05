@@ -6,7 +6,7 @@ import * as sinon from 'sinon';
 import xmlUtil, { yinNS } from '../../__tests__/xmlUtil';
 
 import { Leaf, List } from '../';
-import { UnionType, DerivedType, EnumerationMemberType } from '../../types';
+import { UnionType, DerivedType } from '../../types';
 
 describe('Leaf Model', () => {
   const modelText = fs.readFileSync(path.join(__dirname, './data/testLeaf.xml'), 'utf-8');
@@ -120,7 +120,6 @@ describe('Leaf Model', () => {
         types: [
           { type: 'uint32', range: { ranges: [{ min: 1, max: 720 }] } },
           {
-            type: 'enumeration',
             members: new Map([
               [
                 'never',
@@ -128,7 +127,8 @@ describe('Leaf Model', () => {
                   description: 'Never regenerate security keys'
                 }
               ]
-            ])
+            ]),
+            type: 'enumeration'
           }
         ]
       };
@@ -150,7 +150,6 @@ describe('Leaf Model', () => {
           types: [
             { type: 'uint32', range: { ranges: [{ min: 0, max: 999999999 }] } },
             {
-              type: 'enumeration',
               members: new Map([
                 [
                   'ordered',
@@ -164,7 +163,8 @@ describe('Leaf Model', () => {
                     description: 'paths with the vector are not used'
                   }
                 ]
-              ])
+              ]),
+              type: 'enumeration'
             }
           ]
         },
