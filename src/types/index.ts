@@ -5,6 +5,7 @@ import DecimalType from './DecimalType';
 import DerivedType from './DerivedType';
 import EmptyType from './EmptyType';
 import EnumerationType from './EnumerationType';
+import EnumerationMemberType from './EnumerationMemberType';
 import IdentityRefType from './IdentityRefType';
 import InstanceIdentifierType from './InstanceIdentifierType';
 import IntegerType from './IntegerType';
@@ -38,6 +39,7 @@ export {
   DerivedType,
   EmptyType,
   EnumerationType,
+  EnumerationMemberType,
   IdentityRefType,
   InstanceIdentifierType,
   IntegerType,

@@ -51,6 +51,17 @@ export class DescriptionParser {
   }
 }
 
+export class ReferenceParser {
+  public static convertNewlinesToSpaces(stringToReplace: string) {
+    return stringToReplace.replace(/(\r\n|\n|\r)/gm, ' ');
+  }
+
+  public static parse(el: Element) {
+    const referenceEl = el.get('./yin:reference/yin:text', ns);
+    return referenceEl ? ReferenceParser.convertNewlinesToSpaces(referenceEl.text()) : null;
+  }
+}
+
 export class OrderedByParser {
   public static parse(el: Element) {
     const orderedByEl = el.get('./yin:ordered-by', ns);

@@ -119,7 +119,17 @@ describe('Leaf Model', () => {
         type: 'union',
         types: [
           { type: 'uint32', range: { ranges: [{ min: 1, max: 720 }] } },
-          { type: 'enumeration', options: ['never'] }
+          {
+            members: new Map([
+              [
+                'never',
+                {
+                  description: 'Never regenerate security keys'
+                }
+              ]
+            ]),
+            type: 'enumeration'
+          }
         ]
       };
       expect(leaf.type).to.deep.equal(expectedType);
@@ -139,7 +149,23 @@ describe('Leaf Model', () => {
           type: 'union',
           types: [
             { type: 'uint32', range: { ranges: [{ min: 0, max: 999999999 }] } },
-            { type: 'enumeration', options: ['ordered', 'never'] }
+            {
+              members: new Map([
+                [
+                  'ordered',
+                  {
+                    description: 'priority value determined by ordinal position'
+                  }
+                ],
+                [
+                  'never',
+                  {
+                    description: 'paths with the vector are not used'
+                  }
+                ]
+              ]),
+              type: 'enumeration'
+            }
           ]
         },
         default: 'ordered',
