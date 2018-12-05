@@ -2,6 +2,7 @@ import { expect } from 'chai';
 
 import xmlUtil, { yinNS } from '../../__tests__/xmlUtil';
 import { EnumerationMemberType } from '../';
+import { Status } from '../../enum';
 
 describe('Enumeration Member Type', () => {
   const typeEl = xmlUtil.toElement(`
@@ -27,13 +28,13 @@ describe('Enumeration Member Type', () => {
     expect(type.description).to.equal('This is a foo description.');
     expect(type.value).to.equal(0);
     expect(type.reference).to.equal('RFC1997');
-    expect(type.status).to.equal('deprecated');
+    expect(type.status).to.equal(Status.deprecated);
   });
 
   it('should default status to `current`', () => {
     const type = new EnumerationMemberType(typeElEmpty);
 
-    expect(type.status).to.equal('current');
+    expect(type.status).to.equal(Status.current);
   });
 
   it('should set missing fields to null', () => {

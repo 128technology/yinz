@@ -5,16 +5,12 @@ import { Status } from '../enum';
 import * as Parsers from '../model/parsers';
 
 export default class EnumerationMemberType {
-  public description: string;
-  public value: number;
-  public reference: string;
-  public status: Status = Status.current;
+  public readonly description: string;
+  public readonly value: number;
+  public readonly reference: string;
+  public readonly status: Status = Status.current;
 
   constructor(enumEl: Element) {
-    this.parseType(enumEl);
-  }
-
-  public parseType(enumEl: Element) {
     this.status = Parsers.StatusParser.parse(enumEl) || Status.current;
     this.description = Parsers.DescriptionParser.parse(enumEl);
     this.reference = Parsers.ReferenceParser.parse(enumEl);
