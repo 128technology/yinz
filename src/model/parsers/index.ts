@@ -127,7 +127,7 @@ export class NamespacesParser {
   public static parse(el: Element) {
     const nsEls = el.find('descendant-or-self::yin:*[@module-prefix]', ns);
 
-    return nsEls.reduce((acc: { [s: string]: string }, nsEl) => {
+    return nsEls.reduce((acc: { [s: string]: string }, nsEl: Element) => {
       const [prefix, href] = NamespacesParser.getNamespaceFromModule(nsEl);
       acc[prefix] = href;
       return acc;
@@ -140,7 +140,7 @@ export class WhenParser {
     const whenEls = el.find('./yin:when', ns);
 
     if (whenEls && whenEls.length > 0) {
-      return whenEls.map(whenEl => {
+      return whenEls.map((whenEl: Element) => {
         const condition = whenEl.attr('condition').value();
         const prefix = NamespacesParser.getModulePrefix(el);
         const prefixed = WhenParser.ensureXPathNamesPrefixed(condition, prefix);
@@ -192,7 +192,7 @@ export class PropertiesParser {
     const children = el.find('./child::*', ns);
 
     return children
-      .filter(child => {
+      .filter((child: Element) => {
         if (_.includes(ignoreList, getLocalName(child.name()))) {
           return false;
         }
@@ -203,7 +203,7 @@ export class PropertiesParser {
 
         return false;
       })
-      .reduce((acc, child) => {
+      .reduce((acc, child: Element) => {
         const name = _.camelCase(getLocalName(child.name()));
 
         if (PropertiesParser.isTextProperty(child)) {

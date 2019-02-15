@@ -13,13 +13,13 @@ export function buildChildren(parentEl: Element, parentModel: Model): IChildren 
   return parentEl
     .childNodes()
     .filter(node => node.type() === 'element')
-    .filter(el => {
+    .filter((el: Element) => {
       const isConfig = el.get('./yin:config', ns);
 
       return isConfig ? isConfig.attr('value').value() !== 'false' : true;
     })
     .reduce(
-      ({ children, choices }, el) => {
+      ({ children, choices }, el: Element) => {
         const child = buildChild(el, parentModel);
 
         if (child) {

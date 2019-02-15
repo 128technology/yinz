@@ -43,7 +43,9 @@ export default class DataModelInstance {
 
     if (sourceType instanceof LeafRefType) {
       const leafRefXPath = applyConditionToPath(sourceType.path, value);
-      const matchCandidates = config.find(leafRefXPath, this.model.namespaces).map(x => this.getInstanceFromElement(x));
+      const matchCandidates = config
+        .find(leafRefXPath, this.model.namespaces)
+        .map((el: Element) => this.getInstanceFromElement(el));
 
       if (matchCandidates.length === 0) {
         throw new Error('Referenced entity not found. Has it been deleted?');
@@ -102,7 +104,7 @@ export default class DataModelInstance {
       }
 
       modelRoot = modelRoot.parentModel;
-      instanceRoot = instanceRoot.parent();
+      instanceRoot = instanceRoot.parent() as Element;
     }
 
     return true;
@@ -123,7 +125,7 @@ export default class DataModelInstance {
       instance = addEmptyTree(path, this.model, instance);
     }
 
-    return instance.get(targetXPath).find(xPath, this.model.namespaces);
+    return instance.get(targetXPath).find(xPath, this.model.namespaces) as Element[];
   }
 
   public evaluateLeafRef(path: Path) {
@@ -145,7 +147,7 @@ export default class DataModelInstance {
       }
 
       const contextNode = instance.get(xPath);
-      return (contextNode.find(leafRefPath, this.model.namespaces) || []).map(refNode => refNode.text());
+      return (contextNode.find(leafRefPath, this.model.namespaces) || []).map((refEl: Element) => refEl.text());
     } else {
       throw new Error('Cannot evaluate leaf reference for a path that does not correspond to a leafref.');
     }
@@ -175,8 +177,8 @@ export default class DataModelInstance {
         const contextNode = instance.get(xPath);
 
         const suggestions = paths.reduce((acc, suggestionPath) => {
-          (contextNode.find(suggestionPath, this.model.namespaces) || []).forEach(refNode => {
-            acc.add(refNode.text());
+          (contextNode.find(suggestionPath, this.model.namespaces) || []).forEach((refEl: Element) => {
+            acc.add(refEl.text());
           });
 
           return acc;
@@ -210,7 +212,7 @@ export default class DataModelInstance {
       }
 
       currentModel = currentModel.parentModel;
-      currentElement = currentElement.parent();
+      currentElement = currentElement.parent() as Element;
     }
 
     return this.getInstance(path.reverse());
