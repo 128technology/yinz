@@ -1,4 +1,6 @@
-<yin:leaf-list name="vector" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+<yin:leaf-list name="vector" 
+  xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" 
+  xmlns:test="http://foo.bar" module-prefix="test">
   <yin:max-elements value="5"/>
   <yin:min-elements value="2"/>
   <yin:ordered-by value="user"/>

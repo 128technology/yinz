@@ -1,4 +1,4 @@
-import { Element } from 'libxmljs';
+import { Element, Document } from 'libxmljs';
 
 import { ContextNode } from '../enum';
 
@@ -35,6 +35,19 @@ export default class DataModelInstance {
 
   public toJSON(camelCase = false): object {
     return [...this.root.values()][0].toJSON(camelCase);
+  }
+
+  public toXML(rootEl?: Element) {
+    if (rootEl) {
+      const config = rootEl;
+      [...this.root.values()][0].toXML(config);
+      return config.doc();
+    } else {
+      const document = new Document();
+      const config = document.node('config');
+      [...this.root.values()][0].toXML(config);
+      return document;
+    }
   }
 
   public resolveLeafRefPath(path: Path): Path {

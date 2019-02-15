@@ -1,3 +1,4 @@
+import { Document } from 'libxmljs';
 import { expect } from 'chai';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -13,9 +14,9 @@ describe('List Child Instance', () => {
   const listModel = new List(model);
 
   const mockConfig = `
-    <authy:peer xmlns:authy="http://128technology.com/t128/config/authority-config" >
-      <authy:name>foo</authy:name>
-    </authy:peer>
+    <test:peer xmlns:test="http://foo.bar" >
+      <test:name>foo</test:name>
+    </test:peer>
   `;
   const mockConfigXML = xmlUtil.toElement(mockConfig);
 
@@ -56,6 +57,22 @@ describe('List Child Instance', () => {
     const instance = new ListChildInstance(listModel, mockConfigXML, null);
 
     expect(instance.toJSON()).to.deep.equal({ name: 'foo' });
+  });
+
+  it('should serialize to XML', () => {
+    const document = new Document();
+    const el = document.node('mockEl');
+    const instance = new ListChildInstance(listModel, mockConfigXML, null);
+    instance.toXML(el);
+
+    expect(document.toString()).xml.to.equal(`
+      <?xml version="1.0" encoding="UTF-8"?>
+      <mockEl xmlns:test="http://foo.bar">
+        <test:peer>
+          <test:name>foo</test:name> 
+        </test:peer>
+      </mockEl>
+    `);
   });
 
   it('should get keys', () => {

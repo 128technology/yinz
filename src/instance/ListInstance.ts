@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { Element } from 'libxmljs';
+import { Element, Document } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
 import { List } from '../model';
@@ -51,6 +51,12 @@ export default class ListInstance implements Searchable {
     return {
       [this.model.getName(camelCase)]: [...this.children.values()].map(child => child.toJSON(camelCase))
     };
+  }
+
+  public toXML(parent: Element) {
+    Array.from(this.children.values()).forEach(child => {
+      child.toXML(parent);
+    });
   }
 
   public getInstance(path: Path): Instance {

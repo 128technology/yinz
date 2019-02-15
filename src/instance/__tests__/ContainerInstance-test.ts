@@ -1,9 +1,9 @@
+import { Document } from 'libxmljs';
 import { expect } from 'chai';
 import * as fs from 'fs';
 import * as path from 'path';
 
 import xmlUtil from '../../__tests__/xmlUtil';
-
 import { Container } from '../../model';
 
 import { ContainerInstance, LeafInstance } from '../';
@@ -14,9 +14,9 @@ describe('Container Instance', () => {
   const leafModel = new Container(model);
 
   const mockConfigXML = xmlUtil.toElement(`
-    <authy:bfd xmlns:authy="http://128technology.com/t128/config/authority-config">
-      <authy:state>enabled</authy:state>
-    </authy:bfd>
+    <test:bfd xmlns:test="http://foo.bar">
+      <test:state>enabled</test:state>
+    </test:bfd>
   `);
 
   it('should get initialized with a value', () => {
@@ -38,5 +38,21 @@ describe('Container Instance', () => {
         state: 'enabled'
       }
     });
+  });
+
+  it('should serialize to XML', () => {
+    const document = new Document();
+    const el = document.node('mockEl');
+    const instance = new ContainerInstance(leafModel, mockConfigXML);
+    instance.toXML(el);
+
+    expect(document.toString()).xml.to.equal(`
+      <?xml version="1.0" encoding="UTF-8"?>
+      <mockEl xmlns:test="http://foo.bar">
+        <test:bfd>
+          <test:state>enabled</test:state>
+        </test:bfd>
+      </mockEl>
+    `);
   });
 });

@@ -64,6 +64,11 @@ describe('Data Model Instance', () => {
       expect(dataModelInstance.toJSON(true)).to.deep.equal(instanceJSONCamelCase);
     });
 
+    it('should serialize an instance to XML', () => {
+      const expectedXML = readConfigFile('./data/instanceToXML.xml');
+      expect(dataModelInstance.toXML().toString()).xml.to.equal(expectedXML.toString());
+    });
+
     it('should get leaves', () => {
       const searchPath = [{ name: 'authority' }, { name: 'name' }];
       const leaf = dataModelInstance.getInstance(searchPath);
