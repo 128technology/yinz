@@ -63,7 +63,7 @@ export default class DerivedType implements Named, Traversable {
     // also copies the child type into the derived type in some cases.
     const restrictionEls = typeEl.find('./*[not(self::yin:typedef) and not(self::yin:type)]', ns);
 
-    restrictionEls.forEach(el => {
+    restrictionEls.forEach((el: Element) => {
       baseTypeEl.addChild(el);
     });
 

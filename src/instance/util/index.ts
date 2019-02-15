@@ -61,7 +61,7 @@ export function getFieldIdFromParentAxis(element: Element) {
 
   while (currentElement && currentElement.name() !== 'config') {
     stack.push(currentElement.name());
-    currentElement = currentElement.parent();
+    currentElement = currentElement.parent() as Element;
   }
 
   return stack.reverse().join('.');

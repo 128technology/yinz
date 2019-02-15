@@ -68,15 +68,15 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   private injestConfig(config: Element) {
     Lazy(config.childNodes())
       .filter(node => node.type() === 'element')
-      .each(node => {
-        const localName = node.name();
+      .each((el: Element) => {
+        const localName = el.name();
 
         if (this.model.hasChild(localName)) {
           if (this.children.has(localName)) {
             const child = this.children.get(localName);
 
             if (child instanceof ListInstance || child instanceof LeafListInstance) {
-              child.add(node);
+              child.add(el);
             }
           } else {
             const childModel = this.model.getChild(localName);
@@ -86,7 +86,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
               this.activeChoices.set(childModel.choiceCase.parentChoice.name, childModel.choiceCase.name);
             }
 
-            this.children.set(localName, childModel.buildInstance(node, this));
+            this.children.set(localName, childModel.buildInstance(el, this));
           }
         }
       });

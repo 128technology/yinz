@@ -32,7 +32,7 @@ export default class UnionType implements Named, RequiredField, StringSerialize,
   }
 
   public parseType(el: Element, identities?: Identities) {
-    this.types = el.find('./yin:type', ns).map(typeEl => TypeParser.parse(typeEl, identities));
+    this.types = el.find('./yin:type', ns).map((typeEl: Element) => TypeParser.parse(typeEl, identities));
   }
 
   public childTypes(): Type[] {

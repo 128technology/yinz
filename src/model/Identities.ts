@@ -30,7 +30,7 @@ export default class Identities {
 
   public parseIdentitiesFromModel(el: Element) {
     const identities = _(el.find('yin:identity', ns))
-      .map(identity => {
+      .map((identity: Element) => {
         const descriptionEl = identity.get('.//yin:description/yin:text', ns);
         const baseEl = identity.get('./yin:base', ns);
 

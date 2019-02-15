@@ -1,107 +1,229 @@
-// Type definitions for Libxmljs v0.14.2
-// Project: https://github.com/polotek/libxmljs
+// Type definitions for Libxmljs 0.18
+// Project: https://github.com/libxmljs/libxmljs
 // Definitions by: François de Campredon <https://github.com/fdecampredon>
+//                 ComFreek <https://github.com/ComFreek>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-declare module 'libxmljs' {
-  import events = require('events');
+/// <reference types="node"/>
+import { EventEmitter } from 'events';
 
-  export function parseXml(source: string): XMLDocument;
-  export function parseHtml(source: string): HTMLDocument;
-  export function parseXmlString(source: string): XMLDocument;
-  export function parseHtmlString(source: string): HTMLDocument;
+export const version: string;
+export const libxml_version: string;
+export const libxml_parser_version: string;
 
-  export class XMLDocument {
-    public validationErrors: XmlError[];
+// tslint:disable-next-line:strict-export-declare-modifiers
+interface StringMap {
+  [key: string]: string;
+}
 
-    constructor(version: number, encoding: string);
-    public child(idx: number): Element | undefined;
-    public childNodes(): Element[];
-    public errors(): SyntaxError[];
-    public encoding(): string;
-    public encoding(enc: string): void;
-    public find(xpath: string): Element[];
-    public get(xpath: string): Element | undefined;
-    public node(name: string, content: string): Element;
-    public root(): Element;
-    public toString(): string;
-    public validate(xsdDoc: XMLDocument): boolean;
-    public version(): number;
-  }
+// tslint:disable-next-line:strict-export-declare-modifiers
+interface ParserOptions {
+  recover?: boolean;
+  noent?: boolean;
+  dtdload?: boolean;
+  doctype?: boolean;
+  dtdattr?: any;
+  dtdvalid?: boolean;
+  noerror?: boolean;
+  errors?: boolean;
+  nowarning?: boolean;
+  warnings?: boolean;
+  pedantic?: boolean;
+  noblanks?: boolean;
+  blanks?: boolean;
+  sax1?: boolean;
+  xinclude?: boolean;
+  nonet?: boolean;
+  net?: boolean;
+  nodict?: boolean;
+  dict?: boolean;
+  nsclean?: boolean;
+  implied?: boolean;
+  nocdata?: boolean;
+  cdata?: boolean;
+  noxincnode?: boolean;
+  compact?: boolean;
+  old?: boolean;
+  nobasefix?: boolean;
+  basefix?: boolean;
+  huge?: boolean;
+  oldsax?: boolean;
+  ignore_enc?: boolean;
+  big_lines?: boolean;
+}
 
-  export class HTMLDocument extends XMLDocument {}
+export function parseXml(source: string, options?: ParserOptions): Document;
+export function parseXmlString(source: string, options?: ParserOptions): Document;
 
-  export class Element {
-    constructor(doc: XMLDocument, name: string, content?: string);
-    public name(): string;
-    public name(newName: string): void;
-    public node(name: string, content?: string): Element;
-    public text(): string;
-    public attr(name: string): Attribute;
-    public attr(attr: Attribute | { [key: string]: string }): void;
-    public attrs(): Attribute[];
-    public parent(): Element;
-    public doc(): XMLDocument;
-    public child(idx: number): Element | undefined;
-    public childNodes(): Element[];
-    public clone(): Element;
-    public addChild(child: Element): Element;
-    public nextSibling(): Element;
-    public nextElement(): Element;
-    public addNextSibling(siblingNode: Element): Element;
-    public prevSibling(): Element;
-    public prevElement(): Element;
-    public addPrevSibling(siblingNode: Element): Element;
-    public find(xpath: string): Element[];
-    public find(xpath: string, ns_uri: string): Element[];
-    public find(xpath: string, namespaces: { [key: string]: string }): Element[];
-    public get(xpath: string): Element | undefined;
-    public get(xpath: string, ns_uri: string): Element | undefined;
-    public get(xpath: string, ns_uri: { [key: string]: string }): Element | undefined;
-    public defineNamespace(href: string): Namespace;
-    public defineNamespace(prefix: string, href: string): Namespace;
-    public namespace(): Namespace;
-    public namespace(ns: Namespace): Element;
-    public namespace(href: string): Namespace;
-    public namespace(prefix: string, href: string): Namespace;
-    public namespaces(): Namespace[];
-    public remove(): void;
-    public path(): string;
-    public type(): string;
-  }
+export function parseHtml(source: string, options?: ParserOptions): Document;
+export function parseHtmlString(source: string, options?: ParserOptions): Document;
+export function parseHtmlFragment(source: string, options?: ParserOptions): Document;
 
-  export class Attribute {
-    constructor(node: Element, name: string, value: string, ns?: Namespace);
-    public name(): string;
-    public namespace(ns?: Namespace): Namespace;
-    public nextSibling(): Attribute;
-    public node(): Element;
-    public prevSibling(): Attribute;
-    public remove(): void;
-    public value(): string;
-  }
+export function memoryUsage(): number;
+export function nodeCount(): number;
 
-  export class Namespace {
-    constructor(node: Element, prefix: string, href: string);
-    public href(): string;
-    public prefix(): string;
-  }
+export class Document {
+  /**
+   * Create a new XML Document
+   * @param version XML document version, defaults to 1.0
+   * @param encoding Encoding, defaults to utf8
+   */
+  constructor(version?: number, encoding?: string);
 
-  export class SaxParser extends events.EventEmitter {
-    parseString(source: string): boolean;
-  }
+  errors: SyntaxError[];
+  validationErrors: ValidationError[];
 
-  export class SaxPushParser extends events.EventEmitter {
-    push(source: string): boolean;
-  }
+  child(idx: number): Element | null;
+  childNodes(): Element[];
+  encoding(): string;
+  encoding(enc: string): this;
+  find(xpath: string): Element[];
+  get(xpath: string, namespaces?: StringMap): Element | null;
+  node(name: string, content?: string): Element;
+  root(): Element | null;
+  root(newRoot: Node): Node;
+  toString(formatted?: boolean): string;
+  type(): 'document';
+  validate(xsdDoc: Document): boolean;
+  version(): string;
+  setDtd(name: string, ext: string, sys: string): void;
+  getDtd(): {
+    name: string;
+    externalId: string;
+    systemId: string;
+  };
+}
 
-  export interface XmlError {
-    domain: number;
-    code: number;
-    message: string;
-    level: number;
-    file?: string;
-    column: number;
-    line: number;
-  }
+export class Node {
+  doc(): Document;
+  parent(): Element | Document;
+  /**
+   * The namespace or null in case of comment nodes
+   */
+  namespace(): Namespace | null;
+
+  /**
+   * An array of namespaces that the object belongs to.
+   *
+   * @param local If it is true, only the namespace declarations local to this
+   *              node are returned, rather than all of the namespaces in scope
+   *              at this node (including the ones from the parent elements).
+   */
+  namespaces(local?: boolean): Namespace[];
+
+  prevSibling(): Node | null;
+  nextSibling(): Node | null;
+
+  type(): 'comment' | 'element' | 'text' | 'attribute';
+  remove(): this;
+  clone(): this;
+  /**
+   * Serializes the node to a string. The string will contain all contents of the node formatted as XML and can be used to print the node.
+   */
+  toString(
+    format?:
+      | boolean
+      | {
+          declaration: boolean;
+          selfCloseEmpty: boolean;
+          whitespace: boolean;
+          type: 'xml' | 'html' | 'xhtml';
+        }
+  ): string;
+}
+
+export class Element extends Node {
+  constructor(doc: Document, name: string, content?: string);
+  node(name: string, content?: string): Element;
+  name(): string;
+  name(newName: string): this;
+  text(): string;
+  text(newText: string): this;
+  attr(name: string): Attribute | null;
+  attr(attrObject: StringMap): this;
+  attrs(): Attribute[];
+
+  doc(): Document;
+  child(idx: number): Node | null;
+  childNodes(): Node[];
+
+  /**
+   * @return The original element, not the child.
+   */
+  addChild(child: Element): this;
+
+  prevElement(): Element | null;
+  nextElement(): Element | null;
+  addNextSibling(siblingNode: Node): Node;
+  addPrevSibling(siblingNode: Node): Node;
+
+  find(xpath: string, ns_uri?: string): Node[];
+  find(xpath: string, namespaces: StringMap): Node[];
+  get(xpath: string, ns_uri?: string): Element | null;
+  get(xpath: string, namespaces: StringMap): Element | null;
+
+  defineNamespace(prefixOrHref: string, hrefInCaseOfPrefix?: string): Namespace;
+
+  namespace(): Namespace | null;
+  namespace(newNamespace: Namespace): this;
+  namespace(prefixOrHref: string, hrefInCaseOfPrefix?: string): Namespace;
+
+  replace(replacement: string): string;
+  replace(replacement: Element): Element;
+
+  path(): string;
+}
+
+export class Attribute {
+  name(): string;
+  value(): string;
+  value(newValue: string): Attribute;
+  namespace(): Namespace;
+
+  remove(): void;
+}
+
+export class Namespace {
+  href(): string;
+  prefix(): string;
+}
+
+export class SaxParser extends EventEmitter {
+  constructor();
+  parseString(source: string): boolean;
+}
+
+export class SaxPushParser extends EventEmitter {
+  constructor();
+  push(source: string): boolean;
+}
+
+export interface SyntaxError {
+  domain: number | null;
+  code: number | null;
+  message: string | null;
+  level: number | null;
+  file: string | null;
+  line: number | null;
+  /**
+   * 1-based column number, 0 if not applicable/available.
+   */
+  column: number;
+
+  str1: number | null;
+  str2: number | null;
+  str3: number | null;
+  int1: number | null;
+}
+
+export interface ValidationError extends Error {
+  domain: number | null;
+  code: number | null;
+  level: number | null;
+
+  line: number | null;
+  /**
+   * 1-based column number, 0 if not applicable/available.
+   */
+  column: number;
 }

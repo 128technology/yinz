@@ -49,7 +49,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   public injestConfig(config: Element) {
     Lazy(config.childNodes())
       .filter(node => node.type() === 'element')
-      .each(el => {
+      .each((el: Element) => {
         const localName = el.name();
 
         if (this.model.hasChild(localName)) {
