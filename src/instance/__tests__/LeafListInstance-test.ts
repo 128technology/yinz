@@ -1,3 +1,4 @@
+import { Document } from 'libxmljs';
 import { expect } from 'chai';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -13,7 +14,7 @@ describe('Leaf List Instance', () => {
   const leafListModel = new LeafList(model);
 
   const mockConfig = `
-    <if:vector xmlns:if="http://128technology.com/t128/config/interface-config">foo</if:vector>
+    <test:vector xmlns:test="http://foo.bar">foo</test:vector>
   `;
   const mockConfigXML = xmlUtil.toElement(mockConfig);
 
@@ -27,7 +28,7 @@ describe('Leaf List Instance', () => {
     const instance = new LeafListInstance(leafListModel, mockConfigXML);
 
     const newItemXML = xmlUtil.toElement(`
-      <if:vector xmlns:if="http://128technology.com/t128/config/interface-config">bar</if:vector>
+      <test:vector xmlns:test="http://foo.bar">bar</test:vector>
     `);
 
     instance.add(newItemXML);
@@ -41,5 +42,26 @@ describe('Leaf List Instance', () => {
     expect(instance.toJSON()).to.deep.equal({
       vector: ['foo']
     });
+  });
+
+  it('should serialize to XML', () => {
+    const instance = new LeafListInstance(leafListModel, mockConfigXML);
+
+    const newItemXML = xmlUtil.toElement(`
+      <test:vector xmlns:test="http://foo.bar">bar</test:vector>
+    `);
+
+    instance.add(newItemXML);
+    const document = new Document();
+    const el = document.node('mockEl');
+    instance.toXML(el);
+
+    expect(document.toString()).xml.to.equal(`
+      <?xml version="1.0" encoding="UTF-8"?>
+      <mockEl xmlns:test="http://foo.bar">
+          <test:vector>foo</test:vector>
+          <test:vector>bar</test:vector>
+      </mockEl>
+    `);
   });
 });

@@ -1,7 +1,8 @@
-import { Element } from 'libxmljs';
+import { Element, Document } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
 import { Leaf } from '../model';
+import { defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
 import { Path, Instance, Visitor } from './';
@@ -35,6 +36,12 @@ export default class LeafInstance implements Searchable, WithAttributes {
     return {
       [this.model.getName(camelCase)]: this.getConvertedValue()
     };
+  }
+
+  public toXML(parent: Element) {
+    const [prefix, href] = this.model.ns;
+    defineNamespaceOnRoot(parent, prefix, href);
+    parent.node(this.model.name, this.value).namespace(prefix);
   }
 
   public getInstance(path: Path) {

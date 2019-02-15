@@ -3,7 +3,7 @@ import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
 import { List } from '../model';
-import { isElement } from '../util/xmlUtil';
+import { isElement, defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
 import { Path, Instance, LeafInstance, ListInstance, LeafListInstance, Visitor } from './';
@@ -77,6 +77,17 @@ export default class ListChildInstance implements Searchable, WithAttributes {
     return [...this.instance.values()]
       .map(field => field.toJSON(camelCase))
       .reduce((acc, field) => Object.assign(acc, field), {});
+  }
+
+  public toXML(parent: Element) {
+    const [prefix, href] = this.model.ns;
+    defineNamespaceOnRoot(parent, prefix, href);
+    const outer = parent.node(this.model.name);
+    outer.namespace(prefix);
+
+    Array.from(this.instance.values()).forEach(child => {
+      child.toXML(outer);
+    });
   }
 
   public getInstance(path: Path): Instance {

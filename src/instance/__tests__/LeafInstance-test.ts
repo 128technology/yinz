@@ -1,3 +1,4 @@
+import { Document } from 'libxmljs';
 import { expect } from 'chai';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -13,7 +14,7 @@ describe('Leaf Instance', () => {
   const leafModel = new Leaf(model);
 
   const mockConfig = `
-    <if:qp-value xmlns:if="http://128technology.com/t128/config/interface-config">5</if:qp-value>
+    <test:qp-value xmlns:test="http://foo.bar">5</test:qp-value>
   `;
   const mockConfigXML = xmlUtil.toElement(mockConfig);
 
@@ -35,5 +36,19 @@ describe('Leaf Instance', () => {
     expect(instance.toJSON()).to.deep.equal({
       'qp-value': 5
     });
+  });
+
+  it('should serialize to XML', () => {
+    const document = new Document();
+    const el = document.node('mockEl');
+    const instance = new LeafInstance(leafModel, mockConfigXML);
+    instance.toXML(el);
+
+    expect(document.toString()).xml.to.equal(`
+      <?xml version="1.0" encoding="UTF-8"?>
+      <mockEl xmlns:test="http://foo.bar">
+          <test:qp-value>5</test:qp-value>
+      </mockEl>
+    `);
   });
 });

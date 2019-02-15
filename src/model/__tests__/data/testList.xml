@@ -1,4 +1,7 @@
-<yin:list name="peer" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" xmlns:t128ext="http://128technology.com/t128-extensions">
+<yin:list name="peer" 
+  xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" 
+  xmlns:t128ext="http://128technology.com/t128-extensions" 
+  xmlns:test="http://foo.bar" module-prefix="test">
   <yin:key value="name"/>
   <yin:unique tag="authority-name router-name"/>
   <yin:unique tag="id"/>
