@@ -39,9 +39,8 @@ export default class DataModelInstance {
 
   public toXML(rootEl?: Element) {
     if (rootEl) {
-      const config = rootEl;
-      [...this.root.values()][0].toXML(config);
-      return config.doc();
+      [...this.root.values()][0].toXML(rootEl);
+      return rootEl.doc();
     } else {
       const document = new Document();
       const config = document.node('config');
