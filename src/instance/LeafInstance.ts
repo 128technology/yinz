@@ -1,4 +1,4 @@
-import { Element, Document } from 'libxmljs';
+import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
 import { Leaf } from '../model';
