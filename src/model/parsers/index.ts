@@ -5,7 +5,7 @@ import ns from '../../util/ns';
 import { OrderedBy, Visibility, Status } from '../../enum';
 import ContextNode, { enumValueOf } from '../../enum/ContextNode';
 import { tokens } from '../../util/xPathParser';
-
+import { isElement } from '../../util/xmlUtil';
 export { default as TypeParser } from '../../types/util/TypeParser';
 
 function getLocalName(name: string) {
@@ -125,9 +125,9 @@ export class NamespacesParser {
   }
 
   public static parse(el: Element) {
-    const nsEls = el.find('descendant-or-self::yin:*[@module-prefix]', ns);
+    const nsEls = el.find('descendant-or-self::yin:*[@module-prefix]', ns).filter(isElement);
 
-    return nsEls.reduce((acc: { [s: string]: string }, nsEl: Element) => {
+    return nsEls.reduce((acc: { [s: string]: string }, nsEl) => {
       const [prefix, href] = NamespacesParser.getNamespaceFromModule(nsEl);
       acc[prefix] = href;
       return acc;
@@ -137,10 +137,10 @@ export class NamespacesParser {
 
 export class WhenParser {
   public static parse(el: Element) {
-    const whenEls = el.find('./yin:when', ns);
+    const whenEls = el.find('./yin:when', ns).filter(isElement);
 
     if (whenEls && whenEls.length > 0) {
-      return whenEls.map((whenEl: Element) => {
+      return whenEls.map(whenEl => {
         const condition = whenEl.attr('condition').value();
         const prefix = NamespacesParser.getModulePrefix(el);
         const prefixed = WhenParser.ensureXPathNamesPrefixed(condition, prefix);
@@ -189,10 +189,10 @@ export class PropertiesParser {
 
   public static parse(el: Element) {
     const ignoreList = ['visibility', 'type'];
-    const children = el.find('./child::*', ns);
+    const children = el.find('./child::*', ns).filter(isElement);
 
     return children
-      .filter((child: Element) => {
+      .filter(child => {
         if (_.includes(ignoreList, getLocalName(child.name()))) {
           return false;
         }
@@ -203,7 +203,7 @@ export class PropertiesParser {
 
         return false;
       })
-      .reduce((acc, child: Element) => {
+      .reduce((acc, child) => {
         const name = _.camelCase(getLocalName(child.name()));
 
         if (PropertiesParser.isTextProperty(child)) {

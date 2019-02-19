@@ -2,6 +2,7 @@ import { Element } from 'libxmljs';
 import * as _ from 'lodash';
 
 import ns from '../util/ns';
+import { isElement } from '../util/xmlUtil';
 
 interface IMember {
   base: string;
@@ -30,7 +31,8 @@ export default class Identities {
 
   public parseIdentitiesFromModel(el: Element) {
     const identities = _(el.find('yin:identity', ns))
-      .map((identity: Element) => {
+      .filter(isElement)
+      .map(identity => {
         const descriptionEl = identity.get('.//yin:description/yin:text', ns);
         const baseEl = identity.get('./yin:base', ns);
 

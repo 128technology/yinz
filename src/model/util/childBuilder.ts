@@ -1,6 +1,7 @@
 import { Element } from 'libxmljs';
 
 import ns from '../../util/ns';
+import { isElement } from '../../util/xmlUtil';
 
 import { Container, Leaf, LeafList, List, Choice, Model } from '../';
 
@@ -12,14 +13,14 @@ export interface IChildren {
 export function buildChildren(parentEl: Element, parentModel: Model): IChildren {
   return parentEl
     .childNodes()
-    .filter(node => node.type() === 'element')
-    .filter((el: Element) => {
+    .filter(isElement)
+    .filter(el => {
       const isConfig = el.get('./yin:config', ns);
 
       return isConfig ? isConfig.attr('value').value() !== 'false' : true;
     })
     .reduce(
-      ({ children, choices }, el: Element) => {
+      ({ children, choices }, el) => {
         const child = buildChild(el, parentModel);
 
         if (child) {

@@ -1,6 +1,7 @@
 import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
+import { isElement } from '../util/xmlUtil';
 import { Visibility, Status } from '../enum';
 
 import { Statement, Whenable, WithRegistry } from './mixins';
@@ -79,8 +80,9 @@ export default class Choice implements Statement, Whenable, WithRegistry {
   private buildCases(el: Element, parentModel?: Model) {
     return el
       .childNodes()
-      .filter(node => node.type() === 'element' && Choice.isCase(node as Element))
-      .map((caseEl: Element) => new Case(caseEl, this, parentModel));
+      .filter(isElement)
+      .filter(caseEl => Choice.isCase(caseEl))
+      .map(caseEl => new Case(caseEl, this, parentModel));
   }
 }
 

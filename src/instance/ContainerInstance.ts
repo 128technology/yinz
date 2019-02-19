@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
-import * as Lazy from 'lazy.js';
 import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
 import { Container } from '../model';
+import { isElement } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
 import { Path, Instance, ListInstance, LeafListInstance, Visitor } from './';
@@ -66,9 +66,10 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   }
 
   private injestConfig(config: Element) {
-    Lazy(config.childNodes())
-      .filter(node => node.type() === 'element')
-      .each((el: Element) => {
+    config
+      .childNodes()
+      .filter(isElement)
+      .forEach(el => {
         const localName = el.name();
 
         if (this.model.hasChild(localName)) {
