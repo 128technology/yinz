@@ -5,6 +5,7 @@ import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import ns from '../util/ns';
 import { Identities } from '../model';
 import { SerializationReturnType } from '../enum/SerializationType';
+import { isElement } from '../util/xmlUtil';
 
 import TypeParser from './util/TypeParser';
 import { Named, RequiredField, StringSerialize, Traversable } from './mixins';
@@ -32,7 +33,10 @@ export default class UnionType implements Named, RequiredField, StringSerialize,
   }
 
   public parseType(el: Element, identities?: Identities) {
-    this.types = el.find('./yin:type', ns).map((typeEl: Element) => TypeParser.parse(typeEl, identities));
+    this.types = el
+      .find('./yin:type', ns)
+      .filter(isElement)
+      .map(typeEl => TypeParser.parse(typeEl, identities));
   }
 
   public childTypes(): Type[] {

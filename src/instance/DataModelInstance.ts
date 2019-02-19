@@ -15,6 +15,7 @@ import {
 } from './util';
 import { DerivedType, LeafRefType } from '../types';
 import DataModel, { Model, List, Leaf, Choice } from '../model';
+import { isElement } from '../util/xmlUtil';
 
 export default class DataModelInstance {
   public rawInstance: Element;
@@ -45,7 +46,8 @@ export default class DataModelInstance {
       const leafRefXPath = applyConditionToPath(sourceType.path, value);
       const matchCandidates = config
         .find(leafRefXPath, this.model.namespaces)
-        .map((el: Element) => this.getInstanceFromElement(el));
+        .filter(isElement)
+        .map(el => this.getInstanceFromElement(el));
 
       if (matchCandidates.length === 0) {
         throw new Error('Referenced entity not found. Has it been deleted?');
@@ -125,7 +127,10 @@ export default class DataModelInstance {
       instance = addEmptyTree(path, this.model, instance);
     }
 
-    return instance.get(targetXPath).find(xPath, this.model.namespaces) as Element[];
+    return instance
+      .get(targetXPath)
+      .find(xPath, this.model.namespaces)
+      .filter(isElement);
   }
 
   public evaluateLeafRef(path: Path) {
@@ -147,7 +152,7 @@ export default class DataModelInstance {
       }
 
       const contextNode = instance.get(xPath);
-      return (contextNode.find(leafRefPath, this.model.namespaces) || []).map((refEl: Element) => refEl.text());
+      return (contextNode.find(leafRefPath, this.model.namespaces) || []).filter(isElement).map(refEl => refEl.text());
     } else {
       throw new Error('Cannot evaluate leaf reference for a path that does not correspond to a leafref.');
     }
@@ -177,7 +182,7 @@ export default class DataModelInstance {
         const contextNode = instance.get(xPath);
 
         const suggestions = paths.reduce((acc, suggestionPath) => {
-          (contextNode.find(suggestionPath, this.model.namespaces) || []).forEach((refEl: Element) => {
+          (contextNode.find(suggestionPath, this.model.namespaces) || []).filter(isElement).forEach(refEl => {
             acc.add(refEl.text());
           });
 

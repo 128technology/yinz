@@ -5,6 +5,7 @@ import ns from '../util/ns';
 import { enumValueOf } from '../enum/BuiltInType';
 import { Identities } from '../model';
 import { SerializationReturnType } from '../enum/SerializationType';
+import { isElement } from '../util/xmlUtil';
 
 import TypeParser from './util/TypeParser';
 import { Type, BuiltInType } from './';
@@ -61,9 +62,9 @@ export default class DerivedType implements Named, Traversable {
 
     // Really you only need to avoid typedef in the XPATH below, but a bug in yinsolidated
     // also copies the child type into the derived type in some cases.
-    const restrictionEls = typeEl.find('./*[not(self::yin:typedef) and not(self::yin:type)]', ns);
+    const restrictionEls = typeEl.find('./*[not(self::yin:typedef) and not(self::yin:type)]', ns).filter(isElement);
 
-    restrictionEls.forEach((el: Element) => {
+    restrictionEls.forEach(el => {
       baseTypeEl.addChild(el);
     });
 

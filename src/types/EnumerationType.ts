@@ -4,6 +4,7 @@ import applyMixins from '../util/applyMixins';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import ns from '../util/ns';
 import { SerializationReturnType } from '../enum/SerializationType';
+import { isElement } from '../util/xmlUtil';
 
 import EnumerationMemberType from './EnumerationMemberType';
 import { Named, RequiredField, StringSerialize } from './mixins';
@@ -37,8 +38,9 @@ export default class EnumerationType implements Named, RequiredField, StringSeri
   public parseType(el: Element) {
     this.members = el
       .find('./yin:enum', ns)
+      .filter(isElement)
       .reduce(
-        (acc, enumEl: Element) => acc.set(enumEl.attr('name').value(), new EnumerationMemberType(enumEl)),
+        (acc, enumEl) => acc.set(enumEl.attr('name').value(), new EnumerationMemberType(enumEl)),
         new Map<string, EnumerationMemberType>()
       );
   }
