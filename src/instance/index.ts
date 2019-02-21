@@ -1,10 +1,10 @@
 import DataModelInstance from './DataModelInstance';
-import ContainerInstance from './ContainerInstance';
-import ListInstance from './ListInstance';
-import ListChildInstance from './ListChildInstance';
-import LeafListInstance from './LeafListInstance';
+import ContainerInstance, { IContainerJSON } from './ContainerInstance';
+import ListInstance, { ListJSON } from './ListInstance';
+import ListChildInstance, { IListChildJSON } from './ListChildInstance';
+import LeafListInstance, { LeafListJSON } from './LeafListInstance';
 import LeafListChildInstance from './LeafListChildInstance';
-import LeafInstance from './LeafInstance';
+import LeafInstance, { LeafJSON } from './LeafInstance';
 import Instance from './Instance';
 import Path from './Path';
 
@@ -15,11 +15,16 @@ export default DataModelInstance;
 export {
   DataModelInstance,
   ContainerInstance,
+  IContainerJSON,
   ListInstance,
+  ListJSON,
   ListChildInstance,
+  IListChildJSON,
   LeafListInstance,
+  LeafListJSON,
   LeafListChildInstance,
   LeafInstance,
+  LeafJSON,
   Instance,
   Path
 };

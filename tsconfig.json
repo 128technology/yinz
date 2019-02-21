@@ -11,7 +11,8 @@
     "baseUrl": ".",
     "paths": {
       "*": ["*", "./types/*"]
-    }
+    },
+    "noErrorTruncation": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "src/**/__test__/*"]

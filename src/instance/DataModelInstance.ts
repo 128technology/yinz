@@ -1,10 +1,13 @@
 import { Element, Document } from 'libxmljs';
 
 import { ContextNode } from '../enum';
+import { DerivedType, LeafRefType } from '../types';
+import DataModel, { Model, List, Leaf, Choice } from '../model';
+import { isElement } from '../util/xmlUtil';
 
 import Path from './Path';
 import Instance from './Instance';
-import { ContainerInstance, LeafInstance, Visitor } from './';
+import { ContainerInstance, LeafInstance, Visitor, IContainerJSON, LeafListChildInstance, ListChildInstance } from './';
 import {
   addEmptyTree,
   getPathXPath,
@@ -13,24 +16,37 @@ import {
   buildAuxiliaryKeyMap,
   findBestCandidate
 } from './util';
-import { DerivedType, LeafRefType } from '../types';
-import DataModel, { Model, List, Leaf, Choice } from '../model';
-import { isElement } from '../util/xmlUtil';
 
 export default class DataModelInstance {
   public rawInstance: Element;
   public model: DataModel;
   public root: Map<string, ContainerInstance>;
 
-  constructor(model: DataModel, instance: Element) {
+  constructor(model: DataModel, instance: Element | { [rootName: string]: IContainerJSON }) {
     this.model = model;
+    this.root = new Map();
 
     const rootName = [...model.root.keys()][0];
 
-    this.rawInstance = instance;
+    if (instance instanceof Element) {
+      this.rawInstance = instance;
+      this.root.set(rootName, new ContainerInstance(model.root.get(rootName), instance.get('./*[1]')));
+    } else {
+      this.root.set(rootName, new ContainerInstance(model.root.get(rootName), Object.values(instance)[0]));
+      this.rawInstance = this.toXML().root();
 
-    this.root = new Map();
-    this.root.set(rootName, new ContainerInstance(model.root.get(rootName), instance.get('./*[1]')));
+      this.visit(instanceToVisit => {
+        if (
+          instanceToVisit instanceof ListChildInstance ||
+          instanceToVisit instanceof LeafListChildInstance ||
+          instanceToVisit instanceof LeafInstance ||
+          instanceToVisit instanceof ContainerInstance
+        ) {
+          const xPath = getPathXPath(instanceToVisit.getPath());
+          instanceToVisit.config = this.rawInstance.get(xPath, this.model.namespaces);
+        }
+      });
+    }
   }
 
   public toJSON(camelCase = false): object {

@@ -54,6 +54,13 @@ describe('Data Model Instance', () => {
       expect(dataModelInstance.root.get('authority')).to.be.an.instanceOf(ContainerInstance);
     });
 
+    it('should be constructable from JSON', () => {
+      const instanceRawJSON = readJSON('./data/instance.json');
+      const instanceFromJSON = new DataModelInstance(dataModel, instanceRawJSON);
+
+      expect(instanceFromJSON.toJSON()).to.deep.equal(instanceRawJSON);
+    });
+
     it('should serialize an instance to JSON', () => {
       const instanceJSON = readJSON('./data/instance.json');
       expect(dataModelInstance.toJSON()).to.deep.equal(instanceJSON);

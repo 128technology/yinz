@@ -1,8 +1,5 @@
 import { Element } from 'libxmljs';
 
-import { Path, Instance, ListChildInstance } from '../';
-import { Model } from '../../model';
-
 export default class WithAttributes {
   public config: Element;
 

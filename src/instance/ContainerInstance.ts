@@ -2,11 +2,15 @@ import * as _ from 'lodash';
 import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
-import { Container } from '../model';
+import { Container, Leaf, LeafList, List } from '../model';
 import { isElement, defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
-import { Path, Instance, ListInstance, LeafListInstance, Visitor } from './';
+import { Path, Instance, ListInstance, LeafListInstance, Visitor, LeafJSON, LeafListJSON, ListJSON } from './';
+
+export interface IContainerJSON {
+  [childName: string]: LeafJSON | LeafListJSON | ListJSON | IContainerJSON;
+}
 
 export default class ContainerInstance implements Searchable, WithAttributes {
   public model: Container;
@@ -21,17 +25,21 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public isMatch: (path: Path) => boolean;
   public handleNoMatch: () => void;
 
-  constructor(model: Container, config: Element, parent?: Instance) {
+  constructor(model: Container, config: Element | IContainerJSON, parent?: Instance) {
     this.model = model;
-    this.config = config;
     this.parent = parent;
     this.children = new Map();
     this.activeChoices = new Map();
 
-    this.injestConfig(config);
+    if (config instanceof Element) {
+      this.config = config;
+      this.injestConfigXML(config);
+    } else {
+      this.injestConfigJSON(config);
+    }
   }
 
-  public toJSON(camelCase = false): object {
+  public toJSON(camelCase = false): IContainerJSON {
     const containerInner = [...this.children.values()].reduce(
       (acc, child) => Object.assign(acc, child.toJSON(camelCase)),
       {}
@@ -76,7 +84,37 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     });
   }
 
-  private injestConfig(config: Element) {
+  private injestConfigJSON(config: IContainerJSON) {
+    for (const childName in config) {
+      if (this.model.hasChild(childName)) {
+        const child = config[childName];
+        const childModel = this.model.getChild(childName);
+
+        // Note: This does not support nested choices
+        if (childModel.choiceCase) {
+          this.activeChoices.set(childModel.choiceCase.parentChoice.name, childModel.choiceCase.name);
+        }
+
+        let instance: Instance;
+
+        if (childModel instanceof Leaf) {
+          instance = childModel.buildInstance(child as LeafJSON, this);
+        } else if (childModel instanceof LeafList) {
+          instance = childModel.buildInstance(child as LeafListJSON, this);
+        } else if (childModel instanceof Container) {
+          instance = childModel.buildInstance(child as IContainerJSON, this);
+        } else if (childModel instanceof List) {
+          instance = childModel.buildInstance(child as ListJSON, this);
+        } else {
+          throw new Error(`Unknown child of type ${typeof childModel} encountered.`);
+        }
+
+        this.children.set(childName, instance);
+      }
+    }
+  }
+
+  private injestConfigXML(config: Element) {
     config
       .childNodes()
       .filter(isElement)
