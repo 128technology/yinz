@@ -2,7 +2,7 @@ import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
 import ns from '../util/ns';
-import { ListInstance, Instance } from '../instance';
+import { ListInstance, Instance, ListJSON } from '../instance';
 import { OrderedBy, Visibility, Status } from '../enum';
 
 import { Statement, ListLike, Whenable, WithRegistry } from './mixins';
@@ -81,7 +81,7 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
     return [...this.keys.values()].map(key => this.children.get(key));
   }
 
-  public buildInstance(config: Element, parent?: Instance) {
+  public buildInstance(config: Element | ListJSON, parent?: Instance) {
     return new ListInstance(this, config, parent);
   }
 

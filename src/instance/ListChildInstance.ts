@@ -2,11 +2,22 @@ import * as _ from 'lodash';
 import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
-import { List } from '../model';
+import { List, Leaf, Container, LeafList } from '../model';
 import { isElement, defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
-import { Path, Instance, LeafInstance, ListInstance, LeafListInstance, Visitor } from './';
+import {
+  Path,
+  Instance,
+  LeafInstance,
+  ListInstance,
+  LeafListInstance,
+  Visitor,
+  LeafJSON,
+  ListJSON,
+  LeafListJSON,
+  IContainerJSON
+} from './';
 
 export type ChoiceName = string;
 export type SelectedCaseName = string;
@@ -14,6 +25,9 @@ export type ChildName = string;
 
 export interface IKeys {
   [keyName: string]: string;
+}
+export interface IListChildJSON {
+  [childName: string]: LeafJSON | LeafListJSON | ListJSON | IContainerJSON;
 }
 
 export default class ListChildInstance implements Searchable, WithAttributes {
@@ -29,14 +43,18 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   public isMatch: (path: Path) => boolean;
   public handleNoMatch: () => void;
 
-  constructor(model: List, config: Element, parent: Instance) {
+  constructor(model: List, config: Element | IListChildJSON, parent: Instance) {
     this.model = model;
-    this.config = config;
     this.parent = parent;
     this.instance = new Map();
     this.activeChoices = new Map();
 
-    this.injestConfig(config);
+    if (config instanceof Element) {
+      this.config = config;
+      this.injestConfigXML(config);
+    } else {
+      this.injestConfigJSON(config);
+    }
   }
 
   public get keys() {
@@ -46,7 +64,36 @@ export default class ListChildInstance implements Searchable, WithAttributes {
     }, {});
   }
 
-  public injestConfig(config: Element) {
+  public injestConfigJSON(config: IListChildJSON) {
+    for (const childName in config) {
+      if (this.model.hasChild(childName)) {
+        const child = config[childName];
+        const childModel = this.model.getChild(childName);
+
+        if (childModel.choiceCase) {
+          this.activeChoices.set(childModel.choiceCase.parentChoice.name, childModel.choiceCase.name);
+        }
+
+        let instance: Instance;
+
+        if (childModel instanceof Leaf) {
+          instance = childModel.buildInstance(child as LeafJSON, this);
+        } else if (childModel instanceof LeafList) {
+          instance = childModel.buildInstance(child as LeafListJSON, this);
+        } else if (childModel instanceof Container) {
+          instance = childModel.buildInstance(child as IContainerJSON, this);
+        } else if (childModel instanceof List) {
+          instance = childModel.buildInstance(child as ListJSON, this);
+        } else {
+          throw new Error(`Unknown child of type ${typeof childModel} encountered.`);
+        }
+
+        this.instance.set(childName, instance);
+      }
+    }
+  }
+
+  public injestConfigXML(config: Element) {
     config
       .childNodes()
       .filter(isElement)
@@ -73,7 +120,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
       });
   }
 
-  public toJSON(camelCase = false): object {
+  public toJSON(camelCase = false): IListChildJSON {
     return [...this.instance.values()]
       .map(field => field.toJSON(camelCase))
       .reduce((acc, field) => Object.assign(acc, field), {});

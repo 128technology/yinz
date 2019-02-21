@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 
 import applyMixins from '../util/applyMixins';
 import { Visibility, Status } from '../enum';
-import { LeafInstance, Instance } from '../instance';
+import { LeafInstance, Instance, LeafJSON } from '../instance';
 import { Type, DerivedType, BuiltInType } from '../types';
 
 import { MandatoryParser, DefaultParser } from './parsers';
@@ -65,7 +65,7 @@ export default class Leaf implements Statement, Typed, Whenable, WithIdentities,
     return this.mandatory || this.isKey;
   }
 
-  public buildInstance(config: Element, parent?: Instance) {
+  public buildInstance(config: Element | LeafJSON, parent?: Instance) {
     return new LeafInstance(this, config, parent);
   }
 

@@ -1,4 +1,5 @@
 import { Element } from 'libxmljs';
+import * as _ from 'lodash';
 
 import applyMixins from '../util/applyMixins';
 import { Leaf } from '../model';
@@ -6,6 +7,8 @@ import { defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
 import { Path, Instance, Visitor } from './';
+
+export type LeafJSON = string | number | boolean;
 
 export default class LeafInstance implements Searchable, WithAttributes {
   public model: Leaf;
@@ -19,20 +22,24 @@ export default class LeafInstance implements Searchable, WithAttributes {
   public isMatch: (path: Path) => boolean;
   public handleNoMatch: () => void;
 
-  constructor(model: Leaf, config: Element, parent?: Instance) {
+  constructor(model: Leaf, config: Element | LeafJSON, parent?: Instance) {
     this.model = model;
-    this.config = config;
     this.parent = parent;
     this.value = null;
 
-    this.injestConfig(config);
+    if (config instanceof Element) {
+      this.config = config;
+      this.injestConfigXML(config);
+    } else {
+      this.injestConfigJSON(config);
+    }
   }
 
   public getConvertedValue() {
     return this.model.type.serialize(this.value);
   }
 
-  public toJSON(camelCase = false): object {
+  public toJSON(camelCase = false): { [name: string]: LeafJSON } {
     return {
       [this.model.getName(camelCase)]: this.getConvertedValue()
     };
@@ -56,7 +63,11 @@ export default class LeafInstance implements Searchable, WithAttributes {
     visitor(this);
   }
 
-  private injestConfig(config: Element) {
+  private injestConfigJSON(config: LeafJSON) {
+    this.value = config.toString();
+  }
+
+  private injestConfigXML(config: Element) {
     this.value = config.text();
   }
 }

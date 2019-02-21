@@ -5,11 +5,13 @@ import applyMixins from '../util/applyMixins';
 import { List } from '../model';
 
 import { Searchable } from './mixins';
-import { Path, Instance, ListChildInstance, LeafInstance, Visitor } from './';
+import { Path, Instance, ListChildInstance, IListChildJSON, LeafInstance, Visitor } from './';
 import { isKeyedSegment } from './Path';
 
 // Comma separated string of key values
 export type Key = string;
+
+export type ListJSON = IListChildJSON[];
 
 export default class ListInstance implements Searchable {
   public children: Map<Key, ListChildInstance>;
@@ -21,15 +23,21 @@ export default class ListInstance implements Searchable {
   public isMatch: (path: Path) => boolean;
   public handleNoMatch: () => void;
 
-  constructor(model: List, config: Element, parent?: Instance) {
+  constructor(model: List, config: Element | ListJSON, parent?: Instance) {
     this.model = model;
     this.parent = parent;
     this.children = new Map();
 
-    this.add(config);
+    if (config instanceof Element) {
+      this.add(config);
+    } else {
+      config.forEach(child => {
+        this.add(child);
+      });
+    }
   }
 
-  public add(config: Element) {
+  public add(config: Element | IListChildJSON) {
     const newChild = new ListChildInstance(this.model, config, this.parent);
 
     const keys = [...this.model.keys]
@@ -47,7 +55,7 @@ export default class ListInstance implements Searchable {
     this.children.set(keys, newChild);
   }
 
-  public toJSON(camelCase = false): object {
+  public toJSON(camelCase = false): { [name: string]: ListJSON } {
     return {
       [this.model.getName(camelCase)]: [...this.children.values()].map(child => child.toJSON(camelCase))
     };

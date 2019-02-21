@@ -1,11 +1,14 @@
 import { Element } from 'libxmljs';
+import * as _ from 'lodash';
 
 import applyMixins from '../util/applyMixins';
 import { LeafList } from '../model';
 import { defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable } from './mixins';
-import { Path, Instance, Visitor, LeafListChildInstance } from './';
+import { Path, Instance, Visitor, LeafListChildInstance, LeafJSON } from './';
+
+export type LeafListJSON = LeafJSON[];
 
 export default class LeafListInstance implements Searchable {
   public model: LeafList;
@@ -17,15 +20,21 @@ export default class LeafListInstance implements Searchable {
   public isMatch: (path: Path) => boolean;
   public handleNoMatch: () => void;
 
-  constructor(model: LeafList, config: Element, parent?: Instance) {
+  constructor(model: LeafList, config: Element | LeafListJSON, parent?: Instance) {
     this.model = model;
     this.parent = parent;
     this.children = [];
 
-    this.add(config);
+    if (config instanceof Element) {
+      this.add(config);
+    } else {
+      config.forEach(child => {
+        this.add(child);
+      });
+    }
   }
 
-  public add(config: Element) {
+  public add(config: Element | LeafJSON) {
     this.children.push(new LeafListChildInstance(this.model, config, this));
   }
 
@@ -33,7 +42,7 @@ export default class LeafListInstance implements Searchable {
     return this.children.map(child => child.value);
   }
 
-  public toJSON(camelCase = false): object {
+  public toJSON(camelCase = false): { [name: string]: LeafListJSON } {
     return {
       [this.model.getName(camelCase)]: this.values
     };
