@@ -12,7 +12,8 @@
     "paths": {
       "*": ["*", "./types/*"]
     },
-    "noErrorTruncation": true
+    "noErrorTruncation": true,
+    "noUnusedLocals": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "src/**/__test__/*"]

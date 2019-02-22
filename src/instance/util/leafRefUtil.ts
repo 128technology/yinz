@@ -1,9 +1,7 @@
 import * as _ from 'lodash';
-import { Element } from 'libxmljs';
 
 import { Instance, ListChildInstance, LeafInstance } from '../';
-import Path, { isKeyedSegment, ISegmentKeys, IKeyed, ISegment } from '../Path';
-import { List, Model } from '../../model';
+import Path, { isKeyedSegment, ISegmentKeys } from '../Path';
 
 export function findBestCandidate(matchCandidates: Instance[], auxiliaryKeys: Map<string, string>) {
   for (const potentialMatch of matchCandidates) {

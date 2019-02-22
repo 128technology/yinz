@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import { Path, Instance, ListChildInstance } from '../';
+import { Path, ListChildInstance } from '../';
 import { Model } from '../../model';
 
 export default class Searchable {

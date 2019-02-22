@@ -15,7 +15,7 @@ export default class WithUnits {
     return this.definedUnits
       ? this.definedUnits
       : this.type instanceof DerivedType && this.type.units
-        ? this.type.units
-        : null;
+      ? this.type.units
+      : null;
   }
 }
