@@ -1,7 +1,5 @@
 import { Element } from 'libxmljs';
 
-import BuiltInType from '../../enum/BuiltInType';
-import ns from '../../util/ns';
 import { Identities } from '../../model';
 import { Type } from '../';
 import {
@@ -20,9 +18,7 @@ import {
   UnionType
 } from '../';
 
-interface IConstructable {
-  new (el: Element, identities?: Identities): Type;
-}
+type IConstructable = new (el: Element, identities?: Identities) => Type;
 
 function getTypeConstructor(typeName: string): IConstructable {
   const TYPE_REGISTRY = [

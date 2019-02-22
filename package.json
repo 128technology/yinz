@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "mocha --compilers ts:ts-node/register 'src/__tests__/setup.ts' 'src/**/__tests__/*.ts'",
-    "lint": "tslint --project . src/**/*.ts src/**/*-test.ts",
+    "lint": "tslint --project . 'src/**/*.ts' 'src/**/*-test.ts'",
     "validate": "npm run lint && npm run test",
     "clean": "rm -rf dist",
     "init": "mkdir dist",
@@ -41,12 +41,12 @@
     "chai": "^3.5.0",
     "chai-xml": "^0.3.1",
     "mocha": "^3.2.0",
-    "prettier": "^1.12.0",
+    "prettier": "^1.16.4",
     "sinon": "^6.1.2",
     "ts-node": "^5.0.1",
-    "tslint": "^5.9.1",
-    "tslint-config-prettier": "^1.10.0",
-    "tslint-plugin-prettier": "^1.2.0",
+    "tslint": "^5.12.1",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.3.3"
   },
   "publishConfig": {

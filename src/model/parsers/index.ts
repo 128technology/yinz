@@ -3,7 +3,7 @@ import { Element, Namespace } from 'libxmljs';
 
 import ns from '../../util/ns';
 import { OrderedBy, Visibility, Status } from '../../enum';
-import ContextNode, { enumValueOf } from '../../enum/ContextNode';
+import { enumValueOf } from '../../enum/ContextNode';
 import { tokens } from '../../util/xPathParser';
 import { isElement } from '../../util/xmlUtil';
 export { default as TypeParser } from '../../types/util/TypeParser';

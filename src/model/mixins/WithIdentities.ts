@@ -1,7 +1,5 @@
-import { Element } from 'libxmljs';
 import * as _ from 'lodash';
 
-import ns from '../../util/ns';
 import { Identities } from '../';
 import { Model } from '../';
 
