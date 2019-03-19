@@ -5,7 +5,7 @@ import applyMixins from '../util/applyMixins';
 import { List } from '../model';
 
 import { Searchable } from './mixins';
-import { Path, Instance, ListChildInstance, IListChildJSON, LeafInstance, Visitor } from './';
+import { Path, ListChildInstance, IListChildJSON, LeafInstance, Visitor, NoMatchHandler, Parent } from './';
 import { isKeyedSegment } from './Path';
 
 // Comma separated string of key values
@@ -15,7 +15,7 @@ export type ListJSON = IListChildJSON[];
 
 export default class ListInstance implements Searchable {
   public children: Map<Key, ListChildInstance>;
-  public parent: Instance;
+  public parent: Parent;
   public model: List;
 
   public getPath: () => Path;
@@ -23,7 +23,7 @@ export default class ListInstance implements Searchable {
   public isMatch: (path: Path) => boolean;
   public handleNoMatch: () => void;
 
-  constructor(model: List, config: Element | ListJSON, parent?: Instance) {
+  constructor(model: List, config: Element | ListJSON, parent?: Parent) {
     this.model = model;
     this.parent = parent;
     this.children = new Map();
@@ -67,7 +67,7 @@ export default class ListInstance implements Searchable {
     });
   }
 
-  public getInstance(path: Path): Instance {
+  public getInstance(path: Path, noMatchHandler: NoMatchHandler = this.handleNoMatch) {
     if (this.isTryingToMatchMe(path) && this.isMatch(path) && !isKeyedSegment(_.head(path))) {
       // Returns the entire list if no keys provided
       return this;
@@ -82,13 +82,13 @@ export default class ListInstance implements Searchable {
           const keyString = modelKeys.map(key => keyMap.get(key)).join(',');
 
           if (this.children.has(keyString)) {
-            return this.children.get(keyString).getInstance(_.tail(path));
+            return this.children.get(keyString).getInstance(_.tail(path), noMatchHandler);
           }
         }
       }
     }
 
-    this.handleNoMatch();
+    noMatchHandler(this, path);
   }
 
   public visit(visitor: Visitor) {

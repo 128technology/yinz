@@ -2,7 +2,7 @@ import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
 import { OrderedBy, Visibility, Status } from '../enum';
-import { LeafListInstance, Instance, LeafListJSON } from '../instance';
+import { LeafListInstance, LeafListJSON, ListChildInstance, ContainerInstance } from '../instance';
 import { Type } from '../types';
 
 import { ListLike, Statement, Typed, Whenable, WithIdentities, WithRegistry, WithUnits } from './mixins';
@@ -56,7 +56,7 @@ export default class LeafList implements ListLike, Statement, Typed, Whenable, W
     this.register(parentModel, this);
   }
 
-  public buildInstance(config: Element | LeafListJSON, parent?: Instance) {
+  public buildInstance(config: Element | LeafListJSON, parent?: ListChildInstance | ContainerInstance) {
     return new LeafListInstance(this, config, parent);
   }
 

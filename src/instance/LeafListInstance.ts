@@ -6,13 +6,13 @@ import { LeafList } from '../model';
 import { defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable } from './mixins';
-import { Path, Instance, Visitor, LeafListChildInstance, LeafJSON } from './';
+import { Path, Visitor, LeafListChildInstance, LeafJSON, NoMatchHandler, Parent } from './';
 
 export type LeafListJSON = LeafJSON[];
 
 export default class LeafListInstance implements Searchable {
   public model: LeafList;
-  public parent: Instance;
+  public parent: Parent;
   public children: LeafListChildInstance[];
 
   public getPath: () => Path;
@@ -20,7 +20,7 @@ export default class LeafListInstance implements Searchable {
   public isMatch: (path: Path) => boolean;
   public handleNoMatch: () => void;
 
-  constructor(model: LeafList, config: Element | LeafListJSON, parent?: Instance) {
+  constructor(model: LeafList, config: Element | LeafListJSON, parent?: Parent) {
     this.model = model;
     this.parent = parent;
     this.children = [];
@@ -56,12 +56,12 @@ export default class LeafListInstance implements Searchable {
     });
   }
 
-  public getInstance(path: Path) {
+  public getInstance(path: Path, noMatchHandler: NoMatchHandler = this.handleNoMatch) {
     if (this.isTryingToMatchMe(path) && this.isMatch(path)) {
       return this;
     }
 
-    this.handleNoMatch();
+    noMatchHandler(this, path);
   }
 
   public visit(visitor: Visitor) {

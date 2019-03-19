@@ -1,9 +1,15 @@
-import { Element, parseXmlString } from 'libxmljs';
+import { Element } from 'libxmljs';
+import * as _ from 'lodash';
 
 import DataModel from '../../model';
 import Path, { isKeyedSegment, PathSegment } from '../Path';
+import { Instance, LeafInstance, ContainerInstance, LeafListChildInstance, ListChildInstance } from '../';
 
 export * from './leafRefUtil';
+
+function cleanUp(el: Element) {
+  el.remove();
+}
 
 export function getPathXPath(path: Path) {
   const tail = path.map(segment => getSegmentXPath(segment)).join('/');
@@ -22,37 +28,48 @@ export function getSegmentXPath(segment: PathSegment) {
   return `*[local-name()='${name}']${keySelector}`;
 }
 
-export function addEmptyTree(path: Path, model: DataModel, instance: Element): Element {
-  const instanceCopy = instance.clone();
+export function addEmptyTree(remainingPath: Path, model: DataModel, closestAncestor: Instance) {
+  let emptyXmlRoot: Element | undefined;
+  let modelPath: string | undefined;
+  let closestXml: Element | undefined;
+  if (
+    closestAncestor instanceof LeafInstance ||
+    closestAncestor instanceof LeafListChildInstance ||
+    closestAncestor instanceof ListChildInstance ||
+    closestAncestor instanceof ContainerInstance
+  ) {
+    closestXml = closestAncestor.config;
+    modelPath = closestAncestor.model.path;
+  } else {
+    closestXml = closestAncestor.parent.config!;
+    modelPath = closestAncestor.parent.model.path;
+  }
 
-  let walkRef = instanceCopy;
-  let modelPath = '';
-  path.forEach((segment, i) => {
+  let walkRef = closestXml;
+  remainingPath.forEach((segment, i) => {
     const { name } = segment;
-    modelPath = `${modelPath}${i > 0 ? '.' : ''}${name}`;
+    modelPath = `${modelPath}.${name}`;
 
-    const match = walkRef.get(getSegmentXPath(segment));
-    if (match) {
-      walkRef = match;
-    } else {
-      const pathModel = model.getModelForPath(modelPath);
-      const [prefix, href] = pathModel.ns;
-      const newNode = walkRef.node(name);
-      newNode.namespace(prefix, href);
+    const pathModel = model.getModelForPath(modelPath);
+    const [prefix, href] = pathModel.ns;
+    const newNode = walkRef.node(name);
+    newNode.namespace(prefix, href);
 
-      if (isKeyedSegment(segment)) {
-        // Assuming that the keys have the same NS as the parent, this
-        // SHOULD always hold.
-        segment.keys.forEach(({ key, value }) => {
-          newNode.node(key, value).namespace(prefix, href);
-        });
-      }
-
-      walkRef = newNode;
+    if (isKeyedSegment(segment)) {
+      // Assuming that the keys have the same NS as the parent, this
+      // SHOULD always hold.
+      segment.keys.forEach(({ key, value }) => {
+        newNode.node(key, value).namespace(prefix, href);
+      });
     }
+
+    if (i === 0) {
+      emptyXmlRoot = newNode;
+    }
+    walkRef = newNode;
   });
 
-  return parseXmlString(instanceCopy.toString()).root();
+  return { cleanUpHiddenTree: _.partial(cleanUp, emptyXmlRoot), contextEl: walkRef };
 }
 
 export function getFieldIdFromParentAxis(element: Element) {

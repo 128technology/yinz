@@ -2,7 +2,7 @@ import { Element } from 'libxmljs';
 import * as _ from 'lodash';
 
 import applyMixins from '../util/applyMixins';
-import { ContainerInstance, Instance, IContainerJSON } from '../instance';
+import { ContainerInstance, Parent, IContainerJSON } from '../instance';
 import { Visibility, Status } from '../enum';
 
 import { PresenceParser } from './parsers';
@@ -79,7 +79,7 @@ export default class Container implements Statement, Whenable, WithRegistry {
     return this.children;
   }
 
-  public buildInstance(config: Element | IContainerJSON, parent?: Instance) {
+  public buildInstance(config: Element | IContainerJSON, parent?: Parent) {
     return new ContainerInstance(this, config, parent);
   }
 

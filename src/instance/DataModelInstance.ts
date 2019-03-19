@@ -1,4 +1,5 @@
 import { Element, Document } from 'libxmljs';
+import * as _ from 'lodash';
 
 import { ContextNode } from '../enum';
 import { DerivedType, LeafRefType } from '../types';
@@ -7,14 +8,22 @@ import { isElement } from '../util/xmlUtil';
 
 import Path from './Path';
 import Instance from './Instance';
-import { ContainerInstance, LeafInstance, Visitor, IContainerJSON, LeafListChildInstance, ListChildInstance } from './';
 import {
-  addEmptyTree,
+  ContainerInstance,
+  LeafInstance,
+  Visitor,
+  IContainerJSON,
+  LeafListChildInstance,
+  ListChildInstance,
+  NoMatchHandler
+} from './';
+import {
   getPathXPath,
   getFieldIdFromParentAxis,
   applyConditionToPath,
   buildAuxiliaryKeyMap,
-  findBestCandidate
+  findBestCandidate,
+  addEmptyTree
 } from './util';
 
 export default class DataModelInstance {
@@ -103,84 +112,74 @@ export default class DataModelInstance {
       return true;
     }
 
-    const xPath = getPathXPath(path);
+    const { element, cleanUp } = this.getElementForPath(path);
 
-    let exists = true;
     try {
-      this.getInstance(path);
-    } catch (e) {
-      exists = false;
-    }
+      let modelRoot = model;
+      let instanceRoot = element;
+      while (modelRoot.parentModel) {
+        if (modelRoot.when) {
+          for (const when of modelRoot.when) {
+            const { condition, context } = when;
+            const contextNode =
+              context === ContextNode.parent || modelRoot instanceof Choice ? instanceRoot.parent() : instanceRoot;
+            const result = contextNode.get(condition, this.model.namespaces);
 
-    let instance = this.rawInstance;
-    if (!exists) {
-      instance = addEmptyTree(path, this.model, instance);
-    }
-
-    let instanceRoot = instance.get(xPath);
-    let modelRoot = model;
-    while (modelRoot.parentModel) {
-      if (modelRoot.when) {
-        for (const when of modelRoot.when) {
-          const { condition, context } = when;
-          const contextNode =
-            context === ContextNode.parent || modelRoot instanceof Choice ? instanceRoot.parent() : instanceRoot;
-          const result = contextNode.get(condition, this.model.namespaces);
-
-          if (!result) {
-            return false;
+            if (!result) {
+              cleanUp();
+              return false;
+            }
           }
         }
+
+        modelRoot = modelRoot.parentModel;
+        instanceRoot = instanceRoot.parent() as Element;
       }
 
-      modelRoot = modelRoot.parentModel;
-      instanceRoot = instanceRoot.parent() as Element;
+      cleanUp();
+      return true;
+    } catch (e) {
+      cleanUp();
+      throw e;
     }
-
-    return true;
   }
 
   public evaluateXPath(path: Path, xPath: string) {
     const targetXPath = getPathXPath(path);
 
-    let exists = true;
+    const { element, cleanUp } = this.getElementForPath(path);
+
     try {
-      this.getInstance(path);
+      const result = element
+        .get(targetXPath)
+        .find(xPath, this.model.namespaces)
+        .filter(isElement);
+
+      cleanUp();
+      return result;
     } catch (e) {
-      exists = false;
+      cleanUp();
+      throw e;
     }
-
-    let instance = this.rawInstance;
-    if (!exists) {
-      instance = addEmptyTree(path, this.model, instance);
-    }
-
-    return instance
-      .get(targetXPath)
-      .find(xPath, this.model.namespaces)
-      .filter(isElement);
   }
 
   public evaluateLeafRef(path: Path) {
     const model = this.model.getModelForPath(path.map(({ name }) => name).join('.'));
     if (model instanceof Leaf && model.getResolvedType() instanceof LeafRefType) {
       const leafRefPath = (model.getResolvedType() as LeafRefType).path;
-      const xPath = getPathXPath(path);
 
-      let exists = true;
+      const { element, cleanUp } = this.getElementForPath(path);
+
       try {
-        this.getInstance(path);
+        const result = (element.find(leafRefPath, this.model.namespaces) || [])
+          .filter(isElement)
+          .map(refEl => refEl.text());
+        cleanUp();
+        return result;
       } catch (e) {
-        exists = false;
+        cleanUp();
+        throw e;
       }
-
-      let instance = this.rawInstance;
-      if (!exists) {
-        instance = addEmptyTree(path, this.model, instance);
-      }
-
-      const contextNode = instance.get(xPath);
-      return (contextNode.find(leafRefPath, this.model.namespaces) || []).filter(isElement).map(refEl => refEl.text());
     } else {
       throw new Error('Cannot evaluate leaf reference for a path that does not correspond to a leafref.');
     }
@@ -194,30 +193,23 @@ export default class DataModelInstance {
 
       if (type instanceof DerivedType && type.suggestionRefs && type.suggestionRefs.length > 0) {
         const paths = type.suggestionRefs;
-        const xPath = getPathXPath(path);
+        const { element, cleanUp } = this.getElementForPath(path);
 
-        let exists = true;
         try {
-          this.getInstance(path);
+          const suggestions = paths.reduce((acc, suggestionPath) => {
+            (element.find(suggestionPath, this.model.namespaces) || []).filter(isElement).forEach(refEl => {
+              acc.add(refEl.text());
+            });
+
+            return acc;
+          }, new Set());
+
+          cleanUp();
+          return Array.from(suggestions.values());
         } catch (e) {
-          exists = false;
+          cleanUp();
+          throw e;
         }
-
-        let instance = this.rawInstance;
-        if (!exists) {
-          instance = addEmptyTree(path, this.model, instance);
-        }
-        const contextNode = instance.get(xPath);
-
-        const suggestions = paths.reduce((acc, suggestionPath) => {
-          (contextNode.find(suggestionPath, this.model.namespaces) || []).filter(isElement).forEach(refEl => {
-            acc.add(refEl.text());
-          });
-
-          return acc;
-        }, new Set());
-
-        return Array.from(suggestions.values());
       } else {
         throw new Error('Cannot evaluate suggestion reference for a path that does not have suggestion references.');
       }
@@ -251,12 +243,12 @@ export default class DataModelInstance {
     return this.getInstance(path.reverse());
   }
 
-  public getInstance(path: Path) {
+  public getInstance(path: Path, noMatchHandler?: NoMatchHandler) {
     if (path.length > 0) {
       const firstSegmentName = path[0].name;
 
       if (this.root.has(firstSegmentName)) {
-        return this.root.get(firstSegmentName).getInstance(path);
+        return this.root.get(firstSegmentName).getInstance(path, noMatchHandler);
       } else {
         throw new Error(`Path must start with ${[...this.root.keys()][0]}.`);
       }
@@ -269,5 +261,36 @@ export default class DataModelInstance {
     Array.from(this.root.values()).forEach(child => {
       child.visit(visitor);
     });
+  }
+
+  private getElementForPath(path: Path) {
+    let requestedElement: Element | undefined;
+    let cleanUp = _.noop;
+    let closestAncestor: Instance | undefined;
+    let remainingPath: Path | undefined;
+
+    const foundInstance = this.getInstance(path, (stopInstance, remaining) => {
+      closestAncestor = stopInstance;
+      remainingPath = remaining;
+    });
+
+    if (!closestAncestor) {
+      // Found a direct match
+      if (
+        foundInstance instanceof LeafInstance ||
+        foundInstance instanceof ListChildInstance ||
+        foundInstance instanceof ContainerInstance
+      ) {
+        requestedElement = foundInstance.config;
+      } else {
+        throw new Error('Path must resolve to a leaf, a list child, or container.');
+      }
+    } else {
+      const { cleanUpHiddenTree, contextEl } = addEmptyTree(remainingPath, this.model, closestAncestor);
+      requestedElement = contextEl;
+      cleanUp = cleanUpHiddenTree;
+    }
+
+    return { element: requestedElement, cleanUp };
   }
 }
