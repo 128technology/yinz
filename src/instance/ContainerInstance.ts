@@ -6,7 +6,18 @@ import { Container, Leaf, LeafList, List } from '../model';
 import { isElement, defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
-import { Path, Instance, ListInstance, LeafListInstance, Visitor, LeafJSON, LeafListJSON, ListJSON } from './';
+import {
+  Path,
+  Instance,
+  ListInstance,
+  LeafListInstance,
+  Visitor,
+  LeafJSON,
+  LeafListJSON,
+  ListJSON,
+  NoMatchHandler,
+  Parent
+} from './';
 
 export interface IContainerJSON {
   [childName: string]: LeafJSON | LeafListJSON | ListJSON | IContainerJSON;
@@ -15,7 +26,7 @@ export interface IContainerJSON {
 export default class ContainerInstance implements Searchable, WithAttributes {
   public model: Container;
   public config: Element;
-  public parent: Instance;
+  public parent: Parent;
   public children: Map<string, Instance>;
   public activeChoices: Map<string, string>;
 
@@ -25,7 +36,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public isMatch: (path: Path) => boolean;
   public handleNoMatch: () => void;
 
-  constructor(model: Container, config: Element | IContainerJSON, parent?: Instance) {
+  constructor(model: Container, config: Element | IContainerJSON, parent?: Parent) {
     this.model = model;
     this.parent = parent;
     this.children = new Map();
@@ -61,7 +72,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     });
   }
 
-  public getInstance(path: Path): Instance {
+  public getInstance(path: Path, noMatchHandler: NoMatchHandler = this.handleNoMatch): Instance {
     if (this.isTryingToMatchMe(path) && this.isMatch(path)) {
       return this;
     } else if (path.length > 1) {
@@ -69,11 +80,11 @@ export default class ContainerInstance implements Searchable, WithAttributes {
       const nextSegment = _.head(tail);
 
       if (this.children.has(nextSegment.name)) {
-        return this.children.get(nextSegment.name).getInstance(tail);
+        return this.children.get(nextSegment.name).getInstance(tail, noMatchHandler);
       }
     }
 
-    this.handleNoMatch();
+    noMatchHandler(this, _.tail(path));
   }
 
   public visit(visitor: Visitor) {

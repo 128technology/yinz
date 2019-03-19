@@ -16,7 +16,9 @@ import {
   LeafJSON,
   ListJSON,
   LeafListJSON,
-  IContainerJSON
+  IContainerJSON,
+  NoMatchHandler,
+  Parent
 } from './';
 
 export type ChoiceName = string;
@@ -33,7 +35,7 @@ export interface IListChildJSON {
 export default class ListChildInstance implements Searchable, WithAttributes {
   public model: List;
   public config: Element;
-  public parent: Instance;
+  public parent: Parent;
   public instance: Map<ChildName, Instance>;
   public activeChoices: Map<ChoiceName, SelectedCaseName>;
 
@@ -43,7 +45,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   public isMatch: (path: Path) => boolean;
   public handleNoMatch: () => void;
 
-  constructor(model: List, config: Element | IListChildJSON, parent: Instance) {
+  constructor(model: List, config: Element | IListChildJSON, parent: Parent) {
     this.model = model;
     this.parent = parent;
     this.instance = new Map();
@@ -137,17 +139,17 @@ export default class ListChildInstance implements Searchable, WithAttributes {
     });
   }
 
-  public getInstance(path: Path): Instance {
+  public getInstance(path: Path, noMatchHandler: NoMatchHandler = this.handleNoMatch): Instance {
     if (path.length === 0) {
       return this;
     } else {
       const nextSegment = _.head(path);
       if (this.instance.has(nextSegment.name)) {
-        return this.instance.get(nextSegment.name).getInstance(path);
+        return this.instance.get(nextSegment.name).getInstance(path, noMatchHandler);
       }
     }
 
-    this.handleNoMatch();
+    noMatchHandler(this, path);
   }
 
   public visit(visitor: Visitor) {

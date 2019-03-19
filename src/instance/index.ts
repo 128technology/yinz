@@ -9,6 +9,8 @@ import Instance from './Instance';
 import Path from './Path';
 
 export type Visitor = (instance: Instance | LeafListChildInstance) => void;
+export type NoMatchHandler = (instance: Instance, remainingPath: Path) => any;
+export type Parent = ListChildInstance | ContainerInstance;
 
 export default DataModelInstance;
 
