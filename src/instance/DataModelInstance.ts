@@ -15,7 +15,9 @@ import {
   IContainerJSON,
   LeafListChildInstance,
   ListChildInstance,
-  NoMatchHandler
+  NoMatchHandler,
+  ListInstance,
+  LeafListInstance
 } from './';
 import {
   getPathXPath,
@@ -282,8 +284,10 @@ export default class DataModelInstance {
         foundInstance instanceof ContainerInstance
       ) {
         requestedElement = foundInstance.config;
-      } else {
-        throw new Error('Path must resolve to a leaf, a list child, or container.');
+      } else if (foundInstance instanceof ListInstance) {
+        requestedElement = foundInstance.children.values().next().value.config;
+      } else if (foundInstance instanceof LeafListInstance) {
+        requestedElement = foundInstance.children[0].config;
       }
     } else {
       const { cleanUpHiddenTree, contextEl } = addEmptyTree(remainingPath, this.model, closestAncestor);
