@@ -1,6 +1,6 @@
 {
   "name": "@128technology/yinz",
-  "version": "4.2.4",
+  "version": "4.2.5",
   "description": "A module for injesting a YIN datamodel and handling instance data.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,7 +29,7 @@
   ],
   "dependencies": {
     "libxmljs": "^0.19.5",
-    "lodash": "^4.17.5"
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
     "@types/chai": "^4.0.1",
