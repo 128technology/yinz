@@ -616,6 +616,26 @@ describe('Data Model Instance', () => {
     });
   });
 
+  it('should evaluate a relative leafref from a key field', () => {
+    const dataModelInstance = getInstance('./data/instanceNonUniqueNetworkIntf.xml');
+    const leafRefPath = [
+      { name: 'authority' },
+      { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
+      { name: 'service-route', keys: [{ key: 'name', value: 'TestServiceRoute' }] },
+      {
+        keys: [
+          { key: 'node-name', value: 'XXX_FAKE_KEY_VALUE_XXX' },
+          { key: 'interface', value: 'XXX_FAKE_KEY_VALUE_XXX' }
+        ],
+        name: 'next-hop'
+      },
+      { name: 'node-name' }
+    ];
+
+    const result = dataModelInstance.evaluateLeafRef(leafRefPath);
+    expect(result).to.deep.equal(['TestNode1', 'TestNode2']);
+  });
+
   describe('SuggestionRef Evaluation', () => {
     it('should evaluate a suggestionref', () => {
       const dataModelInstance = getInstance('./data/instanceNonUniqueNetworkIntf.xml');

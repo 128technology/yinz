@@ -53,31 +53,34 @@ export function addEmptyTree(remainingPath: Path, model: DataModel, closestAnces
 
     const pathModel = model.getModelForPath(modelPath);
     const [prefix, href] = pathModel.ns;
-    const newNode = walkRef.node(name);
-    newNode.namespace(prefix, href);
+    walkRef = walkRef.node(name);
+    walkRef.namespace(prefix, href);
 
     if (i === 0) {
-      emptyXmlRoot = newNode;
+      emptyXmlRoot = walkRef;
     }
 
     if (isKeyedSegment(segment)) {
-      const keySet = new Set();
+      const keys = new Map<string, Element>();
 
       // Assuming that the keys have the same NS as the parent, this
       // SHOULD always hold.
       segment.keys.forEach(({ key, value }) => {
-        keySet.add(key);
-        newNode.node(key, value).namespace(prefix, href);
+        const newKey = walkRef.node(key, value);
+        newKey.namespace(prefix, href);
+        keys.set(key, newKey);
       });
 
       // If next segment is a key, skip it since we created it above.
       const nextSegment = remainingPath[i + 1];
-      if (nextSegment && keySet.has(nextSegment.name)) {
-        i += 1;
+      if (nextSegment) {
+        const matchedKey = keys.get(nextSegment.name);
+        if (matchedKey) {
+          walkRef = matchedKey;
+          i += 1;
+        }
       }
     }
-
-    walkRef = newNode;
   }
 
   return { cleanUpHiddenTree: _.partial(cleanUp, emptyXmlRoot), contextEl: walkRef };
