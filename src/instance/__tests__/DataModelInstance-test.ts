@@ -649,5 +649,18 @@ describe('Data Model Instance', () => {
       const result = dataModelInstance.evaluateSuggestionRef(leafRefPath);
       expect(result).to.deep.equal(['Authority128', 'foreignAuthority']);
     });
+
+    it('should handle a circular suggestionref', () => {
+      const dataModelInstance = getInstance('./data/instanceCircularSuggestionRef.xml');
+      const leafRefPath = [
+        { name: 'authority' },
+        { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
+        { name: 'peer', keys: [{ key: 'name', value: 'bar' }] },
+        { name: 'authority-name' }
+      ];
+
+      const result = dataModelInstance.evaluateSuggestionRef(leafRefPath);
+      expect(result).to.deep.equal(['Authority128', 'foreignAuthority']);
+    });
   });
 });
