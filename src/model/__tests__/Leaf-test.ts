@@ -169,6 +169,7 @@ describe('Leaf Model', () => {
           ]
         },
         default: 'ordered',
+        description: 'A type for defining priorities for vector use',
         type: 't128ext:vector-priority'
       };
 
@@ -193,6 +194,7 @@ describe('Leaf Model', () => {
           pattern: '([a-zA-Z0-9]([a-zA-Z0-9\\-_]){0,61})?[a-zA-Z0-9]',
           type: 'string'
         },
+        description: 'A string identifier for network neighborhood.',
         suggestionRefs: ['/t128:config/authy:authority/authy:security/authy:name'],
         type: 't128ext:neighborhood-id'
       };

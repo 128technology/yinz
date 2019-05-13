@@ -106,6 +106,18 @@ describe('Derived Type', () => {
     expect(type.type).to.equal('t128ext:name-id');
   });
 
+  it('should parse description', () => {
+    const type = new DerivedType(typeEl);
+
+    expect(type.description).to.equal('A string identifier.');
+  });
+
+  it('should parse no description', () => {
+    const type = new DerivedType(nestedDerivedTypeMultipleDefault);
+
+    expect(type.description).to.equal(undefined);
+  });
+
   it('should parse default', () => {
     const type = new DerivedType(typeEl);
 
