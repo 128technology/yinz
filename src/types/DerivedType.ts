@@ -19,6 +19,7 @@ export default class DerivedType implements Named, Traversable {
   public type: string;
   public default: string;
   public units: string;
+  public description?: string;
   public baseType: Type;
   public suggestionRefs: string[];
 
@@ -31,6 +32,7 @@ export default class DerivedType implements Named, Traversable {
 
     this.parseBaseType(el, typeDefEl, identities);
     this.parseUnits(typeDefEl);
+    this.parseDescription(typeDefEl);
     this.parseDefault(typeDefEl);
     this.parseSuggestionRef(typeDefEl);
   }
@@ -54,6 +56,14 @@ export default class DerivedType implements Named, Traversable {
 
     if (unitsEl) {
       this.units = unitsEl.attr('name').value();
+    }
+  }
+
+  public parseDescription(typeDefEl: Element) {
+    const descriptionEl = typeDefEl.get('./yin:description/yin:text', ns);
+
+    if (descriptionEl) {
+      this.description = descriptionEl.text();
     }
   }
 
