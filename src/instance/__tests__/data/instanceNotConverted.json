@@ -1,0 +1,503 @@
+{
+  "authority": {
+    "name": "Authority128",
+    "sessionType": [
+      {
+        "name": "HTTP",
+        "serviceClass": "Standard",
+        "transport": [
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "80"
+              },
+              {
+                "startPort": "8080"
+              }
+            ]
+          }
+        ],
+        "timeout": "1900000"
+      },
+      {
+        "name": "HTTPS",
+        "serviceClass": "Standard",
+        "transport": [
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "443"
+              }
+            ]
+          }
+        ],
+        "timeout": "1900000"
+      },
+      {
+        "name": "FTP",
+        "serviceClass": "HighThroughputData",
+        "transport": [
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "20",
+                "endPort": "21"
+              }
+            ]
+          }
+        ],
+        "timeout": "1900000"
+      },
+      {
+        "name": "SSH",
+        "serviceClass": "OAM",
+        "transport": [
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "22"
+              }
+            ]
+          }
+        ],
+        "timeout": "1900000"
+      },
+      {
+        "name": "Telnet",
+        "serviceClass": "OAM",
+        "transport": [
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "23"
+              }
+            ]
+          }
+        ],
+        "timeout": "1900000"
+      },
+      {
+        "name": "SMTP",
+        "serviceClass": "HighThroughputData",
+        "transport": [
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "25"
+              }
+            ]
+          }
+        ],
+        "timeout": "10000"
+      },
+      {
+        "name": "DNS",
+        "serviceClass": "NetworkControl",
+        "transport": [
+          {
+            "protocol": "udp",
+            "portRange": [
+              {
+                "startPort": "53"
+              }
+            ]
+          }
+        ],
+        "timeout": "5000"
+      },
+      {
+        "name": "RTP",
+        "serviceClass": "MultimediaStreaming",
+        "transport": [
+          {
+            "protocol": "udp",
+            "portRange": [
+              {
+                "startPort": "5004",
+                "endPort": "5005"
+              }
+            ]
+          }
+        ],
+        "timeout": "180000"
+      },
+      {
+        "name": "SIP",
+        "serviceClass": "Telephony",
+        "transport": [
+          {
+            "protocol": "udp",
+            "portRange": [
+              {
+                "startPort": "5060"
+              }
+            ]
+          },
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "5060"
+              }
+            ]
+          }
+        ],
+        "timeout": "3600000"
+      },
+      {
+        "name": "SIPS",
+        "serviceClass": "Telephony",
+        "transport": [
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "5061"
+              }
+            ]
+          }
+        ],
+        "timeout": "3600000"
+      },
+      {
+        "name": "TFTP",
+        "serviceClass": "HighThroughputData",
+        "transport": [
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "69"
+              }
+            ]
+          }
+        ],
+        "timeout": "1900000"
+      },
+      {
+        "name": "SFTP",
+        "serviceClass": "HighThroughputData",
+        "transport": [
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "989",
+                "endPort": "990"
+              }
+            ]
+          }
+        ],
+        "timeout": "1900000"
+      },
+      {
+        "name": "POP3",
+        "serviceClass": "HighThroughputData",
+        "transport": [
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "110"
+              },
+              {
+                "startPort": "995"
+              }
+            ]
+          }
+        ],
+        "timeout": "10000"
+      },
+      {
+        "name": "SNMP",
+        "serviceClass": "OAM",
+        "transport": [
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "161",
+                "endPort": "162"
+              }
+            ]
+          }
+        ],
+        "timeout": "10000"
+      },
+      {
+        "name": "BGP",
+        "serviceClass": "NetworkControl",
+        "transport": [
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "179"
+              }
+            ]
+          }
+        ],
+        "timeout": "1900000"
+      },
+      {
+        "name": "IPSEC",
+        "serviceClass": "Standard",
+        "transport": [
+          {
+            "protocol": "udp",
+            "portRange": [
+              {
+                "startPort": "1293"
+              }
+            ]
+          },
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "1293"
+              }
+            ]
+          }
+        ],
+        "timeout": "1900000"
+      },
+      {
+        "name": "IPSEC-NAT",
+        "serviceClass": "Standard",
+        "transport": [
+          {
+            "protocol": "udp",
+            "portRange": [
+              {
+                "startPort": "4500"
+              }
+            ]
+          },
+          {
+            "protocol": "tcp",
+            "portRange": [
+              {
+                "startPort": "4500"
+              }
+            ]
+          }
+        ],
+        "timeout": "1900000"
+      }
+    ],
+    "serviceClass": [
+      {
+        "name": "Standard",
+        "priority": "0",
+        "dscp": "0",
+        "rateLimit": "false",
+        "maxFlowRate": "0",
+        "maxFlowBurst": "0"
+      },
+      {
+        "name": "NetworkControl",
+        "priority": "0",
+        "dscp": "48",
+        "rateLimit": "false",
+        "maxFlowRate": "0",
+        "maxFlowBurst": "0"
+      },
+      {
+        "name": "Telephony",
+        "priority": "0",
+        "dscp": "46",
+        "rateLimit": "false",
+        "maxFlowRate": "0",
+        "maxFlowBurst": "0"
+      },
+      {
+        "name": "Signalling",
+        "priority": "0",
+        "dscp": "40",
+        "rateLimit": "false",
+        "maxFlowRate": "0",
+        "maxFlowBurst": "0"
+      },
+      {
+        "name": "MultimediaConferencing",
+        "priority": "0",
+        "dscp": "34",
+        "rateLimit": "false",
+        "maxFlowRate": "0",
+        "maxFlowBurst": "0"
+      },
+      {
+        "name": "RealTimeInteractive",
+        "priority": "0",
+        "dscp": "32",
+        "rateLimit": "false",
+        "maxFlowRate": "0",
+        "maxFlowBurst": "0"
+      },
+      {
+        "name": "MultimediaStreaming",
+        "priority": "0",
+        "dscp": "26",
+        "rateLimit": "false",
+        "maxFlowRate": "0",
+        "maxFlowBurst": "0"
+      },
+      {
+        "name": "BroadcastVideo",
+        "priority": "0",
+        "dscp": "24",
+        "rateLimit": "false",
+        "maxFlowRate": "0",
+        "maxFlowBurst": "0"
+      },
+      {
+        "name": "LowLatencyData",
+        "priority": "0",
+        "dscp": "18",
+        "rateLimit": "false",
+        "maxFlowRate": "0",
+        "maxFlowBurst": "0"
+      },
+      {
+        "name": "OAM",
+        "priority": "0",
+        "dscp": "16",
+        "rateLimit": "false",
+        "maxFlowRate": "0",
+        "maxFlowBurst": "0"
+      },
+      {
+        "name": "HighThroughputData",
+        "priority": "0",
+        "dscp": "10",
+        "rateLimit": "false",
+        "maxFlowRate": "0",
+        "maxFlowBurst": "0"
+      },
+      {
+        "name": "LowPriorityData",
+        "priority": "0",
+        "dscp": "8",
+        "rateLimit": "false",
+        "maxFlowRate": "0",
+        "maxFlowBurst": "0"
+      }
+    ],
+    "security": [
+      {
+        "name": "internal",
+        "description": "inter-node security",
+        "encryptionCipher": "aes-cbc-256",
+        "encryptionKey": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
+        "encryptionIv": "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+        "encrypt": "true",
+        "hmac": "true",
+        "hmacCipher": "sha256-128",
+        "hmacKey": "4a656665",
+        "adaptiveEncryption": "true"
+      }
+    ],
+    "router": [
+      {
+        "name": "Fabric128",
+        "interNodeSecurity": "internal",
+        "group": ["group1", "group2"],
+        "node": [
+          {
+            "name": "TestNode1",
+            "role": "combo",
+            "id": "1",
+            "enabled": "true"
+          },
+          {
+            "enabled": "true",
+            "id": "2",
+            "name": "TestNode2",
+            "role": "combo"
+          }
+        ],
+        "id": "00000000-0000-0000-0000-000000000000",
+        "system": {
+          "services": {
+            "webserver": {
+              "server": [
+                {
+                  "nodeName": "TestNode2",
+                  "ipAddress": "0.0.0.0"
+                }
+              ],
+              "enabled": "true",
+              "port": "443",
+              "ipAddress": "127.0.0.1"
+            },
+            "epm": {
+              "ipAddress": "127.0.0.1",
+              "port": "14444"
+            },
+            "pdm": {
+              "ipAddress": "127.0.0.1",
+              "port": "830"
+            },
+            "routingEngineListener": {
+              "port": "2620"
+            },
+            "routingAgentListener": {
+              "ipAddress": "127.0.0.1",
+              "port": "13333"
+            },
+            "systemServicesCoordinator": {
+              "ipAddress": "127.0.0.1",
+              "port": "12222"
+            },
+            "runtimeDataStore": {
+              "ipAddress": "127.0.0.1",
+              "port": "6379"
+            }
+          },
+          "logLevel": "trace",
+          "inactivityTimer": "900",
+          "syslog": {
+            "severity": "info",
+            "facility": "local0"
+          },
+          "metrics": {
+            "samplePeriod": "5"
+          },
+          "audit": {
+            "traffic": {
+              "enabled": "false"
+            },
+            "administration": {
+              "enabled": "false"
+            },
+            "system": {
+              "enabled": "false"
+            }
+          }
+        },
+        "reverseFlowEnforcement": "none",
+        "bfd": {
+          "state": "enabled",
+          "desiredTxInterval": "1000",
+          "requiredMinRxInterval": "500",
+          "requiredMinEchoInterval": "1000",
+          "authenticationType": "sha256",
+          "multiplier": "3",
+          "linkTestInterval": "10",
+          "linkTestLength": "20"
+        },
+        "entitlement": {
+          "maxBandwidth": "0"
+        }
+      }
+    ],
+    "rekeyInterval": "never"
+  }
+}

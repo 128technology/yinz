@@ -122,9 +122,9 @@ export default class ListChildInstance implements Searchable, WithAttributes {
       });
   }
 
-  public toJSON(camelCase = false): IListChildJSON {
+  public toJSON(camelCase = false, convert = true): IListChildJSON {
     return [...this.instance.values()]
-      .map(field => field.toJSON(camelCase))
+      .map(field => field.toJSON(camelCase, convert))
       .reduce((acc, field) => Object.assign(acc, field), {});
   }
 

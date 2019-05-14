@@ -60,8 +60,8 @@ export default class DataModelInstance {
     }
   }
 
-  public toJSON(camelCase = false): object {
-    return [...this.root.values()][0].toJSON(camelCase);
+  public toJSON(camelCase = false, convert = true): object {
+    return [...this.root.values()][0].toJSON(camelCase, convert);
   }
 
   public toXML(rootEl?: Element) {
