@@ -39,9 +39,9 @@ export default class LeafInstance implements Searchable, WithAttributes {
     return this.model.type.serialize(this.value);
   }
 
-  public toJSON(camelCase = false): { [name: string]: LeafJSON } {
+  public toJSON(camelCase = false, convert = true): { [name: string]: LeafJSON } {
     return {
-      [this.model.getName(camelCase)]: this.getConvertedValue()
+      [this.model.getName(camelCase)]: convert ? this.getConvertedValue() : this.value
     };
   }
 

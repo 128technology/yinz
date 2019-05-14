@@ -42,9 +42,13 @@ export default class LeafListInstance implements Searchable {
     return this.children.map(child => child.value);
   }
 
-  public toJSON(camelCase = false): { [name: string]: LeafListJSON } {
+  public get rawValues() {
+    return this.children.map(child => child.rawValue);
+  }
+
+  public toJSON(camelCase = false, convert = true): { [name: string]: LeafListJSON } {
     return {
-      [this.model.getName(camelCase)]: this.values
+      [this.model.getName(camelCase)]: convert ? this.values : this.rawValues
     };
   }
 

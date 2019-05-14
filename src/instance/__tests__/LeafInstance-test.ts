@@ -38,6 +38,14 @@ describe('Leaf Instance', () => {
     });
   });
 
+  it('should serialize to JSON without converting type', () => {
+    const instance = new LeafInstance(leafModel, mockConfigXML);
+
+    expect(instance.toJSON(false, false)).to.deep.equal({
+      'qp-value': '5'
+    });
+  });
+
   it('should serialize to XML', () => {
     const document = new Document();
     const el = document.node('mockEl');

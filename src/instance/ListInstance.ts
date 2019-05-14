@@ -55,9 +55,9 @@ export default class ListInstance implements Searchable {
     this.children.set(keys, newChild);
   }
 
-  public toJSON(camelCase = false): { [name: string]: ListJSON } {
+  public toJSON(camelCase = false, convert = true): { [name: string]: ListJSON } {
     return {
-      [this.model.getName(camelCase)]: [...this.children.values()].map(child => child.toJSON(camelCase))
+      [this.model.getName(camelCase)]: [...this.children.values()].map(child => child.toJSON(camelCase, convert))
     };
   }
 
