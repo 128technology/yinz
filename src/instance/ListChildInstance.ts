@@ -67,30 +67,33 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   }
 
   public injestConfigJSON(config: IListChildJSON) {
-    for (const childName in config) {
-      if (this.model.hasChild(childName)) {
-        const child = config[childName];
-        const childModel = this.model.getChild(childName);
+    for (const rawChildName in config) {
+      if (config.hasOwnProperty(rawChildName)) {
+        const childName = this.model.hasChild(rawChildName) ? rawChildName : _.kebabCase(rawChildName);
+        if (this.model.hasChild(childName)) {
+          const child = config[rawChildName];
+          const childModel = this.model.getChild(childName);
 
-        if (childModel.choiceCase) {
-          this.activeChoices.set(childModel.choiceCase.parentChoice.name, childModel.choiceCase.name);
+          if (childModel.choiceCase) {
+            this.activeChoices.set(childModel.choiceCase.parentChoice.name, childModel.choiceCase.name);
+          }
+
+          let instance: Instance;
+
+          if (childModel instanceof Leaf) {
+            instance = childModel.buildInstance(child as LeafJSON, this);
+          } else if (childModel instanceof LeafList) {
+            instance = childModel.buildInstance(child as LeafListJSON, this);
+          } else if (childModel instanceof Container) {
+            instance = childModel.buildInstance(child as IContainerJSON, this);
+          } else if (childModel instanceof List) {
+            instance = childModel.buildInstance(child as ListJSON, this);
+          } else {
+            throw new Error(`Unknown child of type ${typeof childModel} encountered.`);
+          }
+
+          this.instance.set(childName, instance);
         }
-
-        let instance: Instance;
-
-        if (childModel instanceof Leaf) {
-          instance = childModel.buildInstance(child as LeafJSON, this);
-        } else if (childModel instanceof LeafList) {
-          instance = childModel.buildInstance(child as LeafListJSON, this);
-        } else if (childModel instanceof Container) {
-          instance = childModel.buildInstance(child as IContainerJSON, this);
-        } else if (childModel instanceof List) {
-          instance = childModel.buildInstance(child as ListJSON, this);
-        } else {
-          throw new Error(`Unknown child of type ${typeof childModel} encountered.`);
-        }
-
-        this.instance.set(childName, instance);
       }
     }
   }

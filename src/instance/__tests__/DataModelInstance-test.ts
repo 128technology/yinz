@@ -61,6 +61,13 @@ describe('Data Model Instance', () => {
       expect(instanceFromJSON.toJSON()).to.deep.equal(instanceRawJSON);
     });
 
+    it('should be constructable from camelCased JSON', () => {
+      const instanceRawJSON = readJSON('./data/instanceCamelCase.json');
+      const instanceFromJSON = new DataModelInstance(dataModel, instanceRawJSON);
+
+      expect(instanceFromJSON.toJSON(true)).to.deep.equal(instanceRawJSON);
+    });
+
     it('should serialize an instance to JSON', () => {
       const instanceJSON = readJSON('./data/instance.json');
       expect(dataModelInstance.toJSON()).to.deep.equal(instanceJSON);
