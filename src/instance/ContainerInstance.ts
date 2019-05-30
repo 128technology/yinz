@@ -50,9 +50,9 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     }
   }
 
-  public toJSON(camelCase = false, convert = true): IContainerJSON {
+  public toJSON(camelCase = false, convert = true, shouldSkip = (ins: Instance) => false): IContainerJSON {
     const containerInner = [...this.children.values()].reduce(
-      (acc, child) => Object.assign(acc, child.toJSON(camelCase, convert)),
+      (acc, child) => Object.assign(acc, child.toJSON(camelCase, convert, shouldSkip)),
       {}
     );
 

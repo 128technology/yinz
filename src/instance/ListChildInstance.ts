@@ -125,9 +125,13 @@ export default class ListChildInstance implements Searchable, WithAttributes {
       });
   }
 
-  public toJSON(camelCase = false, convert = true): IListChildJSON {
+  public toJSON(camelCase = false, convert = true, shouldSkip = (ins: Instance) => false): IListChildJSON {
     return [...this.instance.values()]
-      .map(field => field.toJSON(camelCase, convert))
+      .map(field =>
+        field instanceof LeafInstance || field instanceof LeafListInstance
+          ? field.toJSON(camelCase, convert)
+          : field.toJSON(camelCase, convert, shouldSkip)
+      )
       .reduce((acc, field) => Object.assign(acc, field), {});
   }
 

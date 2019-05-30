@@ -5,7 +5,7 @@ import applyMixins from '../util/applyMixins';
 import { List } from '../model';
 
 import { Searchable } from './mixins';
-import { Path, ListChildInstance, IListChildJSON, LeafInstance, Visitor, NoMatchHandler, Parent } from './';
+import { Path, ListChildInstance, IListChildJSON, LeafInstance, Visitor, NoMatchHandler, Parent, Instance } from './';
 import { isKeyedSegment } from './Path';
 
 // Comma separated string of key values
@@ -55,9 +55,19 @@ export default class ListInstance implements Searchable {
     this.children.set(keys, newChild);
   }
 
-  public toJSON(camelCase = false, convert = true): { [name: string]: ListJSON } {
+  public toJSON(
+    camelCase = false,
+    convert = true,
+    shouldSkip = (ins: Instance) => false
+  ): { [name: string]: ListJSON } {
+    const value = [];
+    for (const child of this.children.values()) {
+      if (!shouldSkip(child)) {
+        value.push(child.toJSON(camelCase, convert));
+      }
+    }
     return {
-      [this.model.getName(camelCase)]: [...this.children.values()].map(child => child.toJSON(camelCase, convert))
+      [this.model.getName(camelCase)]: value
     };
   }
 
