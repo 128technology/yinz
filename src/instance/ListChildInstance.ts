@@ -18,7 +18,8 @@ import {
   LeafListJSON,
   IContainerJSON,
   NoMatchHandler,
-  Parent
+  Parent,
+  ShouldSkip
 } from './';
 
 export type ChoiceName = string;
@@ -125,7 +126,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
       });
   }
 
-  public toJSON(camelCase = false, convert = true, shouldSkip = (ins: Instance) => false): IListChildJSON {
+  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): IListChildJSON {
     return [...this.instance.values()]
       .map(field =>
         field instanceof LeafInstance || field instanceof LeafListInstance

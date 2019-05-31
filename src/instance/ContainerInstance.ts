@@ -16,7 +16,8 @@ import {
   LeafListJSON,
   ListJSON,
   NoMatchHandler,
-  Parent
+  Parent,
+  ShouldSkip
 } from './';
 
 export interface IContainerJSON {
@@ -50,7 +51,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     }
   }
 
-  public toJSON(camelCase = false, convert = true, shouldSkip = (ins: Instance) => false): IContainerJSON {
+  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): IContainerJSON {
     const containerInner = [...this.children.values()].reduce(
       (acc, child) => Object.assign(acc, child.toJSON(camelCase, convert, shouldSkip)),
       {}
