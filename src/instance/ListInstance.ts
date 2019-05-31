@@ -63,11 +63,13 @@ export default class ListInstance implements Searchable {
           value.push(child.toJSON(camelCase, convert));
         }
       }
+    } else {
+      for (const child of this.children.values()) {
+        value.push(child.toJSON(camelCase, convert));
+      }
     }
     return {
-      [this.model.getName(camelCase)]: shouldSkip
-        ? value
-        : [...this.children.values()].map(child => child.toJSON(camelCase, convert))
+      [this.model.getName(camelCase)]: value
     };
   }
 
