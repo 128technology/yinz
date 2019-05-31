@@ -17,7 +17,8 @@ import {
   ListChildInstance,
   NoMatchHandler,
   ListInstance,
-  LeafListInstance
+  LeafListInstance,
+  ShouldSkip
 } from './';
 import {
   getPathXPath,
@@ -60,8 +61,8 @@ export default class DataModelInstance {
     }
   }
 
-  public toJSON(camelCase = false, convert = true): object {
-    return [...this.root.values()][0].toJSON(camelCase, convert);
+  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): object {
+    return [...this.root.values()][0].toJSON(camelCase, convert, shouldSkip);
   }
 
   public toXML(rootEl?: Element) {

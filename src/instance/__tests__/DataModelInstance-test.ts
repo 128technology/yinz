@@ -83,6 +83,24 @@ describe('Data Model Instance', () => {
       expect(dataModelInstance.toJSON(true, false)).to.deep.equal(instanceNotConverted);
     });
 
+    it('should serialize an instance to JSON without skipped fields', () => {
+      const instanceSkippedFields = readJSON('./data/instanceSkippedFields.json');
+      expect(
+        dataModelInstance.toJSON(
+          true,
+          false,
+          x => x instanceof ListChildInstance && x.instance && x.instance.has('bfd')
+        )
+      ).to.deep.equal(instanceSkippedFields);
+    });
+
+    it('should serialize an instance to JSON and not skip LeafInstance or LeafListInstance or ', () => {
+      const instanceNotConverted = readJSON('./data/instanceNotConverted.json');
+      expect(
+        dataModelInstance.toJSON(true, false, x => x instanceof LeafInstance || x instanceof LeafListInstance)
+      ).to.deep.equal(instanceNotConverted);
+    });
+
     it('should serialize an instance to XML', () => {
       const expectedXML = readConfigFile('./data/instanceToXML.xml');
       expect(dataModelInstance.toXML().toString()).xml.to.equal(expectedXML.toString());
