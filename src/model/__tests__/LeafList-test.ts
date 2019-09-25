@@ -60,4 +60,41 @@ describe('Leaf List Model', () => {
 
     expect(spy.firstCall.args[0]).to.equal(leafList);
   });
+
+  it('should parse derived types', () => {
+    const testXML = fs.readFileSync(path.join(__dirname, './data/testLeafListDerivedType.xml'), 'utf-8');
+    const testModel = xmlUtil.toElement(testXML);
+    const leafList = new LeafList(testModel);
+    const expectedType = {
+      baseType: {
+        type: 'union',
+        types: [
+          { type: 'uint32', range: { ranges: [{ min: 0, max: 999999999 }] } },
+          {
+            members: new Map([
+              [
+                'ordered',
+                {
+                  description: 'priority value determined by ordinal position'
+                }
+              ],
+              [
+                'never',
+                {
+                  description: 'paths with the vector are not used'
+                }
+              ]
+            ]),
+            type: 'enumeration'
+          }
+        ]
+      },
+      default: 'ordered',
+      description: 'A type for defining priorities for vector use',
+      type: 't128ext:vector-priority'
+    };
+
+    expect(leafList.type).to.deep.equal(expectedType);
+    expect(leafList.getResolvedType()).to.deep.equal(expectedType.baseType);
+  });
 });
