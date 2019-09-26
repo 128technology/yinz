@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 
 import { ContextNode } from '../enum';
 import { DerivedType, LeafRefType } from '../types';
-import DataModel, { Model, List, Leaf, Choice } from '../model';
+import DataModel, { Model, List, Leaf, Choice, LeafList } from '../model';
 import { isElement } from '../util/xmlUtil';
 
 import Path from './Path';
@@ -168,7 +168,7 @@ export default class DataModelInstance {
 
   public evaluateLeafRef(path: Path) {
     const model = this.model.getModelForPath(path.map(({ name }) => name).join('.'));
-    if (model instanceof Leaf && model.getResolvedType() instanceof LeafRefType) {
+    if ((model instanceof Leaf || model instanceof LeafList) && model.getResolvedType() instanceof LeafRefType) {
       const leafRefPath = (model.getResolvedType() as LeafRefType).path;
 
       const { element, cleanUp } = this.getElementForPath(path);
@@ -191,7 +191,7 @@ export default class DataModelInstance {
   public evaluateSuggestionRef(path: Path) {
     const model = this.model.getModelForPath(path.map(({ name }) => name).join('.'));
 
-    if (model instanceof Leaf) {
+    if (model instanceof Leaf || model instanceof LeafList) {
       const type = model.type;
 
       if (type instanceof DerivedType && type.suggestionRefs && type.suggestionRefs.length > 0) {
@@ -220,7 +220,9 @@ export default class DataModelInstance {
         throw new Error('Cannot evaluate suggestion reference for a path that does not have suggestion references.');
       }
     } else {
-      throw new Error('Cannot evaluate suggestion reference for a path that does not correspond to a leaf.');
+      throw new Error(
+        'Cannot evaluate suggestion reference for a path that does not correspond to a leaf or leaf list.'
+      );
     }
   }
 

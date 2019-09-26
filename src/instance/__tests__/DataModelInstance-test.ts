@@ -602,6 +602,19 @@ describe('Data Model Instance', () => {
       expect(result).to.deep.equal(['internal']);
     });
 
+    it('should evaluate a leafref on a leaf list', () => {
+      const dataModelInstance = getInstance('./data/instanceLeafListReference.xml');
+      const leafRefPath = [
+        { name: 'authority' },
+        { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
+        { name: 'service-route', keys: [{ key: 'name', value: 'test' }] },
+        { name: 'next-peer' }
+      ];
+
+      const result = dataModelInstance.evaluateLeafRef(leafRefPath);
+      expect(result).to.deep.equal(['testPeer']);
+    });
+
     it('should evaluate an absolute leafref if no context node in instance', () => {
       const dataModelInstance = getInstance('./data/instance.xml');
       const leafRefPath = [
