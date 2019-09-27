@@ -43,7 +43,7 @@
     "mocha": "^6.2.0",
     "prettier": "^1.16.4",
     "sinon": "^6.3.5",
-    "ts-node": "^5.0.1",
+    "ts-node": "^8.4.1",
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.0.1",
