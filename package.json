@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "mocha --compilers ts:ts-node/register 'src/__tests__/setup.ts' 'src/**/__tests__/*.ts'",
+    "test": "mocha --require ts-node/register 'src/__tests__/setup.ts' 'src/**/__tests__/*.ts'",
     "lint": "tslint --project . 'src/**/*.ts' 'src/**/*-test.ts'",
     "validate": "npm run lint && npm run test",
     "clean": "rm -rf dist",
@@ -29,25 +29,25 @@
   ],
   "dependencies": {
     "libxmljs": "^0.19.5",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "@types/chai": "^4.0.1",
     "@types/chai-xml": "^0.3.1",
     "@types/lodash": "^4.14.105",
     "@types/mocha": "^2.2.41",
-    "@types/node": "^8.0.56",
+    "@types/node": "^8.10.54",
     "@types/sinon": "^5.0.1",
     "chai": "^3.5.0",
     "chai-xml": "^0.3.1",
-    "mocha": "^3.2.0",
+    "mocha": "^6.2.0",
     "prettier": "^1.16.4",
-    "sinon": "^6.1.2",
+    "sinon": "^6.3.5",
     "ts-node": "^5.0.1",
-    "tslint": "^5.12.1",
+    "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.0.1",
-    "typescript": "^3.3.3"
+    "typescript": "^3.6.3"
   },
   "publishConfig": {
     "access": "public",
