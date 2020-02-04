@@ -405,6 +405,85 @@
       }
     ],
     "router": [
+      {
+        "name": "Fabric128",
+        "interNodeSecurity": "internal",
+        "group": ["group1", "group2"],
+        "node": [],
+        "id": "00000000-0000-0000-0000-000000000000",
+        "system": {
+          "services": {
+            "webserver": {
+              "server": [
+                {
+                  "nodeName": "TestNode2",
+                  "ipAddress": "0.0.0.0"
+                }
+              ],
+              "enabled": "true",
+              "port": "443",
+              "ipAddress": "127.0.0.1"
+            },
+            "epm": {
+              "ipAddress": "127.0.0.1",
+              "port": "14444"
+            },
+            "pdm": {
+              "ipAddress": "127.0.0.1",
+              "port": "830"
+            },
+            "routingEngineListener": {
+              "port": "2620"
+            },
+            "routingAgentListener": {
+              "ipAddress": "127.0.0.1",
+              "port": "13333"
+            },
+            "systemServicesCoordinator": {
+              "ipAddress": "127.0.0.1",
+              "port": "12222"
+            },
+            "runtimeDataStore": {
+              "ipAddress": "127.0.0.1",
+              "port": "6379"
+            }
+          },
+          "logLevel": "trace",
+          "inactivityTimer": "900",
+          "syslog": {
+            "severity": "info",
+            "facility": "local0"
+          },
+          "metrics": {
+            "samplePeriod": "5"
+          },
+          "audit": {
+            "traffic": {
+              "enabled": "false"
+            },
+            "administration": {
+              "enabled": "false"
+            },
+            "system": {
+              "enabled": "false"
+            }
+          }
+        },
+        "reverseFlowEnforcement": "none",
+        "bfd": {
+          "state": "enabled",
+          "desiredTxInterval": "1000",
+          "requiredMinRxInterval": "500",
+          "requiredMinEchoInterval": "1000",
+          "authenticationType": "sha256",
+          "multiplier": "3",
+          "linkTestInterval": "10",
+          "linkTestLength": "20"
+        },
+        "entitlement": {
+          "maxBandwidth": "0"
+        }
+      }
     ],
     "rekeyInterval": "never"
   }

@@ -86,15 +86,11 @@ describe('Data Model Instance', () => {
     it('should serialize an instance to JSON without skipped fields', () => {
       const instanceSkippedFields = readJSON('./data/instanceSkippedFields.json');
       expect(
-        dataModelInstance.toJSON(
-          true,
-          false,
-          x => x instanceof ListChildInstance && x.instance && x.instance.has('bfd')
-        )
+        dataModelInstance.toJSON(true, false, x => x instanceof ListChildInstance && x.model.name === 'node')
       ).to.deep.equal(instanceSkippedFields);
     });
 
-    it('should serialize an instance to JSON and not skip LeafInstance or LeafListInstance or ', () => {
+    it('should serialize an instance to JSON and not skip LeafInstance or LeafListInstance', () => {
       const instanceNotConverted = readJSON('./data/instanceNotConverted.json');
       expect(
         dataModelInstance.toJSON(true, false, x => x instanceof LeafInstance || x instanceof LeafListInstance)
