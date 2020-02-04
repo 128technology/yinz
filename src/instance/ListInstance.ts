@@ -60,7 +60,7 @@ export default class ListInstance implements Searchable {
     if (shouldSkip) {
       for (const child of this.children.values()) {
         if (!shouldSkip(child)) {
-          value.push(child.toJSON(camelCase, convert));
+          value.push(child.toJSON(camelCase, convert, shouldSkip));
         }
       }
     } else {
