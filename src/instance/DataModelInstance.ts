@@ -18,7 +18,8 @@ import {
   NoMatchHandler,
   ListInstance,
   LeafListInstance,
-  ShouldSkip
+  ShouldSkip,
+  XMLSerializationOptions
 } from './';
 import {
   getPathXPath,
@@ -65,14 +66,14 @@ export default class DataModelInstance {
     return [...this.root.values()][0].toJSON(camelCase, convert, shouldSkip);
   }
 
-  public toXML(rootEl?: Element) {
+  public toXML(rootEl?: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
     if (rootEl) {
-      [...this.root.values()][0].toXML(rootEl);
+      [...this.root.values()][0].toXML(rootEl, options);
       return rootEl.doc();
     } else {
       const document = new Document();
       const config = document.node('config');
-      [...this.root.values()][0].toXML(config);
+      [...this.root.values()][0].toXML(config, options);
       return document;
     }
   }

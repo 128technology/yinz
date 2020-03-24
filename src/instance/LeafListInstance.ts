@@ -6,7 +6,7 @@ import { LeafList } from '../model';
 import { defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable } from './mixins';
-import { Path, Visitor, LeafListChildInstance, LeafJSON, NoMatchHandler, Parent } from './';
+import { Path, Visitor, LeafListChildInstance, LeafJSON, NoMatchHandler, Parent, XMLSerializationOptions } from './';
 
 export type LeafListJSON = LeafJSON[];
 
@@ -15,10 +15,10 @@ export default class LeafListInstance implements Searchable {
   public parent: Parent;
   public children: LeafListChildInstance[];
 
-  public getPath: () => Path;
-  public isTryingToMatchMe: (path: Path) => boolean;
-  public isMatch: (path: Path) => boolean;
-  public handleNoMatch: () => void;
+  public getPath: Searchable['getPath'];
+  public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
+  public isMatch: Searchable['isMatch'];
+  public handleNoMatch: Searchable['handleNoMatch'];
 
   constructor(model: LeafList, config: Element | LeafListJSON, parent?: Parent) {
     this.model = model;
@@ -52,11 +52,11 @@ export default class LeafListInstance implements Searchable {
     };
   }
 
-  public toXML(parent: Element) {
+  public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
     const [prefix, href] = this.model.ns;
     defineNamespaceOnRoot(parent, prefix, href);
-    this.values.forEach(value => {
-      parent.node(this.model.name, value.toString()).namespace(prefix);
+    this.children.forEach(child => {
+      child.toXML(parent, options);
     });
   }
 

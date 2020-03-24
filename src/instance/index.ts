@@ -12,6 +12,7 @@ export type Visitor = (instance: Instance | LeafListChildInstance) => void;
 export type NoMatchHandler = (instance: Instance, remainingPath: Path) => any;
 export type Parent = ListChildInstance | ContainerInstance;
 export type ShouldSkip = (instance: Instance) => boolean;
+export type XMLSerializationOptions = Readonly<{ includeAttributes: boolean }>;
 
 export default DataModelInstance;
 

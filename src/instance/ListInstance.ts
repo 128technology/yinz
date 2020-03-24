@@ -5,7 +5,17 @@ import applyMixins from '../util/applyMixins';
 import { List } from '../model';
 
 import { Searchable } from './mixins';
-import { Path, ListChildInstance, IListChildJSON, LeafInstance, Visitor, NoMatchHandler, Parent, ShouldSkip } from './';
+import {
+  Path,
+  ListChildInstance,
+  IListChildJSON,
+  LeafInstance,
+  Visitor,
+  NoMatchHandler,
+  Parent,
+  ShouldSkip,
+  XMLSerializationOptions
+} from './';
 import { isKeyedSegment } from './Path';
 
 // Comma separated string of key values
@@ -18,10 +28,10 @@ export default class ListInstance implements Searchable {
   public parent: Parent;
   public model: List;
 
-  public getPath: () => Path;
-  public isTryingToMatchMe: (path: Path) => boolean;
-  public isMatch: (path: Path) => boolean;
-  public handleNoMatch: () => void;
+  public getPath: Searchable['getPath'];
+  public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
+  public isMatch: Searchable['isMatch'];
+  public handleNoMatch: Searchable['handleNoMatch'];
 
   constructor(model: List, config: Element | ListJSON, parent?: Parent) {
     this.model = model;
@@ -73,9 +83,9 @@ export default class ListInstance implements Searchable {
     };
   }
 
-  public toXML(parent: Element) {
+  public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
     Array.from(this.children.values()).forEach(child => {
-      child.toXML(parent);
+      child.toXML(parent, options);
     });
   }
 

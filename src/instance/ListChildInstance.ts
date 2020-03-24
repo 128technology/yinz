@@ -19,6 +19,7 @@ import {
   IContainerJSON,
   NoMatchHandler,
   Parent,
+  XMLSerializationOptions,
   ShouldSkip
 } from './';
 
@@ -40,11 +41,15 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   public instance: Map<ChildName, Instance>;
   public activeChoices: Map<ChoiceName, SelectedCaseName>;
 
-  public customAttributes: Map<string, string>;
-  public getPath: () => Path;
-  public isTryingToMatchMe: (path: Path) => boolean;
-  public isMatch: (path: Path) => boolean;
-  public handleNoMatch: () => void;
+  public customAttributes: WithAttributes['customAttributes'];
+  public parseCustomAttributes: WithAttributes['parseCustomAttributes'];
+  public hasCustomAttributes: WithAttributes['hasCustomAttributes'];
+  public customAttributesContainer: WithAttributes['customAttributesContainer'];
+  public addCustomAttributes: WithAttributes['addCustomAttributes'];
+  public getPath: Searchable['getPath'];
+  public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
+  public isMatch: Searchable['isMatch'];
+  public handleNoMatch: Searchable['handleNoMatch'];
 
   constructor(model: List, config: Element | IListChildJSON, parent: Parent) {
     this.model = model;
@@ -55,6 +60,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
     if (config instanceof Element) {
       this.config = config;
       this.injestConfigXML(config);
+      this.parseCustomAttributes(config);
     } else {
       this.injestConfigJSON(config);
     }
@@ -136,14 +142,18 @@ export default class ListChildInstance implements Searchable, WithAttributes {
       .reduce((acc, field) => Object.assign(acc, field), {});
   }
 
-  public toXML(parent: Element) {
+  public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
     const [prefix, href] = this.model.ns;
     defineNamespaceOnRoot(parent, prefix, href);
     const outer = parent.node(this.model.name);
     outer.namespace(prefix);
 
+    if (options.includeAttributes && this.hasCustomAttributes) {
+      this.addCustomAttributes(outer);
+    }
+
     Array.from(this.instance.values()).forEach(child => {
-      child.toXML(outer);
+      child.toXML(outer, options);
     });
   }
 

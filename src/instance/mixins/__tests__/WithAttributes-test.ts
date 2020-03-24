@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { Element } from 'libxmljs';
 
 import applyMixins from '../../../util/applyMixins';
 import xmlUtil from '../../../__tests__/xmlUtil';
@@ -11,17 +10,17 @@ describe('With Attributes Mixin', () => {
   `;
   const mockConfigXML = xmlUtil.toElement(mockConfig);
 
-  class Test implements WithAttributes {
-    public config: Element;
-    public customAttributes: Map<string, string>;
-  }
+  class Test extends WithAttributes implements WithAttributes {}
 
   applyMixins(Test, [WithAttributes]);
 
-  it('should walk parents until it finds identities', () => {
+  it('should parse arguments', () => {
     const testModel = new Test();
-    testModel.config = mockConfigXML;
+    testModel.parseCustomAttributes(mockConfigXML);
 
-    expect(Array.from(testModel.customAttributes.entries())).to.deep.equal([['foo', 'bar'], ['fizz', 'baz']]);
+    expect(Array.from(testModel.customAttributes.entries())).to.deep.equal([
+      ['foo', 'bar'],
+      ['fizz', 'baz']
+    ]);
   });
 });

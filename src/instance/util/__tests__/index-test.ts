@@ -32,7 +32,13 @@ describe('Instance Util', () => {
     it('should get an XPath from a Path with compound keys', () => {
       const testPath = [
         { name: 'authority' },
-        { name: 'session-type', keys: [{ key: 'name', value: 'HTTPS' }, { key: 'foo', value: 'bar' }] },
+        {
+          name: 'session-type',
+          keys: [
+            { key: 'name', value: 'HTTPS' },
+            { key: 'foo', value: 'bar' }
+          ]
+        },
         { name: 'service-class' }
       ];
 
@@ -55,7 +61,13 @@ describe('Instance Util', () => {
 
     it('should get an XPath from a compound keyed segment', () => {
       expect(
-        getSegmentXPath({ name: 'session-type', keys: [{ key: 'name', value: 'HTTPS' }, { key: 'foo', value: 'bar' }] })
+        getSegmentXPath({
+          name: 'session-type',
+          keys: [
+            { key: 'name', value: 'HTTPS' },
+            { key: 'foo', value: 'bar' }
+          ]
+        })
       ).to.equal("*[local-name()='session-type'][*[local-name()='name']='HTTPS' and *[local-name()='foo']='bar']");
     });
   });

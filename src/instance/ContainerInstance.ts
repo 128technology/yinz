@@ -17,6 +17,7 @@ import {
   ListJSON,
   NoMatchHandler,
   Parent,
+  XMLSerializationOptions,
   ShouldSkip
 } from './';
 
@@ -31,11 +32,15 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public children: Map<string, Instance>;
   public activeChoices: Map<string, string>;
 
-  public customAttributes: Map<string, string>;
-  public getPath: () => Path;
-  public isTryingToMatchMe: (path: Path) => boolean;
-  public isMatch: (path: Path) => boolean;
-  public handleNoMatch: () => void;
+  public customAttributes: WithAttributes['customAttributes'];
+  public parseCustomAttributes: WithAttributes['parseCustomAttributes'];
+  public hasCustomAttributes: WithAttributes['hasCustomAttributes'];
+  public customAttributesContainer: WithAttributes['customAttributesContainer'];
+  public addCustomAttributes: WithAttributes['addCustomAttributes'];
+  public getPath: Searchable['getPath'];
+  public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
+  public isMatch: Searchable['isMatch'];
+  public handleNoMatch: Searchable['handleNoMatch'];
 
   constructor(model: Container, config: Element | IContainerJSON, parent?: Parent) {
     this.model = model;
@@ -46,6 +51,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     if (config instanceof Element) {
       this.config = config;
       this.injestConfigXML(config);
+      this.parseCustomAttributes(config);
     } else {
       this.injestConfigJSON(config);
     }
@@ -62,14 +68,18 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     };
   }
 
-  public toXML(parent: Element) {
+  public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
     const [prefix, href] = this.model.ns;
     const outer = parent.node(this.model.name);
     defineNamespaceOnRoot(parent, prefix, href);
     outer.namespace(prefix);
 
+    if (options.includeAttributes && this.hasCustomAttributes) {
+      this.addCustomAttributes(outer);
+    }
+
     Array.from(this.children.values()).forEach(child => {
-      child.toXML(outer);
+      child.toXML(outer, options);
     });
   }
 

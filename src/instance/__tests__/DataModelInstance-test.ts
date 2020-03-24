@@ -102,6 +102,20 @@ describe('Data Model Instance', () => {
       expect(dataModelInstance.toXML().toString()).xml.to.equal(expectedXML.toString());
     });
 
+    it('should serialize an instance to XML with attributes', () => {
+      const instanceWithAttr = getInstance('./data/instanceXMLWithAttributes.xml');
+      const result = instanceWithAttr.toXML(undefined, { includeAttributes: true }).toString();
+      console.log(result);
+      expect(result).xml.to.equal(`
+        <?xml version="1.0" encoding="UTF-8"?>
+        <config xmlns:authy="http://128technology.com/t128/config/authority-config">
+          <authy:authority>
+            <authy:name xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="delete">Authority128</authy:name>
+          </authy:authority>
+        </config>
+      `);
+    });
+
     it('should get leaves', () => {
       const searchPath = [{ name: 'authority' }, { name: 'name' }];
       const leaf = dataModelInstance.getInstance(searchPath);
@@ -331,7 +345,10 @@ describe('Data Model Instance', () => {
             { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
             { name: 'service-route', keys: [{ key: 'name', value: 'TestServiceRoute' }] },
             {
-              keys: [{ key: 'node-name', value: 'TestNode1' }, { key: 'interface', value: 'NetIntf1' }],
+              keys: [
+                { key: 'node-name', value: 'TestNode1' },
+                { key: 'interface', value: 'NetIntf1' }
+              ],
               name: 'next-hop'
             },
             { name: 'interface' }
@@ -359,7 +376,10 @@ describe('Data Model Instance', () => {
             { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
             { name: 'service-route', keys: [{ key: 'name', value: 'TestServiceRoute2' }] },
             {
-              keys: [{ key: 'node-name', value: 'TestNode2' }, { key: 'interface', value: 'NetIntf1' }],
+              keys: [
+                { key: 'node-name', value: 'TestNode2' },
+                { key: 'interface', value: 'NetIntf1' }
+              ],
               name: 'next-hop'
             },
             { name: 'interface' }
