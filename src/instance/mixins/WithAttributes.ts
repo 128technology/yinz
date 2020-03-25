@@ -30,20 +30,25 @@ function mapOperationToAttribute(operation: NetconfOperation): IAttribute {
 }
 
 function mapPoitionToAttributes(position: Position): IAttribute[] {
-  return [
+  const attributes: IAttribute[] = [
     {
       name: 'insert',
       value: position.insert,
       prefix: 'yang',
       href: 'urn:ietf:params:xml:ns:yang:1'
-    },
-    {
+    }
+  ];
+
+  if (position.value) {
+    attributes.push({
       name: 'value',
       value: position.value,
       prefix: 'yang',
       href: 'urn:ietf:params:xml:ns:yang:1'
-    }
-  ];
+    });
+  }
+
+  return attributes;
 }
 
 export default class WithAttributes {

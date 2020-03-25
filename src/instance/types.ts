@@ -20,7 +20,7 @@ export type NetconfOperation = 'merge' | 'create' | 'replace' | 'delete' | 'remo
 
 export type Position = Readonly<{
   insert: 'first' | 'last' | 'before' | 'after';
-  value: string;
+  value?: string;
 }>;
 
 export type AddAttributes<T> = Readonly<{
