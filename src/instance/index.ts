@@ -8,8 +8,7 @@ import LeafInstance from './LeafInstance';
 import Instance from './Instance';
 import Path from './Path';
 
-// TODO: Export All?
-export * from './types';
+export { Visitor, NoMatchHandler, Parent, ShouldSkip } from './types';
 
 export default DataModelInstance;
 

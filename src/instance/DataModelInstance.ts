@@ -12,15 +12,14 @@ import {
   ContainerInstance,
   LeafInstance,
   Visitor,
-  IContainerJSON,
   LeafListChildInstance,
   ListChildInstance,
   NoMatchHandler,
   ListInstance,
   LeafListInstance,
-  ShouldSkip,
-  XMLSerializationOptions
+  ShouldSkip
 } from './';
+import { XMLSerializationOptions, ContainerJSON } from './types';
 import {
   getPathXPath,
   getFieldIdFromParentAxis,
@@ -35,7 +34,7 @@ export default class DataModelInstance {
   public model: DataModel;
   public root: Map<string, ContainerInstance>;
 
-  constructor(model: DataModel, instance: Element | { [rootName: string]: IContainerJSON }) {
+  constructor(model: DataModel, instance: Element | { [rootName: string]: ContainerJSON }) {
     this.model = model;
     this.root = new Map();
 

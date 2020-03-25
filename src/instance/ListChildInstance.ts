@@ -6,19 +6,20 @@ import { List, Leaf, Container, LeafList } from '../model';
 import { isElement, defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
-import { ListJSON, IListChildJSON, LeafJSON, LeafListJSON, IContainerJSON, AddAttributes } from './types';
 import {
-  Path,
-  Instance,
-  LeafInstance,
-  ListInstance,
-  LeafListInstance,
+  ListJSON,
+  ListChildJSON,
+  LeafJSON,
+  LeafListJSON,
+  XMLSerializationOptions,
   Visitor,
   NoMatchHandler,
   Parent,
-  XMLSerializationOptions,
-  ShouldSkip
-} from './';
+  ShouldSkip,
+  ListChildJSONValue,
+  ContainerJSON
+} from './types';
+import { Path, Instance, LeafInstance, ListInstance, LeafListInstance } from './';
 
 export type ChoiceName = string;
 export type SelectedCaseName = string;
@@ -47,7 +48,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
 
-  constructor(model: List, config: Element | IListChildJSON, parent: Parent) {
+  constructor(model: List, config: Element | ListChildJSON, parent: Parent) {
     this.model = model;
     this.parent = parent;
     this.instance = new Map();
@@ -70,8 +71,8 @@ export default class ListChildInstance implements Searchable, WithAttributes {
     }, {});
   }
 
-  public injestConfigJSON(configJSON: IListChildJSON | AddAttributes<IListChildJSON>) {
-    const config = this.getValueFromJSON(configJSON) as IListChildJSON;
+  public injestConfigJSON(configJSON: ListChildJSON) {
+    const config = this.getValueFromJSON(configJSON) as ListChildJSONValue;
 
     for (const rawChildName in config) {
       if (config.hasOwnProperty(rawChildName)) {
@@ -91,7 +92,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
           } else if (childModel instanceof LeafList) {
             instance = childModel.buildInstance(child as LeafListJSON, this);
           } else if (childModel instanceof Container) {
-            instance = childModel.buildInstance(child as IContainerJSON, this);
+            instance = childModel.buildInstance(child as ContainerJSON, this);
           } else if (childModel instanceof List) {
             instance = childModel.buildInstance(child as ListJSON, this);
           } else {
@@ -131,7 +132,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
       });
   }
 
-  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): IListChildJSON {
+  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): ListChildJSONValue {
     return [...this.instance.values()]
       .map(field =>
         field instanceof LeafInstance || field instanceof LeafListInstance

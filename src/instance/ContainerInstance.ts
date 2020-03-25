@@ -6,18 +6,19 @@ import { Container, Leaf, LeafList, List } from '../model';
 import { isElement, defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
-import { ListJSON, LeafJSON, LeafListJSON, IContainerJSON, AddAttributes } from './types';
 import {
-  Path,
-  Instance,
-  ListInstance,
-  LeafListInstance,
+  ListJSON,
+  LeafJSON,
+  LeafListJSON,
+  ContainerJSON,
   Visitor,
   NoMatchHandler,
   Parent,
   XMLSerializationOptions,
-  ShouldSkip
-} from './';
+  ShouldSkip,
+  ContainerJSONValue
+} from './types';
+import { Path, Instance, ListInstance, LeafListInstance } from './';
 
 export default class ContainerInstance implements Searchable, WithAttributes {
   public model: Container;
@@ -38,7 +39,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
 
-  constructor(model: Container, config: Element | IContainerJSON, parent?: Parent) {
+  constructor(model: Container, config: Element | ContainerJSON, parent?: Parent) {
     this.model = model;
     this.parent = parent;
     this.children = new Map();
@@ -54,7 +55,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     }
   }
 
-  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): IContainerJSON {
+  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): ContainerJSONValue {
     const containerInner = [...this.children.values()].reduce(
       (acc, child) => Object.assign(acc, child.toJSON(camelCase, convert, shouldSkip)),
       {}
@@ -103,8 +104,8 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     });
   }
 
-  private injestConfigJSON(configJSON: IContainerJSON | AddAttributes<IContainerJSON>) {
-    const config = this.getValueFromJSON(configJSON) as IContainerJSON;
+  private injestConfigJSON(configJSON: ContainerJSON) {
+    const config = this.getValueFromJSON(configJSON) as ContainerJSONValue;
 
     for (const rawChildName in config) {
       if (config.hasOwnProperty(rawChildName)) {
@@ -125,7 +126,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
           } else if (childModel instanceof LeafList) {
             instance = childModel.buildInstance(child as LeafListJSON, this);
           } else if (childModel instanceof Container) {
-            instance = childModel.buildInstance(child as IContainerJSON, this);
+            instance = childModel.buildInstance(child as ContainerJSON, this);
           } else if (childModel instanceof List) {
             instance = childModel.buildInstance(child as ListJSON, this);
           } else {

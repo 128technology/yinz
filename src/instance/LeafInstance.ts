@@ -6,8 +6,8 @@ import { Leaf } from '../model';
 import { defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
-import { LeafJSON, AddAttributes } from './types';
-import { Path, Parent, Visitor, NoMatchHandler, XMLSerializationOptions } from './';
+import { LeafJSON, XMLSerializationOptions, Visitor, NoMatchHandler, Parent, LeafJSONValue } from './types';
+import { Path } from './';
 
 export default class LeafInstance implements Searchable, WithAttributes {
   public model: Leaf;
@@ -46,7 +46,7 @@ export default class LeafInstance implements Searchable, WithAttributes {
     return this.model.type.serialize(this.value);
   }
 
-  public toJSON(camelCase = false, convert = true): { [name: string]: LeafJSON } {
+  public toJSON(camelCase = false, convert = true): { [name: string]: LeafJSONValue } {
     return {
       [this.model.getName(camelCase)]: convert ? this.getConvertedValue() : this.value
     };
@@ -75,8 +75,8 @@ export default class LeafInstance implements Searchable, WithAttributes {
     visitor(this);
   }
 
-  private injestConfigJSON(configJSON: LeafJSON | AddAttributes<LeafJSON>) {
-    const config = this.getValueFromJSON(configJSON) as LeafJSON;
+  private injestConfigJSON(configJSON: LeafJSON) {
+    const config = this.getValueFromJSON(configJSON) as LeafJSONValue;
     this.value = config.toString();
   }
 

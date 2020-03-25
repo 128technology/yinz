@@ -4,8 +4,8 @@ import applyMixins from '../util/applyMixins';
 import { LeafList } from '../model';
 
 import { WithAttributes } from './mixins';
-import { AddAttributes, LeafJSON } from './types';
-import { Visitor, Path, LeafListInstance, XMLSerializationOptions } from './';
+import { LeafJSON, Visitor, XMLSerializationOptions, LeafJSONValue } from './types';
+import { Path, LeafListInstance } from './';
 
 export default class LeafListChildInstance implements WithAttributes {
   public model: LeafList;
@@ -39,8 +39,8 @@ export default class LeafListChildInstance implements WithAttributes {
     return this.model.type.serialize(this.rawValue);
   }
 
-  private injestConfigJSON(configJSON: LeafJSON | AddAttributes<LeafJSON>) {
-    const config = this.getValueFromJSON(configJSON) as LeafJSON;
+  private injestConfigJSON(configJSON: LeafJSON) {
+    const config = this.getValueFromJSON(configJSON) as LeafJSONValue;
     this.rawValue = config.toString();
   }
 

@@ -1,11 +1,11 @@
 import { Element } from 'libxmljs';
 import * as _ from 'lodash';
 
-import { IAttribute, JSONWithAttributes, JSONWithoutAttributes, NetconfOperation, Position } from '../types';
+import { IAttribute, NetconfOperation, Position, JSONConfig, AddAttributes } from '../types';
 import UnreachableCaseError from '../../util/unreachableCaseError';
 import { defineNamespaceSafe } from '../../util/xmlUtil';
 
-function jsonHasAttributes(configJSON: JSONWithAttributes | JSONWithoutAttributes): configJSON is JSONWithAttributes {
+function jsonHasAttributes(configJSON: JSONConfig): configJSON is AddAttributes<{}> {
   return _.isPlainObject(configJSON) && '_value' in (configJSON as object);
 }
 
@@ -67,7 +67,7 @@ export default class WithAttributes {
     }, []);
   }
 
-  public parseAttributesFromJSON(config: JSONWithAttributes | JSONWithoutAttributes) {
+  public parseAttributesFromJSON(config: JSONConfig) {
     this.rawAttributes = [];
 
     if (jsonHasAttributes(config)) {
@@ -85,7 +85,7 @@ export default class WithAttributes {
     }
   }
 
-  public getValueFromJSON(config: JSONWithAttributes | JSONWithoutAttributes) {
+  public getValueFromJSON(config: JSONConfig) {
     if (jsonHasAttributes(config)) {
       return config._value;
     } else {

@@ -2,7 +2,8 @@ import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
 import ns from '../util/ns';
-import { ListInstance, ListJSON, ListChildInstance, ContainerInstance } from '../instance';
+import { ListInstance, ListChildInstance, ContainerInstance } from '../instance';
+import { ListJSON } from '../instance/types';
 import { OrderedBy, Visibility, Status } from '../enum';
 
 import { Statement, ListLike, Whenable, WithRegistry } from './mixins';

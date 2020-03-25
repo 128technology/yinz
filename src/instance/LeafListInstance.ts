@@ -6,8 +6,16 @@ import { LeafList } from '../model';
 import { defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable } from './mixins';
-import { LeafListJSON } from './types';
-import { Path, Visitor, LeafListChildInstance, LeafJSON, NoMatchHandler, Parent, XMLSerializationOptions } from './';
+import {
+  LeafListJSON,
+  NoMatchHandler,
+  Parent,
+  XMLSerializationOptions,
+  Visitor,
+  LeafJSON,
+  LeafListJSONValue
+} from './types';
+import { Path, LeafListChildInstance } from './';
 
 export default class LeafListInstance implements Searchable {
   public model: LeafList;
@@ -45,7 +53,7 @@ export default class LeafListInstance implements Searchable {
     return this.children.map(child => child.rawValue);
   }
 
-  public toJSON(camelCase = false, convert = true): { [name: string]: LeafListJSON } {
+  public toJSON(camelCase = false, convert = true): { [name: string]: LeafListJSONValue } {
     return {
       [this.model.getName(camelCase)]: convert ? this.values : this.rawValues
     };

@@ -4,17 +4,26 @@ import LeafListChildInstance from './LeafListChildInstance';
 import Instance from './Instance';
 import Path from './Path';
 
-export interface IContainerJSON {
-  [childName: string]: LeafJSON | LeafListJSON | ListJSON | IContainerJSON;
-}
+export type ContainerJSONValue = Readonly<{
+  [childName: string]: LeafJSON | LeafListJSON | ListJSON | ContainerJSON;
+}>;
+export type ContainerJSON = ContainerJSONValue | AddAttributes<ContainerJSONValue>;
 
-export interface IListChildJSON {
-  [childName: string]: LeafJSON | LeafListJSON | ListJSON | IContainerJSON;
-}
+export type ListChildJSONValue = Readonly<{
+  [childName: string]: LeafJSON | LeafListJSON | ListJSON | ContainerJSON;
+}>;
+export type ListChildJSON = ListChildJSONValue | AddAttributes<ListChildJSONValue>;
 
-export type ListJSON = IListChildJSON[];
+export type ListJSONValue = ListChildJSONValue[];
+export type ListJSON = ListChildJSON[];
+
+export type LeafListJSONValue = LeafJSONValue[];
 export type LeafListJSON = LeafJSON[];
-export type LeafJSON = string | number | boolean;
+
+export type LeafJSONValue = Readonly<string | number | boolean>;
+export type LeafJSON = LeafJSONValue | AddAttributes<LeafJSONValue>;
+
+export type JSONConfig = ContainerJSON | ListChildJSON | ListJSON | LeafListJSON | LeafJSON;
 
 export type NetconfOperation = 'merge' | 'create' | 'replace' | 'delete' | 'remove';
 
@@ -29,14 +38,6 @@ export type AddAttributes<T> = Readonly<{
   _position?: Position;
   _value: T;
 }>;
-
-export type JSONWithAttributes =
-  | AddAttributes<IContainerJSON>
-  | AddAttributes<IListChildJSON>
-  | AddAttributes<ListJSON>
-  | AddAttributes<LeafJSON>;
-
-export type JSONWithoutAttributes = IContainerJSON | IListChildJSON | ListJSON | LeafJSON;
 
 export interface IAttribute {
   name: string;

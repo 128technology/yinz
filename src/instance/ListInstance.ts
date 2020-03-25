@@ -5,18 +5,17 @@ import applyMixins from '../util/applyMixins';
 import { List } from '../model';
 
 import { Searchable } from './mixins';
-import { ListJSON } from './types';
 import {
-  Path,
-  ListChildInstance,
-  IListChildJSON,
-  LeafInstance,
+  ListJSON,
   Visitor,
   NoMatchHandler,
   Parent,
   ShouldSkip,
-  XMLSerializationOptions
-} from './';
+  XMLSerializationOptions,
+  ListChildJSON,
+  ListJSONValue
+} from './types';
+import { Path, ListChildInstance, LeafInstance } from './';
 import { isKeyedSegment } from './Path';
 
 // Comma separated string of key values
@@ -46,7 +45,7 @@ export default class ListInstance implements Searchable {
     }
   }
 
-  public add(config: Element | IListChildJSON) {
+  public add(config: Element | ListChildJSON) {
     const newChild = new ListChildInstance(this.model, config, this.parent);
 
     const keys = [...this.model.keys]
@@ -64,7 +63,7 @@ export default class ListInstance implements Searchable {
     this.children.set(keys, newChild);
   }
 
-  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): { [name: string]: ListJSON } {
+  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): { [name: string]: ListJSONValue } {
     const value = [];
     if (shouldSkip) {
       for (const child of this.children.values()) {
