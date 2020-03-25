@@ -5,6 +5,7 @@ import applyMixins from '../util/applyMixins';
 import { List } from '../model';
 
 import { Searchable } from './mixins';
+import { ListJSON } from './types';
 import {
   Path,
   ListChildInstance,
@@ -20,8 +21,6 @@ import { isKeyedSegment } from './Path';
 
 // Comma separated string of key values
 export type Key = string;
-
-export type ListJSON = IListChildJSON[];
 
 export default class ListInstance implements Searchable {
   public children: Map<Key, ListChildInstance>;

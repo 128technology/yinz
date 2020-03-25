@@ -6,9 +6,8 @@ import { Leaf } from '../model';
 import { defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
+import { LeafJSON, AddAttributes } from './types';
 import { Path, Parent, Visitor, NoMatchHandler, XMLSerializationOptions } from './';
-
-export type LeafJSON = string | number | boolean;
 
 export default class LeafInstance implements Searchable, WithAttributes {
   public model: Leaf;
@@ -17,10 +16,12 @@ export default class LeafInstance implements Searchable, WithAttributes {
   public value: string;
 
   public customAttributes: WithAttributes['customAttributes'];
-  public parseCustomAttributes: WithAttributes['parseCustomAttributes'];
-  public hasCustomAttributes: WithAttributes['hasCustomAttributes'];
-  public customAttributesContainer: WithAttributes['customAttributesContainer'];
-  public addCustomAttributes: WithAttributes['addCustomAttributes'];
+  public parseAttributesFromXML: WithAttributes['parseAttributesFromXML'];
+  public parseAttributesFromJSON: WithAttributes['parseAttributesFromJSON'];
+  public hasAttributes: WithAttributes['hasAttributes'];
+  public rawAttributes: WithAttributes['rawAttributes'];
+  public addAttributes: WithAttributes['addAttributes'];
+  public getValueFromJSON: WithAttributes['getValueFromJSON'];
   public getPath: Searchable['getPath'];
   public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
   public isMatch: Searchable['isMatch'];
@@ -34,9 +35,10 @@ export default class LeafInstance implements Searchable, WithAttributes {
     if (config instanceof Element) {
       this.config = config;
       this.injestConfigXML(config);
-      this.parseCustomAttributes(config);
+      this.parseAttributesFromXML(config);
     } else {
       this.injestConfigJSON(config);
+      this.parseAttributesFromJSON(config);
     }
   }
 
@@ -56,8 +58,8 @@ export default class LeafInstance implements Searchable, WithAttributes {
     const el = parent.node(this.model.name, this.value);
     el.namespace(prefix);
 
-    if (options.includeAttributes && this.hasCustomAttributes) {
-      this.addCustomAttributes(el);
+    if (options.includeAttributes && this.hasAttributes) {
+      this.addAttributes(el);
     }
   }
 
@@ -73,7 +75,8 @@ export default class LeafInstance implements Searchable, WithAttributes {
     visitor(this);
   }
 
-  private injestConfigJSON(config: LeafJSON) {
+  private injestConfigJSON(configJSON: LeafJSON | AddAttributes<LeafJSON>) {
+    const config = this.getValueFromJSON(configJSON) as LeafJSON;
     this.value = config.toString();
   }
 

@@ -6,24 +6,18 @@ import { Container, Leaf, LeafList, List } from '../model';
 import { isElement, defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
+import { ListJSON, LeafJSON, LeafListJSON, IContainerJSON, AddAttributes } from './types';
 import {
   Path,
   Instance,
   ListInstance,
   LeafListInstance,
   Visitor,
-  LeafJSON,
-  LeafListJSON,
-  ListJSON,
   NoMatchHandler,
   Parent,
   XMLSerializationOptions,
   ShouldSkip
 } from './';
-
-export interface IContainerJSON {
-  [childName: string]: LeafJSON | LeafListJSON | ListJSON | IContainerJSON;
-}
 
 export default class ContainerInstance implements Searchable, WithAttributes {
   public model: Container;
@@ -33,10 +27,12 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public activeChoices: Map<string, string>;
 
   public customAttributes: WithAttributes['customAttributes'];
-  public parseCustomAttributes: WithAttributes['parseCustomAttributes'];
-  public hasCustomAttributes: WithAttributes['hasCustomAttributes'];
-  public customAttributesContainer: WithAttributes['customAttributesContainer'];
-  public addCustomAttributes: WithAttributes['addCustomAttributes'];
+  public parseAttributesFromXML: WithAttributes['parseAttributesFromXML'];
+  public parseAttributesFromJSON: WithAttributes['parseAttributesFromJSON'];
+  public hasAttributes: WithAttributes['hasAttributes'];
+  public rawAttributes: WithAttributes['rawAttributes'];
+  public addAttributes: WithAttributes['addAttributes'];
+  public getValueFromJSON: WithAttributes['getValueFromJSON'];
   public getPath: Searchable['getPath'];
   public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
   public isMatch: Searchable['isMatch'];
@@ -51,9 +47,10 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     if (config instanceof Element) {
       this.config = config;
       this.injestConfigXML(config);
-      this.parseCustomAttributes(config);
+      this.parseAttributesFromXML(config);
     } else {
       this.injestConfigJSON(config);
+      this.parseAttributesFromJSON(config);
     }
   }
 
@@ -74,8 +71,8 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     defineNamespaceOnRoot(parent, prefix, href);
     outer.namespace(prefix);
 
-    if (options.includeAttributes && this.hasCustomAttributes) {
-      this.addCustomAttributes(outer);
+    if (options.includeAttributes && this.hasAttributes) {
+      this.addAttributes(outer);
     }
 
     Array.from(this.children.values()).forEach(child => {
@@ -106,7 +103,9 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     });
   }
 
-  private injestConfigJSON(config: IContainerJSON) {
+  private injestConfigJSON(configJSON: IContainerJSON | AddAttributes<IContainerJSON>) {
+    const config = this.getValueFromJSON(configJSON) as IContainerJSON;
+
     for (const rawChildName in config) {
       if (config.hasOwnProperty(rawChildName)) {
         const childName = this.model.hasChild(rawChildName) ? rawChildName : _.kebabCase(rawChildName);

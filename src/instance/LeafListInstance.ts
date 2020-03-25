@@ -6,9 +6,8 @@ import { LeafList } from '../model';
 import { defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable } from './mixins';
+import { LeafListJSON } from './types';
 import { Path, Visitor, LeafListChildInstance, LeafJSON, NoMatchHandler, Parent, XMLSerializationOptions } from './';
-
-export type LeafListJSON = LeafJSON[];
 
 export default class LeafListInstance implements Searchable {
   public model: LeafList;

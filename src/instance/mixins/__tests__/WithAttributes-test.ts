@@ -14,13 +14,38 @@ describe('With Attributes Mixin', () => {
 
   applyMixins(Test, [WithAttributes]);
 
-  it('should parse arguments', () => {
+  it('should parse attribues and allow getting of them as a Map', () => {
     const testModel = new Test();
-    testModel.parseCustomAttributes(mockConfigXML);
+    testModel.parseAttributesFromXML(mockConfigXML);
 
     expect(Array.from(testModel.customAttributes.entries())).to.deep.equal([
       ['foo', 'bar'],
       ['fizz', 'baz']
     ]);
+  });
+
+  it('should parse attribues and retain namespaces when adding them', () => {
+    const testModel = new Test();
+    const el = xmlUtil.toElement('<qp-value />');
+    testModel.parseAttributesFromXML(mockConfigXML);
+    testModel.addAttributes(el);
+
+    expect(el.toString()).xml.to.equal(
+      '<qp-value xmlns:if="http://128technology.com/t128/config/interface-config" foo="bar" if:fizz="baz" />'
+    );
+  });
+
+  it('should determine if attributes exist', () => {
+    const testModel = new Test();
+    testModel.parseAttributesFromXML(mockConfigXML);
+
+    expect(testModel.hasAttributes).to.equal(true);
+  });
+
+  it('should determine if attributes exist', () => {
+    const testModel = new Test();
+    testModel.parseAttributesFromXML(xmlUtil.toElement('<qp-value />'));
+
+    expect(testModel.hasAttributes).to.equal(false);
   });
 });

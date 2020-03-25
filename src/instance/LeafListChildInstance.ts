@@ -4,7 +4,8 @@ import applyMixins from '../util/applyMixins';
 import { LeafList } from '../model';
 
 import { WithAttributes } from './mixins';
-import { Visitor, Path, LeafListInstance, LeafJSON, XMLSerializationOptions } from './';
+import { AddAttributes, LeafJSON } from './types';
+import { Visitor, Path, LeafListInstance, XMLSerializationOptions } from './';
 
 export default class LeafListChildInstance implements WithAttributes {
   public model: LeafList;
@@ -13,10 +14,12 @@ export default class LeafListChildInstance implements WithAttributes {
   public rawValue: string;
 
   public customAttributes: WithAttributes['customAttributes'];
-  public parseCustomAttributes: WithAttributes['parseCustomAttributes'];
-  public hasCustomAttributes: WithAttributes['hasCustomAttributes'];
-  public customAttributesContainer: WithAttributes['customAttributesContainer'];
-  public addCustomAttributes: WithAttributes['addCustomAttributes'];
+  public parseAttributesFromXML: WithAttributes['parseAttributesFromXML'];
+  public parseAttributesFromJSON: WithAttributes['parseAttributesFromJSON'];
+  public hasAttributes: WithAttributes['hasAttributes'];
+  public rawAttributes: WithAttributes['rawAttributes'];
+  public addAttributes: WithAttributes['addAttributes'];
+  public getValueFromJSON: WithAttributes['getValueFromJSON'];
 
   constructor(model: LeafList, config: Element | LeafJSON, parent?: LeafListInstance) {
     this.model = model;
@@ -25,9 +28,10 @@ export default class LeafListChildInstance implements WithAttributes {
     if (config instanceof Element) {
       this.config = config;
       this.injestConfigXML(config);
-      this.parseCustomAttributes(config);
+      this.parseAttributesFromXML(config);
     } else {
       this.injestConfigJSON(config);
+      this.parseAttributesFromJSON(config);
     }
   }
 
@@ -35,7 +39,8 @@ export default class LeafListChildInstance implements WithAttributes {
     return this.model.type.serialize(this.rawValue);
   }
 
-  public injestConfigJSON(config: LeafJSON) {
+  private injestConfigJSON(configJSON: LeafJSON | AddAttributes<LeafJSON>) {
+    const config = this.getValueFromJSON(configJSON) as LeafJSON;
     this.rawValue = config.toString();
   }
 
@@ -48,8 +53,8 @@ export default class LeafListChildInstance implements WithAttributes {
     const el = parent.node(this.model.name, this.rawValue);
     el.namespace(prefix);
 
-    if (options.includeAttributes && this.hasCustomAttributes) {
-      this.addCustomAttributes(el);
+    if (options.includeAttributes && this.hasAttributes) {
+      this.addAttributes(el);
     }
   }
 
