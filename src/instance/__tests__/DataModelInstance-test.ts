@@ -200,10 +200,10 @@ describe('Data Model Instance', () => {
             name: {
               _attributes: [
                 {
+                  href: 'urn:ietf:params:xml:ns:netconf:base:1.0',
                   name: 'operation',
-                  value: 'delete',
                   prefix: 'xc',
-                  href: 'urn:ietf:params:xml:ns:netconf:base:1.0'
+                  value: 'delete'
                 }
               ],
               _value: 'Authority128'

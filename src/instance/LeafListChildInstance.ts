@@ -39,7 +39,7 @@ export default class LeafListChildInstance implements WithAttributes {
     return this.model.type.serialize(this.rawValue);
   }
 
-  private injestConfigJSON(configJSON: LeafJSON) {
+  public injestConfigJSON(configJSON: LeafJSON) {
     const config = this.getValueFromJSON(configJSON) as LeafJSONValue;
     this.rawValue = config.toString();
   }

@@ -13,10 +13,10 @@ function mapOperationToAttribute(operation: NetconfOperation): IAttribute {
     case 'remove':
     case 'create': {
       return {
+        href: 'urn:ietf:params:xml:ns:netconf:base:1.0',
         name: 'operation',
-        value: operation,
         prefix: 'xc',
-        href: 'urn:ietf:params:xml:ns:netconf:base:1.0'
+        value: operation
       };
     }
     default: {
@@ -28,19 +28,19 @@ function mapOperationToAttribute(operation: NetconfOperation): IAttribute {
 function mapPositionToAttributes(position: Position): IAttribute[] {
   const attributes: IAttribute[] = [
     {
+      href: 'urn:ietf:params:xml:ns:yang:1',
       name: 'insert',
-      value: position.insert,
       prefix: 'yang',
-      href: 'urn:ietf:params:xml:ns:yang:1'
+      value: position.insert
     }
   ];
 
   if (position.value) {
     attributes.push({
+      href: 'urn:ietf:params:xml:ns:yang:1',
       name: 'value',
-      value: position.value,
       prefix: 'yang',
-      href: 'urn:ietf:params:xml:ns:yang:1'
+      value: position.value
     });
   }
 
@@ -53,10 +53,10 @@ export default class WithAttributes {
   public parseAttributesFromXML(config: Element) {
     this.rawAttributes = config.attrs().reduce((acc, attr) => {
       acc.push({
+        href: attr.namespace()?.href(),
         name: attr.name(),
-        value: attr.value(),
         prefix: attr.namespace()?.prefix(),
-        href: attr.namespace()?.href()
+        value: attr.value()
       });
 
       return acc;

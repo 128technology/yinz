@@ -53,8 +53,8 @@ describe('With Attributes Mixin', () => {
     const testModel = new Test();
     const el = xmlUtil.toElement('<qp-value />');
     testModel.parseAttributesFromJSON({
-      _value: 'foo',
-      _attributes: [{ name: 'test', value: 'foobar', prefix: 'ab', href: 'http://128' }]
+      _attributes: [{ name: 'test', value: 'foobar', prefix: 'ab', href: 'http://128' }],
+      _value: 'foo'
     });
     testModel.addAttributes(el);
 
@@ -65,8 +65,8 @@ describe('With Attributes Mixin', () => {
     const testModel = new Test();
     const el = xmlUtil.toElement('<qp-value />');
     testModel.parseAttributesFromJSON({
-      _value: 'foo',
-      _operation: 'create'
+      _operation: 'create',
+      _value: 'foo'
     });
     testModel.addAttributes(el);
 
@@ -79,9 +79,9 @@ describe('With Attributes Mixin', () => {
     const testModel = new Test();
     const el = xmlUtil.toElement('<qp-value />');
     testModel.parseAttributesFromJSON({
-      _value: 'foo',
       _operation: 'create',
-      _position: { insert: 'first' }
+      _position: { insert: 'first' },
+      _value: 'foo'
     });
     testModel.addAttributes(el);
 
@@ -94,9 +94,9 @@ describe('With Attributes Mixin', () => {
     const testModel = new Test();
     const el = xmlUtil.toElement('<qp-value />');
     testModel.parseAttributesFromJSON({
-      _value: 'foo',
       _operation: 'create',
-      _position: { insert: 'after', value: 'bar' }
+      _position: { insert: 'after', value: 'bar' },
+      _value: 'foo'
     });
     testModel.addAttributes(el);
 
