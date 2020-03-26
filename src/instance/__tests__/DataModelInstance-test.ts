@@ -5,9 +5,8 @@ import * as path from 'path';
 import xmlUtil from '../../__tests__/xmlUtil';
 import DataModel from '../../model';
 
-import {
+import DataModelInstance, {
   ContainerInstance,
-  DataModelInstance,
   LeafInstance,
   LeafListInstance,
   ListInstance,

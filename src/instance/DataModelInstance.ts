@@ -7,7 +7,6 @@ import DataModel, { Model, List, Leaf, Choice, LeafList } from '../model';
 import { isElement } from '../util/xmlUtil';
 
 import Path from './Path';
-import Instance from './Instance';
 import {
   ContainerInstance,
   LeafInstance,
@@ -19,7 +18,7 @@ import {
   LeafListInstance,
   ShouldSkip
 } from './';
-import { XMLSerializationOptions, ContainerJSON } from './types';
+import { XMLSerializationOptions, ContainerJSON, Instance } from './types';
 import {
   getPathXPath,
   getFieldIdFromParentAxis,
