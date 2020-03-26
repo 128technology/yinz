@@ -1,18 +1,27 @@
+import * as _ from 'lodash';
+
 import ContainerInstance from './ContainerInstance';
 import ListChildInstance from './ListChildInstance';
 import LeafListChildInstance from './LeafListChildInstance';
 import Instance from './Instance';
 import Path from './Path';
 
+export type WithAttributes<T> = Attributes &
+  Readonly<{
+    _value: T;
+  }>;
+
+type CanHaveAttributes<T> = T | WithAttributes<T>;
+
 export type ContainerJSONValue = Readonly<{
   [childName: string]: LeafJSON | LeafListJSON | ListJSON | ContainerJSON;
 }>;
-export type ContainerJSON = ContainerJSONValue | AddAttributes<ContainerJSONValue>;
+export type ContainerJSON = CanHaveAttributes<ContainerJSONValue>;
 
 export type ListChildJSONValue = Readonly<{
   [childName: string]: LeafJSON | LeafListJSON | ListJSON | ContainerJSON;
 }>;
-export type ListChildJSON = ListChildJSONValue | AddAttributes<ListChildJSONValue>;
+export type ListChildJSON = CanHaveAttributes<ListChildJSONValue>;
 
 export type ListJSONValue = ListChildJSONValue[];
 export type ListJSON = ListChildJSON[];
@@ -21,9 +30,17 @@ export type LeafListJSONValue = LeafJSONValue[];
 export type LeafListJSON = LeafJSON[];
 
 export type LeafJSONValue = Readonly<string | number | boolean>;
-export type LeafJSON = LeafJSONValue | AddAttributes<LeafJSONValue>;
+export type LeafJSON = CanHaveAttributes<LeafJSONValue>;
 
-export type JSONConfig = ContainerJSON | ListChildJSON | ListJSON | LeafListJSON | LeafJSON;
+export type JSONConfigNode = ContainerJSON | ListChildJSON | ListJSON | LeafListJSON | LeafJSON;
+export type JSONConfigNodeWithAttributes =
+  | WithAttributes<LeafJSONValue>
+  | WithAttributes<ListChildJSONValue>
+  | WithAttributes<ContainerJSONValue>;
+
+export function hasAttributes(x: JSONConfigNode): x is JSONConfigNodeWithAttributes {
+  return _.isPlainObject(x) && '_value' in (x as object);
+}
 
 export type NetconfOperation = 'merge' | 'create' | 'replace' | 'delete' | 'remove';
 
@@ -32,11 +49,10 @@ export type Position = Readonly<{
   value?: string;
 }>;
 
-export type AddAttributes<T> = Readonly<{
+export type Attributes = Readonly<{
   _attributes?: IAttribute[];
   _operation?: NetconfOperation;
   _position?: Position;
-  _value: T;
 }>;
 
 export interface IAttribute {

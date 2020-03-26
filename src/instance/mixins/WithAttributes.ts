@@ -1,13 +1,9 @@
 import { Element } from 'libxmljs';
 import * as _ from 'lodash';
 
-import { IAttribute, NetconfOperation, Position, JSONConfig, AddAttributes } from '../types';
+import { IAttribute, NetconfOperation, Position, JSONConfigNode, hasAttributes } from '../types';
 import UnreachableCaseError from '../../util/unreachableCaseError';
 import { defineNamespaceSafe } from '../../util/xmlUtil';
-
-function jsonHasAttributes(configJSON: JSONConfig): configJSON is AddAttributes<{}> {
-  return _.isPlainObject(configJSON) && '_value' in (configJSON as object);
-}
 
 function mapOperationToAttribute(operation: NetconfOperation): IAttribute {
   switch (operation) {
@@ -29,7 +25,7 @@ function mapOperationToAttribute(operation: NetconfOperation): IAttribute {
   }
 }
 
-function mapPoitionToAttributes(position: Position): IAttribute[] {
+function mapPositionToAttributes(position: Position): IAttribute[] {
   const attributes: IAttribute[] = [
     {
       name: 'insert',
@@ -67,10 +63,10 @@ export default class WithAttributes {
     }, []);
   }
 
-  public parseAttributesFromJSON(config: JSONConfig) {
+  public parseAttributesFromJSON(config: JSONConfigNode) {
     this.rawAttributes = [];
 
-    if (jsonHasAttributes(config)) {
+    if (hasAttributes(config)) {
       if (config._attributes) {
         this.rawAttributes = config._attributes;
       }
@@ -80,13 +76,13 @@ export default class WithAttributes {
       }
 
       if (config._position) {
-        this.rawAttributes = [...this.rawAttributes, ...mapPoitionToAttributes(config._position)];
+        this.rawAttributes = [...this.rawAttributes, ...mapPositionToAttributes(config._position)];
       }
     }
   }
 
-  public getValueFromJSON(config: JSONConfig) {
-    if (jsonHasAttributes(config)) {
+  public getValueFromJSON(config: JSONConfigNode) {
+    if (hasAttributes(config)) {
       return config._value;
     } else {
       return config;
