@@ -2,9 +2,13 @@ import * as _ from 'lodash';
 
 import ContainerInstance from './ContainerInstance';
 import ListChildInstance from './ListChildInstance';
+import ListInstance from './ListInstance';
+import LeafListInstance from './LeafListInstance';
+import LeafInstance from './LeafInstance';
 import LeafListChildInstance from './LeafListChildInstance';
-import Instance from './Instance';
 import Path from './Path';
+
+export type Instance = ContainerInstance | ListInstance | ListChildInstance | LeafListInstance | LeafInstance;
 
 export type WithAttributes<T> = Attributes &
   Readonly<{
