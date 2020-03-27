@@ -6,7 +6,7 @@ import ListInstance from './ListInstance';
 import LeafListInstance from './LeafListInstance';
 import LeafInstance from './LeafInstance';
 import LeafListChildInstance from './LeafListChildInstance';
-import Path from './Path';
+import Path, { ISegmentKeys } from './Path';
 
 export type Instance = ContainerInstance | ListInstance | ListChildInstance | LeafListInstance | LeafInstance;
 
@@ -51,6 +51,7 @@ export type NetconfOperation = 'merge' | 'create' | 'replace' | 'delete' | 'remo
 export type Position = Readonly<{
   insert: 'first' | 'last' | 'before' | 'after';
   value?: string;
+  keys?: ISegmentKeys[];
 }>;
 
 export type Attributes = Readonly<{

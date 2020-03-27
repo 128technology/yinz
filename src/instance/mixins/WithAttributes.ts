@@ -44,6 +44,21 @@ function mapPositionToAttributes(position: Position): IAttribute[] {
     });
   }
 
+  if (position.keys) {
+    const keyString = position.keys
+      .map(({ key, value }) => {
+        return `[${_.kebabCase(key)}='${value}']`;
+      })
+      .join('');
+
+    attributes.push({
+      href: 'urn:ietf:params:xml:ns:yang:1',
+      name: 'key',
+      prefix: 'yang',
+      value: keyString
+    });
+  }
+
   return attributes;
 }
 

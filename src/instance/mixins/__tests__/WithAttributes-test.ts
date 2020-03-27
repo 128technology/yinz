@@ -104,4 +104,26 @@ describe('With Attributes Mixin', () => {
       '<qp-value xmlns:yang="urn:ietf:params:xml:ns:yang:1" xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="create" yang:insert="after" yang:value="bar" />'
     );
   });
+
+  it('should add list operations with keys', () => {
+    const testModel = new Test();
+    const el = xmlUtil.toElement('<qp-value />');
+    testModel.parseAttributesFromJSON({
+      _operation: 'create',
+      _position: {
+        insert: 'after',
+        keys: [
+          { key: 'foo', value: 'bar' },
+          { key: 'fizzPop', value: 'buzz' }
+        ]
+      },
+
+      _value: 'foo'
+    });
+    testModel.addAttributes(el);
+
+    expect(el.toString()).xml.to.equal(
+      '<qp-value xmlns:yang="urn:ietf:params:xml:ns:yang:1" xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="create" yang:insert="after" yang:key="[foo=\'bar\'][fizz-pop=\'buzz\']" />'
+    );
+  });
 });
