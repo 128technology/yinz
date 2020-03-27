@@ -46,7 +46,7 @@ export default class ListInstance implements Searchable {
   }
 
   public add(config: Element | ListChildJSON) {
-    const newChild = new ListChildInstance(this.model, config, this.parent);
+    const newChild = new ListChildInstance(this.model, config, this.parent, this);
 
     const keys = [...this.model.keys]
       .map(key => {

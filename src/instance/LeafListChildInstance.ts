@@ -20,6 +20,8 @@ export default class LeafListChildInstance implements WithAttributes {
   public rawAttributes: WithAttributes['rawAttributes'];
   public addAttributes: WithAttributes['addAttributes'];
   public getValueFromJSON: WithAttributes['getValueFromJSON'];
+  public addOperation: WithAttributes['addOperation'];
+  public addPosition: WithAttributes['addPosition'];
 
   constructor(model: LeafList, config: Element | LeafJSON, parent?: LeafListInstance) {
     this.model = model;

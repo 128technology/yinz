@@ -33,6 +33,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   public model: List;
   public config: Element;
   public parent: Parent;
+  public listParent: ListInstance;
   public instance: Map<ChildName, Instance>;
   public activeChoices: Map<ChoiceName, SelectedCaseName>;
 
@@ -43,14 +44,18 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   public rawAttributes: WithAttributes['rawAttributes'];
   public addAttributes: WithAttributes['addAttributes'];
   public getValueFromJSON: WithAttributes['getValueFromJSON'];
+  public addOperation: WithAttributes['addOperation'];
+  public addPosition: WithAttributes['addPosition'];
+
   public getPath: Searchable['getPath'];
   public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
 
-  constructor(model: List, config: Element | ListChildJSON, parent: Parent) {
+  constructor(model: List, config: Element | ListChildJSON, parent: Parent, listParent: ListInstance) {
     this.model = model;
     this.parent = parent;
+    this.listParent = listParent;
     this.instance = new Map();
     this.activeChoices = new Map();
 

@@ -34,6 +34,9 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public rawAttributes: WithAttributes['rawAttributes'];
   public addAttributes: WithAttributes['addAttributes'];
   public getValueFromJSON: WithAttributes['getValueFromJSON'];
+  public addOperation: WithAttributes['addOperation'];
+  public addPosition: WithAttributes['addPosition'];
+
   public getPath: Searchable['getPath'];
   public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
   public isMatch: Searchable['isMatch'];

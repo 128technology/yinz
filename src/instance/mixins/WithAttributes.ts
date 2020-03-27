@@ -72,11 +72,11 @@ export default class WithAttributes {
       }
 
       if (config._operation) {
-        this.rawAttributes.push(mapOperationToAttribute(config._operation));
+        this.addOperation(config._operation);
       }
 
       if (config._position) {
-        this.rawAttributes = [...this.rawAttributes, ...mapPositionToAttributes(config._position)];
+        this.addPosition(config._position);
       }
     }
   }
@@ -106,5 +106,13 @@ export default class WithAttributes {
         el.attr({ [name]: value });
       }
     });
+  }
+
+  public addOperation(operation: NetconfOperation) {
+    this.rawAttributes.push(mapOperationToAttribute(operation));
+  }
+
+  public addPosition(position: Position) {
+    this.rawAttributes = [...this.rawAttributes, ...mapPositionToAttributes(position)];
   }
 }
