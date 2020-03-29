@@ -79,9 +79,9 @@ export default class ContainerInstance implements Searchable, WithAttributes {
       this.addAttributes(outer);
     }
 
-    Array.from(this.children.values()).forEach(child => {
+    for (const child of this.children.values()) {
       child.toXML(outer, options);
-    });
+    }
   }
 
   public getInstance(path: Path, noMatchHandler: NoMatchHandler = this.handleNoMatch): Instance {
