@@ -4,41 +4,39 @@ import * as _ from 'lodash';
 import applyMixins from '../util/applyMixins';
 import { ContainerInstance, Parent } from '../instance';
 import { ContainerJSON } from '../instance/types';
-import { Visibility, Status } from '../enum';
 
 import { PresenceParser } from './parsers';
 import { Statement, Whenable, WithRegistry } from './mixins';
-import { IWhen } from './mixins/Whenable';
 import { buildChildren } from './util/childBuilder';
-import { Model, Case, Choice, Identities, ModelRegistry, Visitor } from './';
+import { Model, Choice, Identities, ModelRegistry, Visitor } from './';
 
 export default class Container implements Statement, Whenable, WithRegistry {
+  public addStatementProps: Statement['addStatementProps'];
+  public addWhenableProps: Whenable['addWhenableProps'];
+  public choiceCase: Statement['choiceCase'];
+  public description: Statement['description'];
+  public getName: Statement['getName'];
+  public hasWhenAncestorOrSelf: Whenable['hasWhenAncestorOrSelf'];
+  public isDeprecated: Statement['isDeprecated'];
+  public isObsolete: Statement['isObsolete'];
+  public isPrototype: Statement['isPrototype'];
+  public isVisible: Statement['isVisible'];
+  public name: Statement['name'];
+  public ns: Statement['ns'];
+  public otherProps: Statement['otherProps'];
+  public parentModel: Statement['parentModel'];
+  public path: Statement['path'];
+  public register: WithRegistry['register'];
+  public status: Statement['status'];
+  public visibility: Statement['visibility'];
+  public when: Whenable['when'];
+
   public children: Map<string, Model>;
-  public choiceCase: Case;
   public choices: Map<string, Choice>;
-  public description: string;
   public identities: Identities;
-  public isObsolete: boolean;
-  public isDeprecated: boolean;
-  public isPrototype: boolean;
-  public isVisible: boolean;
   public modelRegistry: ModelRegistry;
   public modelType: string;
-  public name: string;
-  public ns: [string, string];
-  public otherProps: Map<string, string | boolean> = new Map();
-  public parentModel: Model;
-  public path: string;
-  public status: Status;
   public presence: string;
-  public visibility: Visibility | null;
-  public when: IWhen[];
-  public hasWhenAncestorOrSelf: boolean;
-
-  public addStatementProps: (el: Element, parentModel: Model) => void;
-  public addWhenableProps: (el: Element) => void;
-  public getName: (camelCase?: boolean) => string;
-  public register: (parentModel: Model, thisModel: Model | Choice) => void;
 
   constructor(el: Element, parentModel?: Model, identities?: Identities, modelRegistry?: ModelRegistry) {
     this.modelType = 'container';

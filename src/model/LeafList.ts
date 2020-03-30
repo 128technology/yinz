@@ -1,49 +1,47 @@
 import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
-import { OrderedBy, Visibility, Status } from '../enum';
 import { LeafListInstance, ListChildInstance, ContainerInstance } from '../instance';
 import { LeafListJSON } from '../instance/types';
-import { Type, DerivedType, BuiltInType } from '../types';
+import { DerivedType, BuiltInType } from '../types';
 
 import { ListLike, Statement, Typed, Whenable, WithIdentities, WithRegistry, WithUnits } from './mixins';
-import { IWhen } from './mixins/Whenable';
-import { Model, Case, Identities, Choice, Visitor } from './';
+import { Model, Visitor } from './';
 
 export default class LeafList implements ListLike, Statement, Typed, Whenable, WithIdentities, WithRegistry, WithUnits {
-  public choiceCase: Case;
-  public definedUnits: string;
-  public description: string;
-  public hasWhenAncestorOrSelf: boolean;
-  public identities: Identities;
-  public isObsolete: boolean;
-  public isDeprecated: boolean;
-  public isPrototype: boolean;
-  public isVisible: boolean;
-  public keys: Set<string>;
-  public maxElements: number;
-  public minElements: number;
-  public modelType: string;
-  public name: string;
-  public ns: [string, string];
-  public orderedBy: OrderedBy;
-  public otherProps: Map<string, string | boolean> = new Map();
-  public parentModel: Model;
-  public path: string;
-  public status: Status;
-  public type: Type;
-  public units: string;
-  public visibility: Visibility | null;
-  public when: IWhen[];
+  public addDefinedUnits: WithUnits['addDefinedUnits'];
+  public addIdentityProps: WithIdentities['addIdentityProps'];
+  public addListLikeProps: ListLike['addListLikeProps'];
+  public addStatementProps: Statement['addStatementProps'];
+  public addTypeProps: Typed['addTypeProps'];
+  public addWhenableProps: Whenable['addWhenableProps'];
+  public choiceCase: Statement['choiceCase'];
+  public definedUnits: WithUnits['definedUnits'];
+  public description: Statement['description'];
+  public getName: Statement['getName'];
+  public hasWhenAncestorOrSelf: Whenable['hasWhenAncestorOrSelf'];
+  public identities: WithIdentities['identities'];
+  public isDeprecated: Statement['isDeprecated'];
+  public isObsolete: Statement['isObsolete'];
+  public isPrototype: Statement['isPrototype'];
+  public isVisible: Statement['isVisible'];
+  public maxElements: ListLike['maxElements'];
+  public minElements: ListLike['minElements'];
+  public name: Statement['name'];
+  public ns: Statement['ns'];
+  public orderedBy: ListLike['orderedBy'];
+  public otherProps: Statement['otherProps'];
+  public parentModel: Statement['parentModel'];
+  public path: Statement['path'];
+  public register: WithRegistry['register'];
+  public status: Statement['status'];
+  public type: Typed['type'];
+  public units: WithUnits['units'];
+  public visibility: Statement['visibility'];
+  public when: Whenable['when'];
 
-  public addDefinedUnits: (el: Element) => void;
-  public addIdentityProps: (parentModel: Model) => void;
-  public addListLikeProps: (el: Element) => void;
-  public addStatementProps: (el: Element, parentModel: Model) => void;
-  public addTypeProps: (el: Element, identities: Identities) => void;
-  public addWhenableProps: (el: Element) => void;
-  public getName: (camelCase?: boolean) => string;
-  public register: (parentModel: Model, thisModel: Model | Choice) => void;
+  public keys: Set<string>;
+  public modelType: string;
 
   constructor(el: Element, parentModel?: Model) {
     this.modelType = 'leafList';

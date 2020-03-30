@@ -3,7 +3,6 @@ import { Element } from 'libxmljs';
 import applyMixins from '../util/applyMixins';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import ns from '../util/ns';
-import { SerializationReturnType } from '../enum/SerializationType';
 import { isElement } from '../util/xmlUtil';
 
 import EnumerationMemberType from './EnumerationMemberType';
@@ -16,12 +15,12 @@ export default class EnumerationType implements Named, RequiredField, StringSeri
     return enumValueOf(typeName) === TYPE;
   }
 
-  public type: string;
-  public members: Map<string, EnumerationMemberType>;
+  public addNamedProps: Named['addNamedProps'];
+  public serialize: StringSerialize['serialize'];
+  public type: Named['type'];
+  public validateRequiredFields: RequiredField['validateRequiredFields'];
 
-  public serialize: (val: string) => SerializationReturnType;
-  public addNamedProps: (el: Element) => void;
-  public validateRequiredFields: (el: Element, fields: string[], type: string) => void;
+  public members: Map<string, EnumerationMemberType>;
 
   get options() {
     return Array.from(this.members.entries())

@@ -2,47 +2,45 @@ import { Element } from 'libxmljs';
 import * as _ from 'lodash';
 
 import applyMixins from '../util/applyMixins';
-import { Visibility, Status } from '../enum';
 import { LeafInstance, Parent } from '../instance';
 import { LeafJSON } from '../instance/types';
-import { Type, DerivedType, BuiltInType } from '../types';
+import { DerivedType, BuiltInType } from '../types';
 
 import { MandatoryParser, DefaultParser } from './parsers';
 import { Statement, Typed, Whenable, WithIdentities, WithRegistry, WithUnits } from './mixins';
-import { IWhen } from './mixins/Whenable';
-import { List, Model, Case, Identities, Choice, Visitor } from './';
+import { List, Model, Visitor } from './';
 
 export default class Leaf implements Statement, Typed, Whenable, WithIdentities, WithRegistry, WithUnits {
-  public choiceCase: Case;
+  public addDefinedUnits: WithUnits['addDefinedUnits'];
+  public addIdentityProps: WithIdentities['addIdentityProps'];
+  public addStatementProps: Statement['addStatementProps'];
+  public addTypeProps: Typed['addTypeProps'];
+  public addWhenableProps: Whenable['addWhenableProps'];
+  public choiceCase: Statement['choiceCase'];
+  public definedUnits: WithUnits['definedUnits'];
+  public description: Statement['description'];
+  public getName: Statement['getName'];
+  public hasWhenAncestorOrSelf: Whenable['hasWhenAncestorOrSelf'];
+  public identities: WithIdentities['identities'];
+  public isDeprecated: Statement['isDeprecated'];
+  public isObsolete: Statement['isObsolete'];
+  public isPrototype: Statement['isPrototype'];
+  public isVisible: Statement['isVisible'];
+  public name: Statement['name'];
+  public ns: Statement['ns'];
+  public otherProps: Statement['otherProps'];
+  public parentModel: Statement['parentModel'];
+  public path: Statement['path'];
+  public register: WithRegistry['register'];
+  public status: Statement['status'];
+  public type: Typed['type'];
+  public units: WithUnits['units'];
+  public visibility: Statement['visibility'];
+  public when: Whenable['when'];
+
   public default: string;
-  public definedUnits: string;
-  public description: string;
-  public hasWhenAncestorOrSelf: boolean;
-  public identities: Identities;
-  public isObsolete: boolean;
-  public isDeprecated: boolean;
-  public isPrototype: boolean;
-  public isVisible: boolean;
   public mandatory: boolean;
   public modelType: string;
-  public name: string;
-  public ns: [string, string];
-  public otherProps: Map<string, string | boolean> = new Map();
-  public parentModel: Model;
-  public path: string;
-  public status: Status;
-  public type: Type;
-  public units: string;
-  public visibility: Visibility | null;
-  public when: IWhen[];
-
-  public addIdentityProps: (parentModel: Model) => void;
-  public addStatementProps: (el: Element, parentModel: Model) => void;
-  public addTypeProps: (el: Element, identities: Identities) => void;
-  public addWhenableProps: (el: Element) => void;
-  public addDefinedUnits: (el: Element) => void;
-  public getName: (camelCase?: boolean) => string;
-  public register: (parentModel: Model, thisModel: Model | Choice) => void;
 
   constructor(el: Element, parentModel?: Model) {
     this.modelType = 'leaf';

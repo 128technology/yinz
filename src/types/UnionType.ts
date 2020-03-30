@@ -4,7 +4,6 @@ import applyMixins from '../util/applyMixins';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import ns from '../util/ns';
 import { Identities } from '../model';
-import { SerializationReturnType } from '../enum/SerializationType';
 import { isElement } from '../util/xmlUtil';
 
 import TypeParser from './util/TypeParser';
@@ -18,13 +17,13 @@ export default class UnionType implements Named, RequiredField, StringSerialize,
     return enumValueOf(typeName) === TYPE;
   }
 
-  public type: string;
-  public types: Type[];
+  public addNamedProps: Named['addNamedProps'];
+  public serialize: StringSerialize['serialize'];
+  public traverse: Traversable['traverse'];
+  public type: Named['type'];
+  public validateRequiredFields: RequiredField['validateRequiredFields'];
 
-  public serialize: (val: string) => SerializationReturnType;
-  public addNamedProps: (el: Element) => void;
-  public validateRequiredFields: (el: Element, fields: string[], type: string) => void;
-  public traverse: (action: (type: Type) => void) => void;
+  public types: Type[];
 
   constructor(el: Element, identities?: Identities) {
     this.addNamedProps(el);

@@ -4,7 +4,6 @@ import applyMixins from '../util/applyMixins';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import ns from '../util/ns';
 import { Identities } from '../model';
-import { SerializationReturnType } from '../enum/SerializationType';
 
 import { Named, RequiredField, StringSerialize } from './mixins';
 
@@ -15,12 +14,12 @@ export default class IdentityRefType implements Named, StringSerialize, Required
     return enumValueOf(typeName) === TYPE;
   }
 
-  public type: string;
-  public options: string[];
+  public addNamedProps: Named['addNamedProps'];
+  public serialize: StringSerialize['serialize'];
+  public type: Named['type'];
+  public validateRequiredFields: RequiredField['validateRequiredFields'];
 
-  public serialize: (val: string) => SerializationReturnType;
-  public addNamedProps: (el: Element) => void;
-  public validateRequiredFields: (el: Element, fields: string[], type: string) => void;
+  public options: string[];
 
   constructor(el: Element, identities: Identities) {
     this.addNamedProps(el);

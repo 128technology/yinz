@@ -4,12 +4,10 @@ import applyMixins from '../util/applyMixins';
 import ns from '../util/ns';
 import { ListInstance, ListChildInstance, ContainerInstance } from '../instance';
 import { ListJSON } from '../instance/types';
-import { OrderedBy, Visibility, Status } from '../enum';
 
 import { Statement, ListLike, Whenable, WithRegistry } from './mixins';
-import { IWhen } from './mixins/Whenable';
 import { buildChildren } from './util/childBuilder';
-import { Model, Case, Choice, Identities, Visitor } from './';
+import { Model, Choice, Identities, Visitor } from './';
 
 export default class List implements ListLike, Statement, Whenable, WithRegistry {
   private static getKeys(el: Element) {
@@ -17,35 +15,35 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
     return keyString.split(' ');
   }
 
-  public children: Map<string, Model>;
-  public choiceCase: Case;
-  public choices: Map<string, Choice>;
-  public description: string;
-  public identities: Identities;
-  public isObsolete: boolean;
-  public isDeprecated: boolean;
-  public isPrototype: boolean;
-  public isVisible: boolean;
-  public keys: Set<string>;
-  public maxElements: number;
-  public minElements: number;
-  public modelType: string;
-  public name: string;
-  public ns: [string, string];
-  public orderedBy: OrderedBy;
-  public otherProps: Map<string, string | boolean> = new Map();
-  public parentModel: Model;
-  public path: string;
-  public status: Status;
-  public visibility: Visibility | null;
-  public when: IWhen[];
-  public hasWhenAncestorOrSelf: boolean;
+  public addListLikeProps: ListLike['addListLikeProps'];
+  public addStatementProps: Statement['addStatementProps'];
+  public addWhenableProps: Whenable['addWhenableProps'];
+  public choiceCase: Statement['choiceCase'];
+  public description: Statement['description'];
+  public getName: Statement['getName'];
+  public hasWhenAncestorOrSelf: Whenable['hasWhenAncestorOrSelf'];
+  public isDeprecated: Statement['isDeprecated'];
+  public isObsolete: Statement['isObsolete'];
+  public isPrototype: Statement['isPrototype'];
+  public isVisible: Statement['isVisible'];
+  public maxElements: ListLike['maxElements'];
+  public minElements: ListLike['minElements'];
+  public name: Statement['name'];
+  public ns: Statement['ns'];
+  public orderedBy: ListLike['orderedBy'];
+  public otherProps: Statement['otherProps'];
+  public parentModel: Statement['parentModel'];
+  public path: Statement['path'];
+  public register: WithRegistry['register'];
+  public status: Statement['status'];
+  public visibility: Statement['visibility'];
+  public when: Whenable['when'];
 
-  public addListLikeProps: (el: Element) => void;
-  public addStatementProps: (el: Element, parentModel: Model) => void;
-  public addWhenableProps: (el: Element) => void;
-  public getName: (camelCase?: boolean) => string;
-  public register: (parentModel: Model, thisModel: Model | Choice) => void;
+  public children: Map<string, Model>;
+  public choices: Map<string, Choice>;
+  public identities: Identities;
+  public keys: Set<string>;
+  public modelType: string;
 
   constructor(el: Element, parentModel?: Model, identities?: Identities) {
     this.modelType = 'list';

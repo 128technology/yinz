@@ -25,10 +25,10 @@ export default class IntegerType implements Named {
     return TYPES.indexOf(enumValueOf(typeName)) !== -1;
   }
 
-  public type: string;
-  public range: Range;
+  public addNamedProps: Named['addNamedProps'];
+  public type: Named['type'];
 
-  public addNamedProps: (el: Element) => void;
+  public range: Range;
 
   constructor(el: Element) {
     this.addNamedProps(el);

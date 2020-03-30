@@ -17,12 +17,12 @@ export default class LeafRefType implements Named, RequiredField {
     return enumValueOf(typeName) === TYPE;
   }
 
-  public type: string;
+  public addNamedProps: Named['addNamedProps'];
+  public type: Named['type'];
+  public validateRequiredFields: RequiredField['validateRequiredFields'];
+
   public path: string;
   public refType: Type;
-
-  public addNamedProps: (el: Element) => void;
-  public validateRequiredFields: (el: Element, fields: string[], type: string) => void;
 
   constructor(el: Element, identities?: Identities) {
     this.addNamedProps(el);
