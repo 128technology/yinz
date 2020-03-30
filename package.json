@@ -14,7 +14,7 @@
     "build": "tsc -d",
     "example": "npm run build && node examples/index.js",
     "prepublishOnly": "npm run build",
-    "format": "prettier --print-width 120 --single-quote --trailing-comma none --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "repository": {
     "type": "git",
@@ -41,12 +41,12 @@
     "chai": "^3.5.0",
     "chai-xml": "^0.3.1",
     "mocha": "^6.2.0",
-    "prettier": "^1.19.1",
+    "prettier": "^2.0.2",
     "sinon": "^6.3.5",
     "ts-node": "^8.4.1",
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.0.1",
+    "tslint-plugin-prettier": "^2.3.0",
     "typescript": "^3.8.3"
   },
   "publishConfig": {

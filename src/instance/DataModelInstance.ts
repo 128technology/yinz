@@ -152,10 +152,7 @@ export default class DataModelInstance {
     const { element, cleanUp } = this.getElementForPath(path);
 
     try {
-      const result = element
-        .get(targetXPath)
-        .find(xPath, this.model.namespaces)
-        .filter(isElement);
+      const result = element.get(targetXPath).find(xPath, this.model.namespaces).filter(isElement);
 
       cleanUp();
       return result;

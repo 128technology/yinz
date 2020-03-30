@@ -51,7 +51,7 @@ export default class Choice implements Statement, Whenable, WithRegistry {
 
     // Merge the child maps together
     this.children = new Map(
-      function*(): Iterable<[string, Model]> {
+      function* (): Iterable<[string, Model]> {
         for (let i = 0, lenI = this.cases.length; i < lenI; i++) {
           yield* this.cases[i].children;
         }

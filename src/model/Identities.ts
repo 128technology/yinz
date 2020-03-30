@@ -37,14 +37,7 @@ export default class Identities {
         const baseEl = identity.get('./yin:base', ns);
 
         return {
-          base: baseEl
-            ? _.last(
-                baseEl
-                  .attr('name')
-                  .value()
-                  .split(':')
-              )
-            : undefined,
+          base: baseEl ? _.last(baseEl.attr('name').value().split(':')) : undefined,
           description: descriptionEl ? descriptionEl.text() : undefined,
           name: identity.attr('name').value(),
           prefix: identity.attr('module-prefix').value()

@@ -13,10 +13,7 @@ import { Model, Case, Choice, Identities, Visitor } from './';
 
 export default class List implements ListLike, Statement, Whenable, WithRegistry {
   private static getKeys(el: Element) {
-    const keyString = el
-      .get('./yin:key', ns)
-      .attr('value')
-      .value();
+    const keyString = el.get('./yin:key', ns).attr('value').value();
     return keyString.split(' ');
   }
 
