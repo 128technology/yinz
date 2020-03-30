@@ -16,12 +16,12 @@ export default class DecimalType implements Named, RequiredField {
     return enumValueOf(typeName) === TYPE;
   }
 
-  public range: Range;
-  public type: string;
-  public fractionDigits: number;
+  public addNamedProps: Named['addNamedProps'];
+  public type: Named['type'];
+  public validateRequiredFields: RequiredField['validateRequiredFields'];
 
-  public addNamedProps: (el: Element) => void;
-  public validateRequiredFields: (el: Element, fields: string[], type: string) => void;
+  public range: Range;
+  public fractionDigits: number;
 
   constructor(el: Element) {
     this.addNamedProps(el);

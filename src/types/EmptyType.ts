@@ -13,9 +13,8 @@ export default class EmptyType implements Named {
     return enumValueOf(typeName) === TYPE;
   }
 
-  public type: string;
-
-  public addNamedProps: (el: Element) => void;
+  public addNamedProps: Named['addNamedProps'];
+  public type: Named['type'];
 
   constructor(el: Element) {
     this.addNamedProps(el);

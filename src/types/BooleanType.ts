@@ -8,14 +8,13 @@ import { Named } from './mixins';
 const TYPE = BuiltInType.boolean;
 const SERIALIZATION_TYPE = SerializationType.boolean;
 
-export default class BooleanType {
+export default class BooleanType implements Named {
   public static matches(typeName: string) {
     return enumValueOf(typeName) === TYPE;
   }
 
-  public type: string;
-
-  public addNamedProps: (el: Element) => void;
+  public addNamedProps: Named['addNamedProps'];
+  public type: Named['type'];
 
   constructor(el: Element) {
     this.addNamedProps(el);

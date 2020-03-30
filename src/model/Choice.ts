@@ -2,11 +2,9 @@ import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
 import { isElement } from '../util/xmlUtil';
-import { Visibility, Status } from '../enum';
 
 import { Statement, Whenable, WithRegistry } from './mixins';
 import { MandatoryParser } from './parsers';
-import { IWhen } from './mixins/Whenable';
 import { Model, Case, Visitor } from './';
 
 export default class Choice implements Statement, Whenable, WithRegistry {
@@ -16,30 +14,30 @@ export default class Choice implements Statement, Whenable, WithRegistry {
     return Choice.CASE_TYPES.has(el.name());
   }
 
+  public addStatementProps: Statement['addStatementProps'];
+  public addWhenableProps: Whenable['addWhenableProps'];
+  public choiceCase: Statement['choiceCase'];
+  public description: Statement['description'];
+  public getName: Statement['getName'];
+  public hasWhenAncestorOrSelf: Whenable['hasWhenAncestorOrSelf'];
+  public isDeprecated: Statement['isDeprecated'];
+  public isObsolete: Statement['isObsolete'];
+  public isPrototype: Statement['isPrototype'];
+  public isVisible: Statement['isVisible'];
+  public name: Statement['name'];
+  public ns: Statement['ns'];
+  public otherProps: Statement['otherProps'];
+  public parentModel: Statement['parentModel'];
+  public path: Statement['path'];
+  public register: WithRegistry['register'];
+  public status: Statement['status'];
+  public visibility: Statement['visibility'];
+  public when: Whenable['when'];
+
   public cases: Case[];
   public children: Map<string, Model>;
-  public choiceCase: Case;
-  public description: string;
-  public isObsolete: boolean;
-  public isDeprecated: boolean;
-  public isPrototype: boolean;
-  public isVisible: boolean;
   public mandatory: boolean;
   public modelType: string;
-  public name: string;
-  public ns: [string, string];
-  public otherProps: Map<string, string | boolean> = new Map();
-  public parentModel: Model;
-  public path: string;
-  public status: Status;
-  public visibility: Visibility | null;
-  public when: IWhen[];
-  public hasWhenAncestorOrSelf: boolean;
-
-  public addStatementProps: (el: Element, parentModel: Model) => void;
-  public addWhenableProps: (el: Element) => void;
-  public getName: (camelCase?: boolean) => string;
-  public register: (parentModel: Model, thisModel: Model | Choice) => void;
 
   constructor(el: Element, parentModel?: Model) {
     this.modelType = 'choice';

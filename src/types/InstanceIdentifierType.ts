@@ -2,7 +2,6 @@ import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
-import { SerializationReturnType } from '../enum/SerializationType';
 
 import { Named, StringSerialize } from './mixins';
 
@@ -14,10 +13,9 @@ export default class InstanceIdentifierType implements Named, StringSerialize {
     return enumValueOf(typeName) === TYPE;
   }
 
-  public type: string;
-
-  public serialize: (val: string) => SerializationReturnType;
-  public addNamedProps: (el: Element) => void;
+  public addNamedProps: Named['addNamedProps'];
+  public serialize: StringSerialize['serialize'];
+  public type: Named['type'];
 
   constructor(el: Element) {
     this.addNamedProps(el);

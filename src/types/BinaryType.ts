@@ -3,7 +3,6 @@ import { Element } from 'libxmljs';
 import applyMixins from '../util/applyMixins';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import ns from '../util/ns';
-import { SerializationReturnType } from '../enum/SerializationType';
 
 import Range from './Range';
 import { Named, StringSerialize } from './mixins';
@@ -15,11 +14,11 @@ export default class BinaryType implements Named, StringSerialize {
     return enumValueOf(typeName) === TYPE;
   }
 
-  public type: string;
-  public length: Range;
+  public addNamedProps: Named['addNamedProps'];
+  public serialize: StringSerialize['serialize'];
+  public type: Named['type'];
 
-  public serialize: (val: string) => SerializationReturnType;
-  public addNamedProps: (el: Element) => void;
+  public length: Range;
 
   constructor(el: Element) {
     this.addNamedProps(el);

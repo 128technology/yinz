@@ -16,15 +16,15 @@ export default class DerivedType implements Named, Traversable {
     return enumValueOf(typeName) === null;
   }
 
-  public type: string;
+  public addNamedProps: Named['addNamedProps'];
+  public traverse: Traversable['traverse'];
+  public type: Named['type'];
+
   public default: string;
   public units: string;
   public description?: string;
   public baseType: Type;
   public suggestionRefs: string[];
-
-  public addNamedProps: (el: Element) => void;
-  public traverse: (action: (type: Type) => void) => void;
 
   constructor(el: Element, identities?: Identities) {
     this.addNamedProps(el);
