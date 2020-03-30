@@ -45,7 +45,7 @@ describe('Child Builder', () => {
       'reverse-flow-enforcement'
     ];
 
-    leafs.forEach(leaf => {
+    leafs.forEach((leaf) => {
       expect(children.get(leaf)).to.be.an.instanceof(Leaf);
     });
   });
@@ -53,7 +53,7 @@ describe('Child Builder', () => {
   it('should build container children', () => {
     const containers = ['bfd', 'entitlement', 'system'];
 
-    containers.forEach(container => {
+    containers.forEach((container) => {
       expect(children.get(container)).to.be.an.instanceof(Container);
     });
   });
@@ -61,7 +61,7 @@ describe('Child Builder', () => {
   it('should build leaf-list children', () => {
     const leafLists = ['group'];
 
-    leafLists.forEach(leafList => {
+    leafLists.forEach((leafList) => {
       expect(children.get(leafList)).to.be.an.instanceof(LeafList);
     });
   });
@@ -69,7 +69,7 @@ describe('Child Builder', () => {
   it('should build list children', () => {
     const lists = ['peer', 'routing', 'node', 'redundancy-group', 'priority', 'service-route', 'service-route-policy'];
 
-    lists.forEach(list => {
+    lists.forEach((list) => {
       expect(children.get(list)).to.be.an.instanceof(List);
     });
   });

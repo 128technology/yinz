@@ -13,10 +13,7 @@ import { Model, Case, Choice, Identities, Visitor } from './';
 
 export default class List implements ListLike, Statement, Whenable, WithRegistry {
   private static getKeys(el: Element) {
-    const keyString = el
-      .get('./yin:key', ns)
-      .attr('value')
-      .value();
+    const keyString = el.get('./yin:key', ns).attr('value').value();
     return keyString.split(' ');
   }
 
@@ -79,7 +76,7 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
   }
 
   public getKeyNodes() {
-    return [...this.keys.values()].map(key => this.children.get(key));
+    return [...this.keys.values()].map((key) => this.children.get(key));
   }
 
   public buildInstance(config: Element | ListJSON, parent?: ListChildInstance | ContainerInstance) {

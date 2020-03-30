@@ -37,7 +37,7 @@ export default class Case implements Whenable {
       this.buildChildrenFromImplicitCase(el, parentModel);
     }
 
-    [...this.children.values()].forEach(child => {
+    [...this.children.values()].forEach((child) => {
       child.choiceCase = this;
     });
   }

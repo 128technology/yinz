@@ -14,7 +14,7 @@ export function buildChildren(parentEl: Element, parentModel: Model): IChildren 
   return parentEl
     .childNodes()
     .filter(isElement)
-    .filter(el => {
+    .filter((el) => {
       const isConfig = el.get('./yin:config', ns);
 
       return isConfig ? isConfig.attr('value').value() !== 'false' : true;

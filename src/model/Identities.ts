@@ -32,19 +32,12 @@ export default class Identities {
   public parseIdentitiesFromModel(el: Element) {
     const identities = _(el.find('yin:identity', ns))
       .filter(isElement)
-      .map(identity => {
+      .map((identity) => {
         const descriptionEl = identity.get('.//yin:description/yin:text', ns);
         const baseEl = identity.get('./yin:base', ns);
 
         return {
-          base: baseEl
-            ? _.last(
-                baseEl
-                  .attr('name')
-                  .value()
-                  .split(':')
-              )
-            : undefined,
+          base: baseEl ? _.last(baseEl.attr('name').value().split(':')) : undefined,
           description: descriptionEl ? descriptionEl.text() : undefined,
           name: identity.attr('name').value(),
           prefix: identity.attr('module-prefix').value()
@@ -70,6 +63,6 @@ export default class Identities {
 
   public getOptions(base: string) {
     const hasBase = this.identities.has(base);
-    return !hasBase ? [] : this.identities.get(base).map(identity => identity.label);
+    return !hasBase ? [] : this.identities.get(base).map((identity) => identity.label);
   }
 }

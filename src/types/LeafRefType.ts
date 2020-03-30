@@ -33,10 +33,7 @@ export default class LeafRefType implements Named, RequiredField {
   public parseType(el: Element, identities?: Identities) {
     const typeEl = el.get('./yin:type', ns);
     this.refType = TypeParser.parse(typeEl, identities);
-    this.path = el
-      .get('./yin:path', ns)
-      .attr('value')
-      .value();
+    this.path = el.get('./yin:path', ns).attr('value').value();
   }
 
   public serialize(val: string): SerializationReturnType {

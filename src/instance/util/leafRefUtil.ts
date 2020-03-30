@@ -25,7 +25,7 @@ export function evaluateCandidate(potentialMatch: Instance, auxiliaryKeys: Map<s
       const parentModel = current.model;
       const segmentKeys: ISegmentKeys[] = [];
 
-      const substituteKeys = auxiliaryKeysNames.filter(key => key.includes(parentModel.name));
+      const substituteKeys = auxiliaryKeysNames.filter((key) => key.includes(parentModel.name));
       if (substituteKeys.length > 1) {
         throw new Error('Compound keys of more than two parts are not supported');
       }
@@ -66,7 +66,7 @@ export function buildAuxiliaryKeyMap(path: Path) {
         // We can ignore the key for the leafRef field we are querying for, they will be needed
         // later when we evaluate candidates.
         const nextSegment = path[index + 1];
-        keys.forEach(key => {
+        keys.forEach((key) => {
           const { key: keyName, value } = key;
 
           if (keyName !== nextSegment.name) {

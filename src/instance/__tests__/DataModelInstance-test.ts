@@ -85,14 +85,14 @@ describe('Data Model Instance', () => {
     it('should serialize an instance to JSON without skipped fields', () => {
       const instanceSkippedFields = readJSON('./data/instanceSkippedFields.json');
       expect(
-        dataModelInstance.toJSON(true, false, x => x instanceof ListChildInstance && x.model.name === 'node')
+        dataModelInstance.toJSON(true, false, (x) => x instanceof ListChildInstance && x.model.name === 'node')
       ).to.deep.equal(instanceSkippedFields);
     });
 
     it('should serialize an instance to JSON and not skip LeafInstance or LeafListInstance', () => {
       const instanceNotConverted = readJSON('./data/instanceNotConverted.json');
       expect(
-        dataModelInstance.toJSON(true, false, x => x instanceof LeafInstance || x instanceof LeafListInstance)
+        dataModelInstance.toJSON(true, false, (x) => x instanceof LeafInstance || x instanceof LeafListInstance)
       ).to.deep.equal(instanceNotConverted);
     });
 
@@ -620,7 +620,7 @@ describe('Data Model Instance', () => {
       const whenPathLocal = [...base, { name: 'local-as' }];
       const whenPathHold = [...base, { name: 'timers' }, { name: 'hold-time' }];
 
-      [whenPathLocal, whenPathHold].forEach(whenPath => {
+      [whenPathLocal, whenPathHold].forEach((whenPath) => {
         const result = dataModelInstance.evaluateWhenCondition(whenPath);
         expect(result).to.equal(true);
       });

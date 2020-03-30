@@ -114,7 +114,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
     config
       .childNodes()
       .filter(isElement)
-      .forEach(el => {
+      .forEach((el) => {
         const localName = el.name();
 
         if (this.model.hasChild(localName)) {
@@ -139,7 +139,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
 
   public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): ListChildJSONValue {
     return [...this.instance.values()]
-      .map(field =>
+      .map((field) =>
         field instanceof LeafInstance || field instanceof LeafListInstance
           ? field.toJSON(camelCase, convert)
           : field.toJSON(camelCase, convert, shouldSkip)
@@ -157,7 +157,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
       this.addAttributes(outer);
     }
 
-    Array.from(this.instance.values()).forEach(child => {
+    Array.from(this.instance.values()).forEach((child) => {
       child.toXML(outer, options);
     });
   }
@@ -178,7 +178,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   public visit(visitor: Visitor) {
     visitor(this);
 
-    Array.from(this.instance.values()).forEach(child => {
+    Array.from(this.instance.values()).forEach((child) => {
       child.visit(visitor);
     });
   }

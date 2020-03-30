@@ -39,7 +39,7 @@ export default class ListInstance implements Searchable {
     if (config instanceof Element) {
       this.add(config);
     } else {
-      config.forEach(child => {
+      config.forEach((child) => {
         this.add(child);
       });
     }
@@ -49,7 +49,7 @@ export default class ListInstance implements Searchable {
     const newChild = new ListChildInstance(this.model, config, this.parent, this);
 
     const keys = [...this.model.keys]
-      .map(key => {
+      .map((key) => {
         const keyLeaf = newChild.instance.get(key);
 
         if (keyLeaf instanceof LeafInstance) {
@@ -82,7 +82,7 @@ export default class ListInstance implements Searchable {
   }
 
   public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
-    Array.from(this.children.values()).forEach(child => {
+    Array.from(this.children.values()).forEach((child) => {
       child.toXML(parent, options);
     });
   }
@@ -99,7 +99,7 @@ export default class ListInstance implements Searchable {
         const modelKeys = [...this.model.keys];
 
         if (_.isEqual(modelKeys, [...keyMap.keys()])) {
-          const keyString = modelKeys.map(key => keyMap.get(key)).join(',');
+          const keyString = modelKeys.map((key) => keyMap.get(key)).join(',');
 
           if (this.children.has(keyString)) {
             return this.children.get(keyString).getInstance(_.tail(path), noMatchHandler);
@@ -114,7 +114,7 @@ export default class ListInstance implements Searchable {
   public visit(visitor: Visitor) {
     visitor(this);
 
-    Array.from(this.children.values()).forEach(child => {
+    Array.from(this.children.values()).forEach((child) => {
       child.visit(visitor);
     });
   }
