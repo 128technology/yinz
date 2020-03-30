@@ -76,7 +76,7 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
   }
 
   public getKeyNodes() {
-    return [...this.keys.values()].map((key) => this.children.get(key));
+    return [...this.keys.values()].map(key => this.children.get(key));
   }
 
   public buildInstance(config: Element | ListJSON, parent?: ListChildInstance | ContainerInstance) {

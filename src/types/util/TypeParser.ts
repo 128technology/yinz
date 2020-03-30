@@ -37,7 +37,7 @@ function getTypeConstructor(typeName: string): IConstructable {
     UnionType
   ];
 
-  return TYPE_REGISTRY.find((typeDef) => typeDef.matches(typeName));
+  return TYPE_REGISTRY.find(typeDef => typeDef.matches(typeName));
 }
 
 export default class TypeParser {

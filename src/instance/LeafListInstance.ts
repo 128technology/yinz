@@ -35,7 +35,7 @@ export default class LeafListInstance implements Searchable {
     if (config instanceof Element) {
       this.add(config);
     } else {
-      config.forEach((child) => {
+      config.forEach(child => {
         this.add(child);
       });
     }
@@ -46,11 +46,11 @@ export default class LeafListInstance implements Searchable {
   }
 
   public get values() {
-    return this.children.map((child) => child.value);
+    return this.children.map(child => child.value);
   }
 
   public get rawValues() {
-    return this.children.map((child) => child.rawValue);
+    return this.children.map(child => child.rawValue);
   }
 
   public toJSON(camelCase = false, convert = true): { [name: string]: LeafListJSONValue } {
@@ -62,7 +62,7 @@ export default class LeafListInstance implements Searchable {
   public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
     const [prefix, href] = this.model.ns;
     defineNamespaceOnRoot(parent, prefix, href);
-    this.children.forEach((child) => {
+    this.children.forEach(child => {
       child.toXML(parent, options);
     });
   }
@@ -78,7 +78,7 @@ export default class LeafListInstance implements Searchable {
   public visit(visitor: Visitor) {
     visitor(this);
 
-    this.children.forEach((child) => {
+    this.children.forEach(child => {
       child.visit(visitor);
     });
   }

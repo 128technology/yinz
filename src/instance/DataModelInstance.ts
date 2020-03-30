@@ -46,7 +46,7 @@ export default class DataModelInstance {
       this.root.set(rootName, new ContainerInstance(model.root.get(rootName), Object.values(instance)[0]));
       this.rawInstance = this.toXML().root();
 
-      this.visit((instanceToVisit) => {
+      this.visit(instanceToVisit => {
         if (
           instanceToVisit instanceof ListChildInstance ||
           instanceToVisit instanceof LeafListChildInstance ||
@@ -86,7 +86,7 @@ export default class DataModelInstance {
       const matchCandidates = config
         .find(leafRefXPath, this.model.namespaces)
         .filter(isElement)
-        .map((el) => this.getInstanceFromElement(el));
+        .map(el => this.getInstanceFromElement(el));
 
       if (matchCandidates.length === 0) {
         throw new Error('Referenced entity not found. Has it been deleted?');
@@ -172,7 +172,7 @@ export default class DataModelInstance {
       try {
         const result = (element.find(leafRefPath, this.model.namespaces) || [])
           .filter(isElement)
-          .map((refEl) => refEl.text());
+          .map(refEl => refEl.text());
         cleanUp();
         return result;
       } catch (e) {
@@ -196,7 +196,7 @@ export default class DataModelInstance {
 
         try {
           const suggestions = paths.reduce((acc, suggestionPath) => {
-            (element.find(suggestionPath, this.model.namespaces) || []).filter(isElement).forEach((refEl) => {
+            (element.find(suggestionPath, this.model.namespaces) || []).filter(isElement).forEach(refEl => {
               const text = refEl.text();
               if (text && text.length > 0) {
                 acc.add(text);
@@ -231,7 +231,7 @@ export default class DataModelInstance {
     let currentElement = element;
     while (currentModel) {
       if (currentModel instanceof List) {
-        const keys = Array.from(currentModel.keys).map((key) => ({
+        const keys = Array.from(currentModel.keys).map(key => ({
           key,
           value: currentElement.get(`*[local-name()='${key}']`).text()
         }));
@@ -262,7 +262,7 @@ export default class DataModelInstance {
   }
 
   public visit(visitor: Visitor) {
-    Array.from(this.root.values()).forEach((child) => {
+    Array.from(this.root.values()).forEach(child => {
       child.visit(visitor);
     });
   }

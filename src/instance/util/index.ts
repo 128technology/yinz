@@ -12,7 +12,7 @@ function cleanUp(el: Element) {
 }
 
 export function getPathXPath(path: Path) {
-  const tail = path.map((segment) => getSegmentXPath(segment)).join('/');
+  const tail = path.map(segment => getSegmentXPath(segment)).join('/');
   return `//*[local-name()='config']/${tail}`;
 }
 

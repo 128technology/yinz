@@ -6,7 +6,7 @@ import { IntegerType } from '../';
 const TYPES = ['int8', 'int16', 'int32', 'int64', 'uint8', 'uint16', 'uint32', 'uint64'];
 
 describe('Integer Type', () => {
-  TYPES.forEach((type) => {
+  TYPES.forEach(type => {
     it(`should match ${type} type`, () => {
       const typeEl = xmlUtil.toElement(`<type ${yinNS} name="${type}" />`);
       const name = typeEl.attr('name').value();

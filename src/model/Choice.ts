@@ -62,17 +62,17 @@ export default class Choice implements Statement, Whenable, WithRegistry {
   }
 
   public get caseNames() {
-    return this.cases.map((theCase) => theCase.name);
+    return this.cases.map(theCase => theCase.name);
   }
 
   public get emptyCases() {
-    return this.cases.filter((theCase) => theCase.isEmpty());
+    return this.cases.filter(theCase => theCase.isEmpty());
   }
 
   public visit(visitor: Visitor) {
     visitor(this);
 
-    this.cases.forEach((theCase) => {
+    this.cases.forEach(theCase => {
       theCase.visit(visitor);
     });
   }
@@ -81,8 +81,8 @@ export default class Choice implements Statement, Whenable, WithRegistry {
     return el
       .childNodes()
       .filter(isElement)
-      .filter((caseEl) => Choice.isCase(caseEl))
-      .map((caseEl) => new Case(caseEl, this, parentModel));
+      .filter(caseEl => Choice.isCase(caseEl))
+      .map(caseEl => new Case(caseEl, this, parentModel));
   }
 }
 

@@ -102,7 +102,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public visit(visitor: Visitor) {
     visitor(this);
 
-    Array.from(this.children.values()).forEach((child) => {
+    Array.from(this.children.values()).forEach(child => {
       child.visit(visitor);
     });
   }
@@ -146,7 +146,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     config
       .childNodes()
       .filter(isElement)
-      .forEach((el) => {
+      .forEach(el => {
         const localName = el.name();
 
         if (this.model.hasChild(localName)) {

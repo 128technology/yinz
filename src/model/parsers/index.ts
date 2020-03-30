@@ -140,7 +140,7 @@ export class WhenParser {
     const whenEls = el.find('./yin:when', ns).filter(isElement);
 
     if (whenEls && whenEls.length > 0) {
-      return whenEls.map((whenEl) => {
+      return whenEls.map(whenEl => {
         const condition = whenEl.attr('condition').value();
         const prefix = NamespacesParser.getModulePrefix(el);
         const prefixed = WhenParser.ensureXPathNamesPrefixed(condition, prefix);
@@ -192,7 +192,7 @@ export class PropertiesParser {
     const children = el.find('./child::*', ns).filter(isElement);
 
     return children
-      .filter((child) => {
+      .filter(child => {
         if (_.includes(ignoreList, getLocalName(child.name()))) {
           return false;
         }

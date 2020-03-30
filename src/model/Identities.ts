@@ -32,7 +32,7 @@ export default class Identities {
   public parseIdentitiesFromModel(el: Element) {
     const identities = _(el.find('yin:identity', ns))
       .filter(isElement)
-      .map((identity) => {
+      .map(identity => {
         const descriptionEl = identity.get('.//yin:description/yin:text', ns);
         const baseEl = identity.get('./yin:base', ns);
 
@@ -63,6 +63,6 @@ export default class Identities {
 
   public getOptions(base: string) {
     const hasBase = this.identities.has(base);
-    return !hasBase ? [] : this.identities.get(base).map((identity) => identity.label);
+    return !hasBase ? [] : this.identities.get(base).map(identity => identity.label);
   }
 }

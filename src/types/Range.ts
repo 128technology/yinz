@@ -25,8 +25,8 @@ export default class Range {
     const value = el.attr('value').value();
     this.ranges = value
       .split('|')
-      .map((range) => range.trim())
-      .map((range) => {
+      .map(range => range.trim())
+      .map(range => {
         const [lower, upper] = range.split('..');
 
         const min = parse(lower);

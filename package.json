@@ -14,7 +14,7 @@
     "build": "tsc -d",
     "example": "npm run build && node examples/index.js",
     "prepublishOnly": "npm run build",
-    "format": "prettier --print-width 120 --single-quote --trailing-comma none --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "repository": {
     "type": "git",
