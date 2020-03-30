@@ -4,7 +4,8 @@ import applyMixins from '../util/applyMixins';
 import { LeafList } from '../model';
 
 import { WithAttributes } from './mixins';
-import { Visitor, Path, LeafListInstance, LeafJSON } from './';
+import { LeafJSON, Visitor, XMLSerializationOptions, LeafJSONValue } from './types';
+import { Path, LeafListInstance } from './';
 
 export default class LeafListChildInstance implements WithAttributes {
   public model: LeafList;
@@ -12,7 +13,15 @@ export default class LeafListChildInstance implements WithAttributes {
   public parent: LeafListInstance;
   public rawValue: string;
 
-  public customAttributes: Map<string, string>;
+  public customAttributes: WithAttributes['customAttributes'];
+  public parseAttributesFromXML: WithAttributes['parseAttributesFromXML'];
+  public parseAttributesFromJSON: WithAttributes['parseAttributesFromJSON'];
+  public hasAttributes: WithAttributes['hasAttributes'];
+  public rawAttributes: WithAttributes['rawAttributes'];
+  public addAttributes: WithAttributes['addAttributes'];
+  public getValueFromJSON: WithAttributes['getValueFromJSON'];
+  public addOperation: WithAttributes['addOperation'];
+  public addPosition: WithAttributes['addPosition'];
 
   constructor(model: LeafList, config: Element | LeafJSON, parent?: LeafListInstance) {
     this.model = model;
@@ -21,8 +30,10 @@ export default class LeafListChildInstance implements WithAttributes {
     if (config instanceof Element) {
       this.config = config;
       this.injestConfigXML(config);
+      this.parseAttributesFromXML(config);
     } else {
       this.injestConfigJSON(config);
+      this.parseAttributesFromJSON(config);
     }
   }
 
@@ -30,12 +41,23 @@ export default class LeafListChildInstance implements WithAttributes {
     return this.model.type.serialize(this.rawValue);
   }
 
-  public injestConfigJSON(config: LeafJSON) {
+  public injestConfigJSON(configJSON: LeafJSON) {
+    const config = this.getValueFromJSON(configJSON) as LeafJSONValue;
     this.rawValue = config.toString();
   }
 
   public injestConfigXML(config: Element) {
     this.rawValue = config.text();
+  }
+
+  public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
+    const [prefix] = this.model.ns;
+    const el = parent.node(this.model.name, this.rawValue);
+    el.namespace(prefix);
+
+    if (options.includeAttributes && this.hasAttributes) {
+      this.addAttributes(el);
+    }
   }
 
   public getPath(): Path {

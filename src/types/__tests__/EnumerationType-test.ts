@@ -87,7 +87,12 @@ describe('Enumeration Type', () => {
       `)
     );
 
-    expect(type.members).to.deep.equal(new Map([['foo', fooMember], ['bar', barMember]]));
+    expect(type.members).to.deep.equal(
+      new Map([
+        ['foo', fooMember],
+        ['bar', barMember]
+      ])
+    );
   });
 
   it('should parse member options', () => {

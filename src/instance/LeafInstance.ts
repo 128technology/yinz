@@ -6,9 +6,8 @@ import { Leaf } from '../model';
 import { defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
-import { Path, Parent, Visitor, NoMatchHandler } from './';
-
-export type LeafJSON = string | number | boolean;
+import { LeafJSON, XMLSerializationOptions, Visitor, NoMatchHandler, Parent, LeafJSONValue } from './types';
+import { Path } from './';
 
 export default class LeafInstance implements Searchable, WithAttributes {
   public model: Leaf;
@@ -16,11 +15,20 @@ export default class LeafInstance implements Searchable, WithAttributes {
   public parent: Parent;
   public value: string;
 
-  public customAttributes: Map<string, string>;
-  public getPath: () => Path;
-  public isTryingToMatchMe: (path: Path) => boolean;
-  public isMatch: (path: Path) => boolean;
-  public handleNoMatch: () => void;
+  public customAttributes: WithAttributes['customAttributes'];
+  public parseAttributesFromXML: WithAttributes['parseAttributesFromXML'];
+  public parseAttributesFromJSON: WithAttributes['parseAttributesFromJSON'];
+  public hasAttributes: WithAttributes['hasAttributes'];
+  public rawAttributes: WithAttributes['rawAttributes'];
+  public addAttributes: WithAttributes['addAttributes'];
+  public getValueFromJSON: WithAttributes['getValueFromJSON'];
+  public addOperation: WithAttributes['addOperation'];
+  public addPosition: WithAttributes['addPosition'];
+
+  public getPath: Searchable['getPath'];
+  public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
+  public isMatch: Searchable['isMatch'];
+  public handleNoMatch: Searchable['handleNoMatch'];
 
   constructor(model: Leaf, config: Element | LeafJSON, parent?: Parent) {
     this.model = model;
@@ -30,8 +38,10 @@ export default class LeafInstance implements Searchable, WithAttributes {
     if (config instanceof Element) {
       this.config = config;
       this.injestConfigXML(config);
+      this.parseAttributesFromXML(config);
     } else {
       this.injestConfigJSON(config);
+      this.parseAttributesFromJSON(config);
     }
   }
 
@@ -39,16 +49,21 @@ export default class LeafInstance implements Searchable, WithAttributes {
     return this.model.type.serialize(this.value);
   }
 
-  public toJSON(camelCase = false, convert = true): { [name: string]: LeafJSON } {
+  public toJSON(camelCase = false, convert = true): { [name: string]: LeafJSONValue } {
     return {
       [this.model.getName(camelCase)]: convert ? this.getConvertedValue() : this.value
     };
   }
 
-  public toXML(parent: Element) {
+  public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
     const [prefix, href] = this.model.ns;
     defineNamespaceOnRoot(parent, prefix, href);
-    parent.node(this.model.name, this.value).namespace(prefix);
+    const el = parent.node(this.model.name, this.value);
+    el.namespace(prefix);
+
+    if (options.includeAttributes && this.hasAttributes) {
+      this.addAttributes(el);
+    }
   }
 
   public getInstance(path: Path, noMatchHandler: NoMatchHandler = this.handleNoMatch) {
@@ -63,7 +78,8 @@ export default class LeafInstance implements Searchable, WithAttributes {
     visitor(this);
   }
 
-  private injestConfigJSON(config: LeafJSON) {
+  private injestConfigJSON(configJSON: LeafJSON) {
+    const config = this.getValueFromJSON(configJSON) as LeafJSONValue;
     this.value = config.toString();
   }
 

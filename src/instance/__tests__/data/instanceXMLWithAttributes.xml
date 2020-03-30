@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<t128:config xmlns:authy="http://128technology.com/t128/config/authority-config" 
+  xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" 
+  xmlns:t128="http://128technology.com/t128">
+  <authy:authority>
+    <authy:name xc:operation="delete">Authority128</authy:name>
+  </authy:authority>
+</t128:config>

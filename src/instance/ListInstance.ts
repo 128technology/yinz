@@ -5,23 +5,31 @@ import applyMixins from '../util/applyMixins';
 import { List } from '../model';
 
 import { Searchable } from './mixins';
-import { Path, ListChildInstance, IListChildJSON, LeafInstance, Visitor, NoMatchHandler, Parent, ShouldSkip } from './';
+import {
+  ListJSON,
+  Visitor,
+  NoMatchHandler,
+  Parent,
+  ShouldSkip,
+  XMLSerializationOptions,
+  ListChildJSON,
+  ListJSONValue
+} from './types';
+import { Path, ListChildInstance, LeafInstance } from './';
 import { isKeyedSegment } from './Path';
 
 // Comma separated string of key values
 export type Key = string;
-
-export type ListJSON = IListChildJSON[];
 
 export default class ListInstance implements Searchable {
   public children: Map<Key, ListChildInstance>;
   public parent: Parent;
   public model: List;
 
-  public getPath: () => Path;
-  public isTryingToMatchMe: (path: Path) => boolean;
-  public isMatch: (path: Path) => boolean;
-  public handleNoMatch: () => void;
+  public getPath: Searchable['getPath'];
+  public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
+  public isMatch: Searchable['isMatch'];
+  public handleNoMatch: Searchable['handleNoMatch'];
 
   constructor(model: List, config: Element | ListJSON, parent?: Parent) {
     this.model = model;
@@ -37,8 +45,8 @@ export default class ListInstance implements Searchable {
     }
   }
 
-  public add(config: Element | IListChildJSON) {
-    const newChild = new ListChildInstance(this.model, config, this.parent);
+  public add(config: Element | ListChildJSON) {
+    const newChild = new ListChildInstance(this.model, config, this.parent, this);
 
     const keys = [...this.model.keys]
       .map(key => {
@@ -55,7 +63,7 @@ export default class ListInstance implements Searchable {
     this.children.set(keys, newChild);
   }
 
-  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): { [name: string]: ListJSON } {
+  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): { [name: string]: ListJSONValue } {
     const value = [];
     if (shouldSkip) {
       for (const child of this.children.values()) {
@@ -73,9 +81,9 @@ export default class ListInstance implements Searchable {
     };
   }
 
-  public toXML(parent: Element) {
+  public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
     Array.from(this.children.values()).forEach(child => {
-      child.toXML(parent);
+      child.toXML(parent, options);
     });
   }
 

@@ -3,7 +3,8 @@ import * as _ from 'lodash';
 
 import applyMixins from '../util/applyMixins';
 import { Visibility, Status } from '../enum';
-import { LeafInstance, Parent, LeafJSON } from '../instance';
+import { LeafInstance, Parent } from '../instance';
+import { LeafJSON } from '../instance/types';
 import { Type, DerivedType, BuiltInType } from '../types';
 
 import { MandatoryParser, DefaultParser } from './parsers';

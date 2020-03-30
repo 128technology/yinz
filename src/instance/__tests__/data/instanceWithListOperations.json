@@ -1,0 +1,21 @@
+{
+  "authority": {
+    "router": [
+      {
+        "name": "Fabric128",
+        "group": [
+          { "_value": "group1", "_operation": "create", "_position": { "insert": "after", "value": "group2" } }
+        ],
+        "node": [
+          {
+            "_value": {
+              "name": "TestNode1"
+            },
+            "_operation": "create",
+            "_position": { "insert": "after", "value": "TestNode2" }
+          }
+        ]
+      }
+    ]
+  }
+}

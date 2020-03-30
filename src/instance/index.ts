@@ -1,33 +1,11 @@
 import DataModelInstance from './DataModelInstance';
-import ContainerInstance, { IContainerJSON } from './ContainerInstance';
-import ListInstance, { ListJSON } from './ListInstance';
-import ListChildInstance, { IListChildJSON } from './ListChildInstance';
-import LeafListInstance, { LeafListJSON } from './LeafListInstance';
-import LeafListChildInstance from './LeafListChildInstance';
-import LeafInstance, { LeafJSON } from './LeafInstance';
-import Instance from './Instance';
-import Path from './Path';
-
-export type Visitor = (instance: Instance | LeafListChildInstance) => void;
-export type NoMatchHandler = (instance: Instance, remainingPath: Path) => any;
-export type Parent = ListChildInstance | ContainerInstance;
-export type ShouldSkip = (instance: Instance) => boolean;
+export { default as ContainerInstance } from './ContainerInstance';
+export { default as ListInstance } from './ListInstance';
+export { default as ListChildInstance } from './ListChildInstance';
+export { default as LeafListInstance } from './LeafListInstance';
+export { default as LeafListChildInstance } from './LeafListChildInstance';
+export { default as LeafInstance } from './LeafInstance';
+export { default as Path } from './Path';
+export { Visitor, NoMatchHandler, Parent, ShouldSkip, Instance } from './types';
 
 export default DataModelInstance;
-
-export {
-  DataModelInstance,
-  ContainerInstance,
-  IContainerJSON,
-  ListInstance,
-  ListJSON,
-  ListChildInstance,
-  IListChildJSON,
-  LeafListInstance,
-  LeafListJSON,
-  LeafListChildInstance,
-  LeafInstance,
-  LeafJSON,
-  Instance,
-  Path
-};

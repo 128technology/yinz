@@ -7,22 +7,18 @@ import { isElement, defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
 import {
-  Path,
-  Instance,
-  ListInstance,
-  LeafListInstance,
-  Visitor,
+  ListJSON,
   LeafJSON,
   LeafListJSON,
-  ListJSON,
+  ContainerJSON,
+  Visitor,
   NoMatchHandler,
   Parent,
-  ShouldSkip
-} from './';
-
-export interface IContainerJSON {
-  [childName: string]: LeafJSON | LeafListJSON | ListJSON | IContainerJSON;
-}
+  XMLSerializationOptions,
+  ShouldSkip,
+  ContainerJSONValue
+} from './types';
+import { Path, Instance, ListInstance, LeafListInstance } from './';
 
 export default class ContainerInstance implements Searchable, WithAttributes {
   public model: Container;
@@ -31,13 +27,22 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public children: Map<string, Instance>;
   public activeChoices: Map<string, string>;
 
-  public customAttributes: Map<string, string>;
-  public getPath: () => Path;
-  public isTryingToMatchMe: (path: Path) => boolean;
-  public isMatch: (path: Path) => boolean;
-  public handleNoMatch: () => void;
+  public customAttributes: WithAttributes['customAttributes'];
+  public parseAttributesFromXML: WithAttributes['parseAttributesFromXML'];
+  public parseAttributesFromJSON: WithAttributes['parseAttributesFromJSON'];
+  public hasAttributes: WithAttributes['hasAttributes'];
+  public rawAttributes: WithAttributes['rawAttributes'];
+  public addAttributes: WithAttributes['addAttributes'];
+  public getValueFromJSON: WithAttributes['getValueFromJSON'];
+  public addOperation: WithAttributes['addOperation'];
+  public addPosition: WithAttributes['addPosition'];
 
-  constructor(model: Container, config: Element | IContainerJSON, parent?: Parent) {
+  public getPath: Searchable['getPath'];
+  public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
+  public isMatch: Searchable['isMatch'];
+  public handleNoMatch: Searchable['handleNoMatch'];
+
+  constructor(model: Container, config: Element | ContainerJSON, parent?: Parent) {
     this.model = model;
     this.parent = parent;
     this.children = new Map();
@@ -46,12 +51,14 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     if (config instanceof Element) {
       this.config = config;
       this.injestConfigXML(config);
+      this.parseAttributesFromXML(config);
     } else {
       this.injestConfigJSON(config);
+      this.parseAttributesFromJSON(config);
     }
   }
 
-  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): IContainerJSON {
+  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): ContainerJSONValue {
     const containerInner = [...this.children.values()].reduce(
       (acc, child) => Object.assign(acc, child.toJSON(camelCase, convert, shouldSkip)),
       {}
@@ -62,15 +69,19 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     };
   }
 
-  public toXML(parent: Element) {
+  public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
     const [prefix, href] = this.model.ns;
     const outer = parent.node(this.model.name);
     defineNamespaceOnRoot(parent, prefix, href);
     outer.namespace(prefix);
 
-    Array.from(this.children.values()).forEach(child => {
-      child.toXML(outer);
-    });
+    if (options.includeAttributes && this.hasAttributes) {
+      this.addAttributes(outer);
+    }
+
+    for (const child of this.children.values()) {
+      child.toXML(outer, options);
+    }
   }
 
   public getInstance(path: Path, noMatchHandler: NoMatchHandler = this.handleNoMatch): Instance {
@@ -96,7 +107,9 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     });
   }
 
-  private injestConfigJSON(config: IContainerJSON) {
+  private injestConfigJSON(configJSON: ContainerJSON) {
+    const config = this.getValueFromJSON(configJSON) as ContainerJSONValue;
+
     for (const rawChildName in config) {
       if (config.hasOwnProperty(rawChildName)) {
         const childName = this.model.hasChild(rawChildName) ? rawChildName : _.kebabCase(rawChildName);
@@ -116,7 +129,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
           } else if (childModel instanceof LeafList) {
             instance = childModel.buildInstance(child as LeafListJSON, this);
           } else if (childModel instanceof Container) {
-            instance = childModel.buildInstance(child as IContainerJSON, this);
+            instance = childModel.buildInstance(child as ContainerJSON, this);
           } else if (childModel instanceof List) {
             instance = childModel.buildInstance(child as ListJSON, this);
           } else {

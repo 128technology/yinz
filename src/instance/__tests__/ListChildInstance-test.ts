@@ -6,7 +6,7 @@ import * as path from 'path';
 import xmlUtil from '../../__tests__/xmlUtil';
 import { List } from '../../model';
 
-import { ListChildInstance, LeafInstance } from '../';
+import { ListChildInstance, LeafInstance, ListInstance } from '../';
 
 describe('List Child Instance', () => {
   const modelText = fs.readFileSync(path.join(__dirname, '../../model/__tests__/data/testList.xml'), 'utf-8');
@@ -21,7 +21,7 @@ describe('List Child Instance', () => {
   const mockConfigXML = xmlUtil.toElement(mockConfig);
 
   it('should get initialized with a value', () => {
-    const instance = new ListChildInstance(listModel, mockConfigXML, null);
+    const instance = new ListChildInstance(listModel, mockConfigXML, null, {} as ListInstance);
 
     const child = instance.instance.get('name');
 
@@ -46,7 +46,7 @@ describe('List Child Instance', () => {
       </svc:service-route>
     `);
 
-    const instance = new ListChildInstance(listModelWithChoice, choiceConfig, null);
+    const instance = new ListChildInstance(listModelWithChoice, choiceConfig, null, {} as ListInstance);
 
     const activeChoice = instance.activeChoices.get('type');
 
@@ -54,7 +54,7 @@ describe('List Child Instance', () => {
   });
 
   it('should serialize to JSON', () => {
-    const instance = new ListChildInstance(listModel, mockConfigXML, null);
+    const instance = new ListChildInstance(listModel, mockConfigXML, null, {} as ListInstance);
 
     expect(instance.toJSON()).to.deep.equal({ name: 'foo' });
   });
@@ -62,7 +62,7 @@ describe('List Child Instance', () => {
   it('should serialize to XML', () => {
     const document = new Document();
     const el = document.node('mockEl');
-    const instance = new ListChildInstance(listModel, mockConfigXML, null);
+    const instance = new ListChildInstance(listModel, mockConfigXML, null, {} as ListInstance);
     instance.toXML(el);
 
     expect(document.toString()).xml.to.equal(`
@@ -76,7 +76,7 @@ describe('List Child Instance', () => {
   });
 
   it('should get keys', () => {
-    const instance = new ListChildInstance(listModel, mockConfigXML, null);
+    const instance = new ListChildInstance(listModel, mockConfigXML, null, {} as ListInstance);
 
     expect(instance.keys).to.deep.equal({ name: 'foo' });
   });

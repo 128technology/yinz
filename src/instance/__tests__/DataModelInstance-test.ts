@@ -5,9 +5,8 @@ import * as path from 'path';
 import xmlUtil from '../../__tests__/xmlUtil';
 import DataModel from '../../model';
 
-import {
+import DataModelInstance, {
   ContainerInstance,
-  DataModelInstance,
   LeafInstance,
   LeafListInstance,
   ListInstance,
@@ -181,6 +180,121 @@ describe('Data Model Instance', () => {
       expect((leafList as LeafListInstance).values).to.deep.equal(['group1', 'group2']);
     });
 
+    describe('Attributes Handling and Serialization', () => {
+      it('should serialize an instance to XML with attributes', () => {
+        const instanceWithAttr = getInstance('./data/instanceXMLWithAttributes.xml');
+        const result = instanceWithAttr.toXML(undefined, { includeAttributes: true }).toString();
+        expect(result).xml.to.equal(`
+          <?xml version="1.0" encoding="UTF-8"?>
+          <config xmlns:authy="http://128technology.com/t128/config/authority-config">
+            <authy:authority>
+              <authy:name xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="delete">Authority128</authy:name>
+            </authy:authority>
+          </config>
+        `);
+      });
+
+      it('should parse JSON with attributes and serialize to XML with attributes', () => {
+        const instance = new DataModelInstance(dataModel, {
+          authority: {
+            name: {
+              _attributes: [
+                {
+                  href: 'urn:ietf:params:xml:ns:netconf:base:1.0',
+                  name: 'operation',
+                  prefix: 'xc',
+                  value: 'delete'
+                }
+              ],
+              _value: 'Authority128'
+            }
+          }
+        });
+        const result = instance.toXML(undefined, { includeAttributes: true }).toString();
+
+        expect(result).xml.to.equal(`
+          <?xml version="1.0" encoding="UTF-8"?>
+          <config xmlns:authy="http://128technology.com/t128/config/authority-config">
+            <authy:authority>
+              <authy:name xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="delete">Authority128</authy:name>
+            </authy:authority>
+          </config>
+        `);
+      });
+
+      it('should parse JSON with operations and serialize to XML with attributes', () => {
+        const instance = new DataModelInstance(dataModel, {
+          authority: {
+            name: {
+              _operation: 'delete',
+              _value: 'Authority128'
+            }
+          }
+        });
+        const result = instance.toXML(undefined, { includeAttributes: true }).toString();
+
+        expect(result).xml.to.equal(`
+          <?xml version="1.0" encoding="UTF-8"?>
+          <config xmlns:authy="http://128technology.com/t128/config/authority-config">
+            <authy:authority>
+              <authy:name xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="delete">Authority128</authy:name>
+            </authy:authority>
+          </config>
+        `);
+      });
+
+      it('should parse JSON with operations and serialize to XML with attributes', () => {
+        const instanceRawJSON = readJSON('./data/instanceWithOperations.json');
+        const instance = new DataModelInstance(dataModel, instanceRawJSON);
+        const result = instance.toXML(undefined, { includeAttributes: true }).toString();
+
+        expect(result).xml.to.equal(`
+          <?xml version="1.0" encoding="UTF-8"?>
+          <config xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:sys="http://128technology.com/t128/config/system-config">
+            <authy:authority>
+              <authy:name operation="delete">Authority128</authy:name>
+              <authy:router>
+                <authy:name>Fabric128</authy:name>
+                <authy:inter-node-security xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="remove">internal</authy:inter-node-security>
+                <authy:group xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="delete">group1</authy:group>
+                <authy:group>group2</authy:group>
+                <sys:node xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="delete">
+                  <sys:name>TestNode1</sys:name>
+                </sys:node>
+                <sys:node>
+                  <sys:name>TestNode2</sys:name>
+                  <sys:role>combo</sys:role>
+                  <sys:id>2</sys:id>
+                  <sys:enabled>true</sys:enabled>
+                </sys:node>
+              </authy:router>
+            </authy:authority>
+          </config>
+        `);
+      });
+
+      it('should parse JSON with list operations and serialize to XML with attributes', () => {
+        const instanceRawJSON = readJSON('./data/instanceWithListOperations.json');
+        const instance = new DataModelInstance(dataModel, instanceRawJSON);
+        const result = instance.toXML(undefined, { includeAttributes: true }).toString();
+
+        expect(result).xml.to.equal(`
+          <?xml version="1.0" encoding="UTF-8"?>
+          <config xmlns:authy="http://128technology.com/t128/config/authority-config" xmlns:sys="http://128technology.com/t128/config/system-config">
+            <authy:authority>
+              <authy:router>
+                <authy:name>Fabric128</authy:name>
+                <authy:group xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:yang="urn:ietf:params:xml:ns:yang:1" xc:operation="create" yang:insert="after" yang:value="group2">group1</authy:group>
+                <sys:node xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:yang="urn:ietf:params:xml:ns:yang:1" xc:operation="create" yang:insert="after" yang:value="TestNode2">
+                  <sys:name>TestNode1</sys:name>
+                </sys:node>
+              </authy:router>
+            </authy:authority>
+          </config>
+        `);
+      });
+    });
+
     describe('#getInstanceFromElement()', () => {
       it('should find an instance from the config', () => {
         const targetXML = dataModelInstance.rawInstance.get(
@@ -331,7 +445,10 @@ describe('Data Model Instance', () => {
             { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
             { name: 'service-route', keys: [{ key: 'name', value: 'TestServiceRoute' }] },
             {
-              keys: [{ key: 'node-name', value: 'TestNode1' }, { key: 'interface', value: 'NetIntf1' }],
+              keys: [
+                { key: 'node-name', value: 'TestNode1' },
+                { key: 'interface', value: 'NetIntf1' }
+              ],
               name: 'next-hop'
             },
             { name: 'interface' }
@@ -359,7 +476,10 @@ describe('Data Model Instance', () => {
             { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
             { name: 'service-route', keys: [{ key: 'name', value: 'TestServiceRoute2' }] },
             {
-              keys: [{ key: 'node-name', value: 'TestNode2' }, { key: 'interface', value: 'NetIntf1' }],
+              keys: [
+                { key: 'node-name', value: 'TestNode2' },
+                { key: 'interface', value: 'NetIntf1' }
+              ],
               name: 'next-hop'
             },
             { name: 'interface' }

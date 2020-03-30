@@ -6,19 +6,26 @@ import { LeafList } from '../model';
 import { defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable } from './mixins';
-import { Path, Visitor, LeafListChildInstance, LeafJSON, NoMatchHandler, Parent } from './';
-
-export type LeafListJSON = LeafJSON[];
+import {
+  LeafListJSON,
+  NoMatchHandler,
+  Parent,
+  XMLSerializationOptions,
+  Visitor,
+  LeafJSON,
+  LeafListJSONValue
+} from './types';
+import { Path, LeafListChildInstance } from './';
 
 export default class LeafListInstance implements Searchable {
   public model: LeafList;
   public parent: Parent;
   public children: LeafListChildInstance[];
 
-  public getPath: () => Path;
-  public isTryingToMatchMe: (path: Path) => boolean;
-  public isMatch: (path: Path) => boolean;
-  public handleNoMatch: () => void;
+  public getPath: Searchable['getPath'];
+  public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
+  public isMatch: Searchable['isMatch'];
+  public handleNoMatch: Searchable['handleNoMatch'];
 
   constructor(model: LeafList, config: Element | LeafListJSON, parent?: Parent) {
     this.model = model;
@@ -46,17 +53,17 @@ export default class LeafListInstance implements Searchable {
     return this.children.map(child => child.rawValue);
   }
 
-  public toJSON(camelCase = false, convert = true): { [name: string]: LeafListJSON } {
+  public toJSON(camelCase = false, convert = true): { [name: string]: LeafListJSONValue } {
     return {
       [this.model.getName(camelCase)]: convert ? this.values : this.rawValues
     };
   }
 
-  public toXML(parent: Element) {
+  public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
     const [prefix, href] = this.model.ns;
     defineNamespaceOnRoot(parent, prefix, href);
-    this.values.forEach(value => {
-      parent.node(this.model.name, value.toString()).namespace(prefix);
+    this.children.forEach(child => {
+      child.toXML(parent, options);
     });
   }
 

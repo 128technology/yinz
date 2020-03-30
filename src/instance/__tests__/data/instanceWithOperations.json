@@ -1,0 +1,26 @@
+{
+  "authority": {
+    "name": { "_attributes": [{ "name": "operation", "value": "delete" }], "_value": "Authority128" },
+    "router": [
+      {
+        "name": "Fabric128",
+        "inter-node-security": { "_value": "internal", "_operation": "remove" },
+        "group": [{ "_value": "group1", "_operation": "delete" }, "group2"],
+        "node": [
+          {
+            "_value": {
+              "name": "TestNode1"
+            },
+            "_operation": "delete"
+          },
+          {
+            "name": "TestNode2",
+            "role": "combo",
+            "id": 2,
+            "enabled": true
+          }
+        ]
+      }
+    ]
+  }
+}
