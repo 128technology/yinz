@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 
 import DataModel, { Model, List, Container, Leaf, LeafList } from '../model';
 import DataModelInstance from './';
+import UnreachableCaseError from '../util/unreachableCaseError';
 
 export interface ISegmentKeys {
   key: string;
@@ -36,15 +37,17 @@ export function pathToModelPath(path: Path) {
   return path.map(({ name }) => name).join('.');
 }
 
-function buildNode(segment: PathSegment, model: Model) {
+function buildNode(segment: PathSegment, model: Model, isLastNode: boolean) {
   if (model instanceof List) {
     if (isKeyedSegment(segment)) {
       const keyObject = segment.keys?.reduce<any>((acc, key) => ((acc[key.key] = key.value), acc), {});
       const keys = [keyObject];
       return [{ [segment.name]: keys }, keyObject];
-    } else {
+    } else if (isLastNode) {
       const keys: any[] = [];
       return [{ [segment.name]: keys }, keys];
+    } else {
+      throw new Error('List segment must be keyed unless it is the last segment.');
     }
   } else if (model instanceof Container) {
     const childContainer = {};
@@ -57,7 +60,7 @@ function buildNode(segment: PathSegment, model: Model) {
     const values = value ? [value] : [];
     return [{ [segment.name]: values }, value || values];
   } else {
-    throw new Error('Can only build lists and containers.');
+    throw new UnreachableCaseError(model);
   }
 }
 
@@ -71,7 +74,7 @@ export function pathToJSON(path: Path, dataModel: DataModel) {
     const model = dataModel.getModelForPath(pathToModelPath(_.take(path, i)));
 
     const head = _.head(currPath)!;
-    const [outer, inner] = buildNode(head, model as Model);
+    const [outer, inner] = buildNode(head, model as Model, currPath.length === 1);
     Object.assign(currPosition, outer);
 
     currPosition = inner;

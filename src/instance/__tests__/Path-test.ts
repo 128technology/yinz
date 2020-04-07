@@ -58,5 +58,16 @@ describe('Path', () => {
         terminalNode: []
       });
     });
+
+    it('should allow a list with no key if it is the last segment', () => {
+      expect(pathToJSON([{ name: 'authority' }, { name: 'router' }], dataModel)).to.deep.equal({
+        document: { authority: { router: [] } },
+        terminalNode: []
+      });
+    });
+
+    it('should not allow a list with no key if it is not the last segment', () => {
+      expect(() => pathToJSON([{ name: 'authority' }, { name: 'router' }, { name: 'name' }], dataModel)).to.throw();
+    });
   });
 });
