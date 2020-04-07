@@ -5,7 +5,7 @@ import * as path from 'path';
 import xmlUtil from '../../../__tests__/xmlUtil';
 import { getPathXPath, getSegmentXPath, addEmptyTree } from '../';
 import DataModel from '../../../model';
-import DataModelInstance from '../../';
+import DataModelInstance, { ContainerInstance, ListChildInstance } from '../../';
 
 describe('Instance Util', () => {
   describe('#getPathXPath()', () => {
@@ -92,7 +92,7 @@ describe('Instance Util', () => {
       const { contextEl, cleanUpHiddenTree } = addEmptyTree(
         testPath,
         dataModel,
-        instance.getInstance([{ name: 'authority' }])
+        instance.getInstance([{ name: 'authority' }]) as ContainerInstance
       );
       const result = contextEl.doc().toString();
       cleanUpHiddenTree();
@@ -124,7 +124,7 @@ describe('Instance Util', () => {
       const { contextEl, cleanUpHiddenTree } = addEmptyTree(
         testPath,
         dataModel,
-        instance.getInstance([{ name: 'authority' }])
+        instance.getInstance([{ name: 'authority' }]) as ContainerInstance
       );
       cleanUpHiddenTree();
       const result = contextEl.doc().toString();
@@ -152,12 +152,12 @@ describe('Instance Util', () => {
       const { cleanUpHiddenTree: cleanUp1 } = addEmptyTree(
         testPath,
         dataModel,
-        instance.getInstance([{ name: 'authority' }])
+        instance.getInstance([{ name: 'authority' }]) as ContainerInstance
       );
       const { contextEl, cleanUpHiddenTree: cleanUp2 } = addEmptyTree(
         testPath,
         dataModel,
-        instance.getInstance([{ name: 'authority' }])
+        instance.getInstance([{ name: 'authority' }]) as ContainerInstance
       );
       cleanUp1();
       cleanUp2();
@@ -186,7 +186,7 @@ describe('Instance Util', () => {
       const { contextEl, cleanUpHiddenTree } = addEmptyTree(
         testPath,
         dataModel,
-        instance.getInstance([{ name: 'authority' }])
+        instance.getInstance([{ name: 'authority' }]) as ContainerInstance
       );
       const result = contextEl.doc().toString();
       cleanUpHiddenTree();
@@ -219,7 +219,7 @@ describe('Instance Util', () => {
           { name: 'authority' },
           { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
           { name: 'node', keys: [{ key: 'name', value: 'TestNode1' }] }
-        ])
+        ]) as ListChildInstance
       );
       const result = contextEl.doc().toString();
       cleanUpHiddenTree();

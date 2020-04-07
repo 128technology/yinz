@@ -86,7 +86,7 @@ export default class DataModelInstance {
       const matchCandidates = config
         .find(leafRefXPath, this.model.namespaces)
         .filter(isElement)
-        .map(el => this.getInstanceFromElement(el));
+        .map(el => this.getInstanceFromElement(el)) as Instance[];
 
       if (matchCandidates.length === 0) {
         throw new Error('Referenced entity not found. Has it been deleted?');
@@ -222,7 +222,7 @@ export default class DataModelInstance {
     }
   }
 
-  public getInstanceFromElement(element: Element): Instance {
+  public getInstanceFromElement(element: Element): Instance | LeafListChildInstance {
     const fieldId = getFieldIdFromParentAxis(element);
     const model = this.model.getModelForPath(fieldId) as Model;
     const path: Path = [];

@@ -11,7 +11,9 @@ import DataModelInstance, {
   LeafListInstance,
   ListChildInstance,
   ListInstance,
-  Path
+  Path,
+  pathToInstance,
+  pathToJSON
 } from './instance';
 
 export {
@@ -34,5 +36,7 @@ export {
   OrderedBy,
   Path,
   Type,
-  Types
+  Types,
+  pathToInstance,
+  pathToJSON
 };

@@ -13,18 +13,20 @@ import DataModelInstance, {
   ListChildInstance
 } from '../';
 
+export function readDataModel(filepath: string) {
+  const modelText = fs.readFileSync(path.join(__dirname, filepath), 'utf-8');
+
+  const options = {
+    modelElement: xmlUtil.toElement(modelText),
+    rootPath: '//yin:container[@name="authority"]'
+  };
+
+  return new DataModel(options);
+}
+
+export const dataModel = readDataModel('../../model/__tests__/data/consolidatedT128Model.xml');
+
 describe('Data Model Instance', () => {
-  function readDataModel(filepath: string) {
-    const modelText = fs.readFileSync(path.join(__dirname, filepath), 'utf-8');
-
-    const options = {
-      modelElement: xmlUtil.toElement(modelText),
-      rootPath: '//yin:container[@name="authority"]'
-    };
-
-    return new DataModel(options);
-  }
-
   function readConfigFile(filepath: string) {
     const instanceText = fs.readFileSync(path.join(__dirname, filepath), 'utf-8');
     return xmlUtil.toElement(instanceText);
@@ -35,7 +37,6 @@ describe('Data Model Instance', () => {
     return JSON.parse(instanceJSONText);
   }
 
-  const dataModel = readDataModel('../../model/__tests__/data/consolidatedT128Model.xml');
   function getInstance(instancePath: string) {
     const instance = readConfigFile(instancePath);
     const config = instance.get('//t128:config', { t128: 'http://128technology.com/t128' });

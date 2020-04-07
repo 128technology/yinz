@@ -15,7 +15,8 @@ import {
   LeafJSON,
   LeafListJSONValue
 } from './types';
-import { Path, LeafListChildInstance } from './';
+import Path, { isSegmentWithValue } from './Path';
+import { LeafListChildInstance } from './';
 
 export default class LeafListInstance implements Searchable {
   public model: LeafList;
@@ -68,8 +69,20 @@ export default class LeafListInstance implements Searchable {
   }
 
   public getInstance(path: Path, noMatchHandler: NoMatchHandler = this.handleNoMatch) {
+    const head = _.head(path);
+
     if (this.isTryingToMatchMe(path) && this.isMatch(path)) {
-      return this;
+      if (!isSegmentWithValue(head)) {
+        return this;
+      } else {
+        const match = this.children.find(child => child.rawValue === head.value);
+
+        if (match) {
+          return match;
+        } else {
+          noMatchHandler(this, path);
+        }
+      }
     }
 
     noMatchHandler(this, path);
