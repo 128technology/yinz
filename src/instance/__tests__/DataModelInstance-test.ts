@@ -286,7 +286,7 @@ describe('Data Model Instance', () => {
               <authy:router>
                 <authy:name>Fabric128</authy:name>
                 <authy:group xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:yang="urn:ietf:params:xml:ns:yang:1" xc:operation="create" yang:insert="after" yang:value="group2">group1</authy:group>
-                <sys:node xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:yang="urn:ietf:params:xml:ns:yang:1" xc:operation="create" yang:insert="after" yang:value="TestNode2">
+                <sys:node xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:yang="urn:ietf:params:xml:ns:yang:1" xc:operation="create" yang:insert="after" yang:key="[sys:name='TestNode2']">
                   <sys:name>TestNode1</sys:name>
                 </sys:node>
               </authy:router>

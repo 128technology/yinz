@@ -12,7 +12,7 @@
               "name": "TestNode1"
             },
             "_operation": "create",
-            "_position": { "insert": "after", "value": "TestNode2" }
+            "_position": { "insert": "after", "keys": [{ "key": "name", "value": "TestNode2" }] }
           }
         ]
       }

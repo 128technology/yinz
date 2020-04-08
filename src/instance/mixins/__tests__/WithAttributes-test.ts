@@ -3,6 +3,8 @@ import { expect } from 'chai';
 import applyMixins from '../../../util/applyMixins';
 import xmlUtil from '../../../__tests__/xmlUtil';
 import { WithAttributes } from '../';
+import { configModel } from '../../../model/__tests__/DataModel-test';
+import { LeafList, List } from '../../../model';
 
 describe('With Attributes Mixin', () => {
   const mockConfig = `
@@ -77,7 +79,8 @@ describe('With Attributes Mixin', () => {
 
   it('should add list operations without value', () => {
     const testModel = new Test();
-    const el = xmlUtil.toElement('<qp-value />');
+    testModel.model = configModel.getModelForPath('authority.router.node.device-interface.capture-filter') as LeafList;
+    const el = xmlUtil.toElement('<capture-filter />');
     testModel.parseAttributesFromJSON({
       _operation: 'create',
       _position: { insert: 'first' },
@@ -86,13 +89,14 @@ describe('With Attributes Mixin', () => {
     testModel.addAttributes(el);
 
     expect(el.toString()).xml.to.equal(
-      '<qp-value xmlns:yang="urn:ietf:params:xml:ns:yang:1" xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="create" yang:insert="first" />'
+      '<capture-filter xmlns:yang="urn:ietf:params:xml:ns:yang:1" xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="create" yang:insert="first" />'
     );
   });
 
   it('should add list operations with value', () => {
     const testModel = new Test();
-    const el = xmlUtil.toElement('<qp-value />');
+    testModel.model = configModel.getModelForPath('authority.router.node.device-interface.capture-filter') as LeafList;
+    const el = xmlUtil.toElement('<capture-filter />');
     testModel.parseAttributesFromJSON({
       _operation: 'create',
       _position: { insert: 'after', value: 'bar' },
@@ -101,29 +105,28 @@ describe('With Attributes Mixin', () => {
     testModel.addAttributes(el);
 
     expect(el.toString()).xml.to.equal(
-      '<qp-value xmlns:yang="urn:ietf:params:xml:ns:yang:1" xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="create" yang:insert="after" yang:value="bar" />'
+      '<capture-filter xmlns:yang="urn:ietf:params:xml:ns:yang:1" xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="create" yang:insert="after" yang:value="bar" />'
     );
   });
 
   it('should add list operations with keys', () => {
     const testModel = new Test();
-    const el = xmlUtil.toElement('<qp-value />');
+    testModel.model = configModel.getModelForPath(
+      'authority.router.node.device-interface.network-interface.neighborhood'
+    ) as List;
+    const el = xmlUtil.toElement('<neighborhood />');
     testModel.parseAttributesFromJSON({
       _operation: 'create',
       _position: {
         insert: 'after',
-        keys: [
-          { key: 'foo', value: 'bar' },
-          { key: 'fizzPop', value: 'buzz' }
-        ]
+        keys: [{ key: 'name', value: 'bar' }]
       },
-
       _value: 'foo'
     });
     testModel.addAttributes(el);
 
     expect(el.toString()).xml.to.equal(
-      '<qp-value xmlns:yang="urn:ietf:params:xml:ns:yang:1" xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="create" yang:insert="after" yang:key="[foo=\'bar\'][fizz-pop=\'buzz\']" />'
+      '<neighborhood xmlns:yang="urn:ietf:params:xml:ns:yang:1" xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="create" yang:insert="after" yang:key="[if:name=\'bar\']" />'
     );
   });
 });
