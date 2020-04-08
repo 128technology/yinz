@@ -5,26 +5,21 @@ import { expect } from 'chai';
 
 import DataModel, { Choice, Leaf, Container } from '../';
 
+export const configModel = new DataModel({
+  modelElement: libXML
+    .parseXmlString(fs.readFileSync(path.join(__dirname, './data/consolidatedT128Model.xml'), 'utf-8'))
+    .root(),
+  rootPath: '//yin:container[@name="authority"]'
+});
+
 describe('Data Model', () => {
   describe('Config Model', () => {
-    const modelText = fs.readFileSync(path.join(__dirname, './data/consolidatedT128Model.xml'), 'utf-8');
-    const modelElement = libXML.parseXmlString(modelText).root();
-
-    const options = {
-      modelElement,
-      rootPath: '//yin:container[@name="authority"]'
-    };
-
     it('should parse a data model', () => {
-      const dataModel = new DataModel(options);
-
-      expect(dataModel.root.size).to.equal(1);
+      expect(configModel.root.size).to.equal(1);
     });
 
     it('should have a global namespace map', () => {
-      const dataModel = new DataModel(options);
-
-      expect(dataModel.namespaces).to.deep.equal({
+      expect(configModel.namespaces).to.deep.equal({
         al: 'http://128technology.com/t128/analytics',
         alarm: 'http://128technology.com/t128/config/alarm-config',
         as: 'http://128technology.com/t128/state/asset-state',
@@ -58,18 +53,14 @@ describe('Data Model', () => {
     });
 
     it('should get the model for a given path', () => {
-      const dataModel = new DataModel(options);
-
-      const model = dataModel.getModelForPath('authority.router.node.device-interface.target-interface');
+      const model = configModel.getModelForPath('authority.router.node.device-interface.target-interface');
 
       expect(model.name).to.equal('target-interface');
       expect(model).to.be.an.instanceOf(Leaf);
     });
 
     it('should get the model if it is a choice for a given path', () => {
-      const dataModel = new DataModel(options);
-
-      expect(dataModel.getModelForPath('authority.router.service-route.type')).to.be.an.instanceOf(Choice);
+      expect(configModel.getModelForPath('authority.router.service-route.type')).to.be.an.instanceOf(Choice);
     });
   });
 

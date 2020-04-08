@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { IAttribute, NetconfOperation, Position, JSONConfigNode, hasAttributes } from '../types';
 import UnreachableCaseError from '../../util/unreachableCaseError';
 import { defineNamespaceSafe } from '../../util/xmlUtil';
+import { Model, List, LeafList } from '../../model';
 
 function mapOperationToAttribute(operation: NetconfOperation): IAttribute {
   switch (operation) {
@@ -25,7 +26,7 @@ function mapOperationToAttribute(operation: NetconfOperation): IAttribute {
   }
 }
 
-function mapPositionToAttributes(position: Position): IAttribute[] {
+function mapPositionToAttributes(position: Position, model: List | LeafList): IAttribute[] {
   const attributes: IAttribute[] = [
     {
       href: 'urn:ietf:params:xml:ns:yang:1',
@@ -36,27 +37,43 @@ function mapPositionToAttributes(position: Position): IAttribute[] {
   ];
 
   if (position.value) {
-    attributes.push({
-      href: 'urn:ietf:params:xml:ns:yang:1',
-      name: 'value',
-      prefix: 'yang',
-      value: position.value
-    });
+    if (model instanceof LeafList) {
+      attributes.push({
+        href: 'urn:ietf:params:xml:ns:yang:1',
+        name: 'value',
+        prefix: 'yang',
+        value: position.value
+      });
+    } else {
+      throw new Error('Value can only be provided as the position of a leaf list.');
+    }
   }
 
   if (position.keys) {
-    const keyString = position.keys
-      .map(({ key, value }) => {
-        return `[${_.kebabCase(key)}='${value}']`;
-      })
-      .join('');
+    if (model instanceof List) {
+      const keyMap = model.getKeyNodes().reduce((acc, keyNode) => (acc.set(keyNode.name, keyNode), acc), new Map());
+      const keyString = position.keys
+        .map(({ key, value }) => {
+          const keyModel = keyMap.get(key);
 
-    attributes.push({
-      href: 'urn:ietf:params:xml:ns:yang:1',
-      name: 'key',
-      prefix: 'yang',
-      value: keyString
-    });
+          if (!keyModel) {
+            throw new Error(`Provided key ${key} not found for list ${model.name}.`);
+          }
+
+          const [prefix] = keyModel.ns;
+          return `[${prefix}:${_.kebabCase(key)}='${value}']`;
+        })
+        .join('');
+
+      attributes.push({
+        href: 'urn:ietf:params:xml:ns:yang:1',
+        name: 'key',
+        prefix: 'yang',
+        value: keyString
+      });
+    } else {
+      throw new Error('Keys can only be provided as the position to a list.');
+    }
   }
 
   return attributes;
@@ -64,6 +81,7 @@ function mapPositionToAttributes(position: Position): IAttribute[] {
 
 export default class WithAttributes {
   public rawAttributes: IAttribute[];
+  public model: Model;
 
   public parseAttributesFromXML(config: Element) {
     this.rawAttributes = config.attrs().reduce((acc, attr) => {
@@ -128,6 +146,10 @@ export default class WithAttributes {
   }
 
   public addPosition(position: Position) {
-    this.rawAttributes = [...this.rawAttributes, ...mapPositionToAttributes(position)];
+    if (this.model instanceof List || this.model instanceof LeafList) {
+      this.rawAttributes = [...this.rawAttributes, ...mapPositionToAttributes(position, this.model)];
+    } else {
+      throw new Error('Position attributes can only be added to lists or leaf lists.');
+    }
   }
 }
