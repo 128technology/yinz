@@ -19,7 +19,7 @@ import {
   ListChildJSONValue,
   ContainerJSON
 } from './types';
-import { Path, Instance, LeafInstance, ListInstance, LeafListInstance } from './';
+import { Path, Instance, LeafInstance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
 
 export type ChoiceName = string;
 export type SelectedCaseName = string;
@@ -162,7 +162,10 @@ export default class ListChildInstance implements Searchable, WithAttributes {
     });
   }
 
-  public getInstance(path: Path, noMatchHandler: NoMatchHandler = this.handleNoMatch): Instance {
+  public getInstance(
+    path: Path,
+    noMatchHandler: NoMatchHandler = this.handleNoMatch
+  ): Instance | LeafListChildInstance {
     if (path.length === 0) {
       return this;
     } else {

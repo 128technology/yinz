@@ -18,7 +18,7 @@ import {
   ShouldSkip,
   ContainerJSONValue
 } from './types';
-import { Path, Instance, ListInstance, LeafListInstance } from './';
+import { Path, Instance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
 
 export default class ContainerInstance implements Searchable, WithAttributes {
   public model: Container;
@@ -84,7 +84,10 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     }
   }
 
-  public getInstance(path: Path, noMatchHandler: NoMatchHandler = this.handleNoMatch): Instance {
+  public getInstance(
+    path: Path,
+    noMatchHandler: NoMatchHandler = this.handleNoMatch
+  ): Instance | LeafListChildInstance {
     if (this.isTryingToMatchMe(path) && this.isMatch(path)) {
       return this;
     } else if (path.length > 1) {
