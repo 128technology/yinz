@@ -58,6 +58,16 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     }
   }
 
+  public delete(childName: string) {
+    const child = this.children.get(childName);
+
+    if (!child) {
+      throw new Error(`Cannot delete ${childName}, it was not found on ${this.model.name}.`);
+    }
+
+    this.children.delete(childName);
+  }
+
   public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): ContainerJSONValue {
     const containerInner = [...this.children.values()].reduce(
       (acc, child) => Object.assign(acc, child.toJSON(camelCase, convert, shouldSkip)),
