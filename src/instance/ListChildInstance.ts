@@ -69,6 +69,18 @@ export default class ListChildInstance implements Searchable, WithAttributes {
     }
   }
 
+  public delete(childName: string) {
+    const child = this.instance.get(childName);
+
+    if (!child) {
+      throw new Error(`Cannot delete ${childName}, it was not found on ${this.model.name}.`);
+    } else if (this.model.keys.has(child.model.name)) {
+      throw new Error(`Cannot delete key ${childName}.`);
+    }
+
+    this.instance.delete(childName);
+  }
+
   public get keys() {
     return Array.from(this.model.keys.values()).reduce((acc: IKeys, key) => {
       acc[key] = (this.instance.get(key) as LeafInstance).value;

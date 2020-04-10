@@ -55,4 +55,17 @@ describe('Container Instance', () => {
       </mockEl>
     `);
   });
+
+  it('should delete a child that exists', () => {
+    const instance = new ContainerInstance(leafModel, mockConfigXML);
+    instance.delete('state');
+    expect(instance.toJSON()).to.deep.equal({
+      bfd: {}
+    });
+  });
+
+  it('should throw if child does not exist', () => {
+    const instance = new ContainerInstance(leafModel, mockConfigXML);
+    expect(() => instance.delete('foo')).to.throw();
+  });
 });

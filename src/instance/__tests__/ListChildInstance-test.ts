@@ -80,4 +80,30 @@ describe('List Child Instance', () => {
 
     expect(instance.keys).to.deep.equal({ name: 'foo' });
   });
+
+  it('should delete a child that exists', () => {
+    const instance = new ListChildInstance(
+      listModel,
+      xmlUtil.toElement(`
+        <test:peer xmlns:test="http://foo.bar" >
+          <test:name>foo</test:name>
+          <test:service-filter>foo</test:service-filter>
+        </test:peer>
+     `),
+      null,
+      {} as ListInstance
+    );
+    instance.delete('service-filter');
+    expect(instance.toJSON()).to.deep.equal({ name: 'foo' });
+  });
+
+  it('should throw if child does not exist', () => {
+    const instance = new ListChildInstance(listModel, mockConfigXML, null, {} as ListInstance);
+    expect(() => instance.delete('foo')).to.throw();
+  });
+
+  it('should throw if key', () => {
+    const instance = new ListChildInstance(listModel, mockConfigXML, null, {} as ListInstance);
+    expect(() => instance.delete('name')).to.throw();
+  });
 });
