@@ -43,7 +43,11 @@ export type JSONConfigNodeWithAttributes =
   | WithAttributes<ContainerJSONValue>;
 
 export function hasAttributes(x: JSONConfigNode): x is JSONConfigNodeWithAttributes {
-  return _.isPlainObject(x) && '_value' in (x as object);
+  const toCheck = x as object;
+  return (
+    _.isPlainObject(x) &&
+    ('_value' in toCheck || '_operation' in toCheck || '_position' in toCheck || '_attributes' in toCheck)
+  );
 }
 
 export type NetconfOperation = 'merge' | 'create' | 'replace' | 'delete' | 'remove';

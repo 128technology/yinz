@@ -77,6 +77,19 @@ describe('With Attributes Mixin', () => {
     );
   });
 
+  it('should add operations without value', () => {
+    const testModel = new Test();
+    const el = xmlUtil.toElement('<qp-value />');
+    testModel.parseAttributesFromJSON({
+      _operation: 'create'
+    });
+    testModel.addAttributes(el);
+
+    expect(el.toString()).xml.to.equal(
+      '<qp-value xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0" xc:operation="create" />'
+    );
+  });
+
   it('should add list operations without value', () => {
     const testModel = new Test();
     testModel.model = configModel.getModelForPath('authority.router.node.device-interface.capture-filter') as LeafList;
