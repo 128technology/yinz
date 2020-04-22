@@ -1,4 +1,6 @@
-<yin:leaf name="test" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+<yin:leaf name="test" 
+  xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" 
+  xmlns:test="http://foo.bar" module-prefix="test">
   <yin:type name="t128ext:name-id">
     <yin:typedef name="name-id">
       <yin:default value="moocow"/>

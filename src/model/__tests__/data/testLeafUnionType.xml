@@ -1,4 +1,6 @@
-<yin:leaf name="rekey-interval" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+<yin:leaf name="rekey-interval" 
+    xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" 
+    xmlns:test="http://foo.bar" module-prefix="test">
     <yin:type name="union">
         <yin:type name="uint32">
             <yin:range value="1..720"/>

@@ -5,9 +5,9 @@ import { Status } from '../enum';
 import * as Parsers from '../model/parsers';
 
 export default class EnumerationMemberType {
-  public readonly description: string;
-  public readonly value: number;
-  public readonly reference: string;
+  public readonly description: string | null;
+  public readonly value: number | null;
+  public readonly reference: string | null;
   public readonly status: Status = Status.current;
 
   constructor(enumEl: Element) {
@@ -21,6 +21,6 @@ export default class EnumerationMemberType {
 
   public parseValue(enumEl: Element) {
     const valueEl = enumEl.get('./yin:value', ns);
-    return valueEl && valueEl.attr('value') ? parseInt(valueEl.attr('value').value(), 10) : null;
+    return valueEl && valueEl.attr('value') ? parseInt(valueEl.attr('value')!.value(), 10) : null;
   }
 }

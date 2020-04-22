@@ -1,14 +1,12 @@
-import * as libXML from 'libxmljs';
 import * as fs from 'fs';
 import * as path from 'path';
 import { expect } from 'chai';
 
+import xmlUtil from '../../__tests__/xmlUtil';
 import DataModel, { Choice, Leaf, Container } from '../';
 
 export const configModel = new DataModel({
-  modelElement: libXML
-    .parseXmlString(fs.readFileSync(path.join(__dirname, './data/consolidatedT128Model.xml'), 'utf-8'))
-    .root(),
+  modelElement: xmlUtil.toElement(fs.readFileSync(path.join(__dirname, './data/consolidatedT128Model.xml'), 'utf-8')),
   rootPath: '//yin:container[@name="authority"]'
 });
 
@@ -66,7 +64,7 @@ describe('Data Model', () => {
 
   describe('Stats Model', () => {
     const modelText = fs.readFileSync(path.join(__dirname, './data/consolidatedStatsModel.xml'), 'utf-8');
-    const modelElement = libXML.parseXmlString(modelText).root();
+    const modelElement = xmlUtil.toElement(modelText);
 
     const options = {
       modelElement,

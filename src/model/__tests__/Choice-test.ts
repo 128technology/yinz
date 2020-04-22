@@ -5,7 +5,7 @@ import * as sinon from 'sinon';
 
 import xmlUtil from '../../__tests__/xmlUtil';
 
-import { Leaf, List, Choice } from '../';
+import { Leaf, List, Choice, Container } from '../';
 
 describe('Choice Model', () => {
   const modelText = fs.readFileSync(path.join(__dirname, './data/testChoice.xml'), 'utf-8');
@@ -18,19 +18,19 @@ describe('Choice Model', () => {
   const emptyModel = xmlUtil.toElement(emptyModelText);
 
   it('should get initalized', () => {
-    const choice = new Choice(model);
+    const choice = new Choice(model, {} as Container);
 
     expect(choice.name).to.equal('type');
   });
 
   it('should build cases', () => {
-    const choice = new Choice(model);
+    const choice = new Choice(model, {} as Container);
 
     expect(choice.cases.length).to.equal(2);
   });
 
   it('should build all children', () => {
-    const choice = new Choice(model);
+    const choice = new Choice(model, {} as Container);
 
     expect(choice.children.get('destination')).to.be.an.instanceOf(Leaf);
     expect(choice.children.get('nat-target')).to.be.an.instanceOf(Leaf);
@@ -39,25 +39,25 @@ describe('Choice Model', () => {
   });
 
   it('should get case names', () => {
-    const choice = new Choice(model);
+    const choice = new Choice(model, {} as Container);
 
     expect(choice.caseNames).to.deep.equal(['service-agent', 'peer-service-route']);
   });
 
   it('should not be madatory by default', () => {
-    const choice = new Choice(model);
+    const choice = new Choice(model, {} as Container);
 
     expect(choice.mandatory).to.equal(false);
   });
 
   it('should be mandatory if specified in model', () => {
-    const choice = new Choice(mandatoryModel);
+    const choice = new Choice(mandatoryModel, {} as Container);
 
     expect(choice.mandatory).to.equal(true);
   });
 
   it('should get empty cases', () => {
-    const choice = new Choice(emptyModel);
+    const choice = new Choice(emptyModel, {} as Container);
 
     const { emptyCases } = choice;
 
@@ -67,7 +67,7 @@ describe('Choice Model', () => {
 
   it('visits itself', () => {
     const spy = sinon.spy();
-    const choice = new Choice(model);
+    const choice = new Choice(model, {} as Container);
     choice.visit(spy);
 
     expect(spy.firstCall.args[0]).to.equal(choice);
@@ -75,7 +75,7 @@ describe('Choice Model', () => {
 
   it('visits children', () => {
     const spy = sinon.spy();
-    const choice = new Choice(model);
+    const choice = new Choice(model, {} as Container);
     choice.visit(spy);
 
     expect(spy.callCount).to.equal(10);

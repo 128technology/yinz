@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { Model, Choice, ModelRegistry } from '../';
 
 export default class WithRegistry {
-  public register(parentModel: Model, thisModel: Model | Choice) {
+  public register(parentModel: Model | undefined, thisModel: Model | Choice) {
     if (parentModel) {
       let current = parentModel;
 

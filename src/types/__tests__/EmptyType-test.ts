@@ -7,7 +7,7 @@ describe('Empty Type', () => {
   const typeEl = xmlUtil.toElement(`<type ${yinNS} name="empty" />`);
 
   it('should match a empty type', () => {
-    const name = typeEl.attr('name').value();
+    const name = typeEl.attr('name')!.value();
 
     expect(EmptyType.matches(name)).to.equal(true);
   });
@@ -21,6 +21,6 @@ describe('Empty Type', () => {
   it('should serialize', () => {
     const type = new EmptyType(typeEl);
 
-    expect(type.serialize(null)).to.equal(true);
+    expect(type.serialize('')).to.equal(true);
   });
 });

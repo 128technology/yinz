@@ -28,7 +28,7 @@ export default class DataModel {
   constructor(options: IOptions) {
     const { modelElement, rootPath } = options;
 
-    const rootEl = rootPath ? modelElement.get(rootPath, ns) : modelElement;
+    const rootEl = rootPath ? modelElement.get(rootPath, ns)! : modelElement;
 
     this.identities = new Identities(modelElement);
     this.namespaces = NamespacesParser.parse(modelElement);
@@ -39,7 +39,7 @@ export default class DataModel {
 
   public getModelForPath(path: string): Model | Choice {
     if (this.modelRegistry.registry.has(path)) {
-      return this.modelRegistry.registry.get(path);
+      return this.modelRegistry.registry.get(path)!;
     } else {
       throw new Error(`Model not found for path ${path}`);
     }

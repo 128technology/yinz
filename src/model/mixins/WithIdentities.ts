@@ -6,7 +6,7 @@ import { Model } from '../';
 export default class WithIdentities {
   public identities: Identities;
 
-  public addIdentityProps(parentModel: Model) {
+  public addIdentityProps(parentModel?: Model) {
     if (parentModel) {
       let current = parentModel;
 

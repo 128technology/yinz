@@ -1,3 +1,5 @@
-<yin:leaf-list name="numbers" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+<yin:leaf-list name="numbers" 
+  xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" 
+  xmlns:test="http://foo.bar" module-prefix="test">
   <yin:type name="int32" />
 </yin:leaf-list>

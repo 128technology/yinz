@@ -5,7 +5,7 @@ import * as sinon from 'sinon';
 
 import xmlUtil from '../../__tests__/xmlUtil';
 
-import { Choice, Leaf, Case } from '../';
+import { Choice, Leaf, Case, Container } from '../';
 
 describe('Case', () => {
   const explicitCaseText = fs.readFileSync(path.join(__dirname, './data/testExplicitCase.xml'), 'utf-8');
@@ -29,62 +29,62 @@ describe('Case', () => {
   const mockChoice = {} as Choice;
 
   it('should construct explicit cases', () => {
-    const theCase = new Case(explicitCase, mockChoice);
+    const theCase = new Case(explicitCase, mockChoice, {} as Container);
 
     expect(theCase.name).to.equal('peer-service-route');
   });
 
   it('should construct children for explicit cases', () => {
-    const theCase = new Case(explicitCase, mockChoice);
+    const theCase = new Case(explicitCase, mockChoice, {} as Container);
 
     expect(theCase.children.get('peer')).to.be.an.instanceOf(Leaf);
   });
 
   it('should construct implicit cases', () => {
-    const theCase = new Case(implicitCase, mockChoice);
+    const theCase = new Case(implicitCase, mockChoice, {} as Container);
 
     expect(theCase.name).to.equal('qp-value');
   });
 
   it('should construct children for implicit cases', () => {
-    const theCase = new Case(implicitCase, mockChoice);
+    const theCase = new Case(implicitCase, mockChoice, {} as Container);
 
     expect(theCase.children.get('qp-value')).to.be.an.instanceOf(Leaf);
   });
 
   it('determine if case is not empty', () => {
-    const theCase = new Case(explicitCase, mockChoice);
+    const theCase = new Case(explicitCase, mockChoice, {} as Container);
 
     expect(theCase.isEmpty()).to.equal(false);
   });
 
   it('determine if case is empty', () => {
-    const theCase = new Case(emptyCase, mockChoice);
+    const theCase = new Case(emptyCase, mockChoice, {} as Container);
 
     expect(theCase.isEmpty()).to.equal(true);
   });
 
   it('determine if case is deprecated', () => {
-    const theCase = new Case(deprecatedCase, mockChoice);
+    const theCase = new Case(deprecatedCase, mockChoice, {} as Container);
 
     expect(theCase.isDeprecated).to.equal(true);
   });
 
   it('determine if case is obsolete', () => {
-    const theCase = new Case(obsoleteCase, mockChoice);
+    const theCase = new Case(obsoleteCase, mockChoice, {} as Container);
 
     expect(theCase.isObsolete).to.equal(true);
   });
 
   it('determine if case is a prototype', () => {
-    const theCase = new Case(prototypeCase, mockChoice);
+    const theCase = new Case(prototypeCase, mockChoice, {} as Container);
 
     expect(theCase.isPrototype).to.equal(true);
   });
 
   it('visits itself', () => {
     const spy = sinon.spy();
-    const theCase = new Case(explicitCase, mockChoice);
+    const theCase = new Case(explicitCase, mockChoice, {} as Container);
     theCase.visit(spy);
 
     expect(spy.firstCall.args[0]).to.equal(theCase);
@@ -92,7 +92,7 @@ describe('Case', () => {
 
   it('visits children', () => {
     const spy = sinon.spy();
-    const theCase = new Case(explicitCase, mockChoice);
+    const theCase = new Case(explicitCase, mockChoice, {} as Container);
     theCase.visit(spy);
 
     expect(spy.callCount).to.equal(2);

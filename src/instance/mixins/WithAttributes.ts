@@ -84,7 +84,7 @@ export default class WithAttributes {
   public model: Model;
 
   public parseAttributesFromXML(config: Element) {
-    this.rawAttributes = config.attrs().reduce((acc, attr) => {
+    this.rawAttributes = config.attrs().reduce<IAttribute[]>((acc, attr) => {
       acc.push({
         href: attr.namespace()?.href(),
         name: attr.name(),

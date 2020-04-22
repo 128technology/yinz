@@ -39,7 +39,7 @@ describe('Enumeration Type', () => {
   `);
 
   it('should match a enumeration type', () => {
-    const name = typeEl.attr('name').value();
+    const name = typeEl.attr('name')!.value();
 
     expect(EnumerationType.matches(name)).to.equal(true);
   });

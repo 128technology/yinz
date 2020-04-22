@@ -15,7 +15,7 @@ export default class Traversable {
   public traverse(action: (type: Type) => void) {
     const stack: Type[] = [this as any];
     while (stack.length > 0) {
-      const popped = stack.pop();
+      const popped = stack.pop()!;
       action(popped);
       if (hasChildTypes(popped)) {
         stack.push(...popped.childTypes());

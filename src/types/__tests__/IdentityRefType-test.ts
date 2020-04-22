@@ -30,7 +30,7 @@ describe('IdentityRef Type', () => {
   const mockIdentities = new Identities(mockIdentitiesEl);
 
   it('should match a identityref type', () => {
-    const name = typeEl.attr('name').value();
+    const name = typeEl.attr('name')!.value();
 
     expect(IdentityRefType.matches(name)).to.equal(true);
   });

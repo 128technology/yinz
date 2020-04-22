@@ -35,7 +35,7 @@ export default class StringType implements Named, StringSerialize {
     }
 
     if (patternEl) {
-      this.pattern = patternEl.attr('value').value();
+      this.pattern = patternEl.attr('value')!.value();
     }
   }
 }

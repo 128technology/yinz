@@ -12,7 +12,7 @@ describe('String Type', () => {
   `);
 
   it('should match a string type', () => {
-    const name = typeEl.attr('name').value();
+    const name = typeEl.attr('name')!.value();
 
     expect(StringType.matches(name)).to.equal(true);
   });

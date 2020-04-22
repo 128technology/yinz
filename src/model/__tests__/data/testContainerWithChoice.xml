@@ -1,4 +1,6 @@
-<yin:container name="bfd" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+<yin:container name="bfd" 
+  xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" 
+  xmlns:test="http://foo.bar" module-prefix="test">
   <yin:leaf name="state">
     <yin:type name="enumeration">
       <yin:enum name="enabled">

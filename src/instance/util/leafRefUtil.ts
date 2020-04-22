@@ -19,7 +19,7 @@ export function evaluateCandidate(potentialMatch: Instance, auxiliaryKeys: Map<s
   const auxiliaryKeysNames = Array.from(auxiliaryKeys.keys());
   const path: Path = [];
 
-  let current = potentialMatch;
+  let current: typeof potentialMatch | null = potentialMatch;
   while (current) {
     if (current instanceof ListChildInstance) {
       const parentModel = current.model;
@@ -34,7 +34,7 @@ export function evaluateCandidate(potentialMatch: Instance, auxiliaryKeys: Map<s
         const keyNode = (current.instance.get(key) as LeafInstance).value;
         const substituteKeyValue = substituteKeys.length === 1 ? auxiliaryKeys.get(substituteKeys[0]) : null;
 
-        if (substituteKeyValue === null || keyNode === substituteKeyValue) {
+        if ((substituteKeyValue === null || keyNode === substituteKeyValue) && keyNode) {
           // Value from auxiliary key map matches the key value of this instance, so we have a match
           segmentKeys.push({ key, value: keyNode });
         } else {

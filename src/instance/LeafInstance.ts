@@ -13,7 +13,7 @@ export default class LeafInstance implements Searchable, WithAttributes {
   public model: Leaf;
   public config: Element;
   public parent: Parent;
-  public value: string;
+  public value: string | null;
 
   public customAttributes: WithAttributes['customAttributes'];
   public parseAttributesFromXML: WithAttributes['parseAttributesFromXML'];
@@ -30,10 +30,9 @@ export default class LeafInstance implements Searchable, WithAttributes {
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
 
-  constructor(model: Leaf, config: Element | LeafJSON, parent?: Parent) {
+  constructor(model: Leaf, config: Element | LeafJSON, parent: Parent) {
     this.model = model;
     this.parent = parent;
-    this.value = null;
 
     if (config instanceof Element) {
       this.config = config;
@@ -46,7 +45,7 @@ export default class LeafInstance implements Searchable, WithAttributes {
   }
 
   public getConvertedValue() {
-    return this.model.type.serialize(this.value);
+    return this.value ? this.model.type.serialize(this.value) : null;
   }
 
   public toJSON(camelCase = false, convert = true): { [name: string]: LeafJSONValue } {
@@ -58,7 +57,7 @@ export default class LeafInstance implements Searchable, WithAttributes {
   public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
     const [prefix, href] = this.model.ns;
     defineNamespaceOnRoot(parent, prefix, href);
-    const el = parent.node(this.model.name, this.value);
+    const el = parent.node(this.model.name, this.value || undefined);
     el.namespace(prefix);
 
     if (options.includeAttributes && this.hasAttributes) {
@@ -80,11 +79,12 @@ export default class LeafInstance implements Searchable, WithAttributes {
 
   private injestConfigJSON(configJSON: LeafJSON) {
     const config = this.getValueFromJSON(configJSON) as LeafJSONValue;
-    this.value = config.toString();
+    this.value = config === null ? null : config.toString();
   }
 
   private injestConfigXML(config: Element) {
-    this.value = config.text();
+    const text = config.text();
+    this.value = _.isNil(text) ? null : text;
   }
 }
 

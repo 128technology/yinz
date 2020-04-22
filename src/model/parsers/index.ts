@@ -20,23 +20,23 @@ export class VisibilityParser {
 }
 
 export class StatusParser {
-  public static parse(el: Element): Status {
+  public static parse(el: Element) {
     const statusElem = el.get('./yin:status', ns);
-    return statusElem ? Status[statusElem.attr('value').value() as keyof typeof Status] : null;
+    return statusElem ? Status[statusElem.attr('value')!.value() as keyof typeof Status] : null;
   }
 }
 
 export class MaxElementsParser {
   public static parse(el: Element) {
     const maxElemEl = el.get('./yin:max-elements', ns);
-    return maxElemEl ? parseInt(maxElemEl.attr('value').value(), 10) : null;
+    return maxElemEl ? parseInt(maxElemEl.attr('value')!.value(), 10) : null;
   }
 }
 
 export class MinElementsParser {
   public static parse(el: Element) {
     const minElemEl = el.get('./yin:min-elements', ns);
-    return minElemEl ? parseInt(minElemEl.attr('value').value(), 10) : 0;
+    return minElemEl ? parseInt(minElemEl.attr('value')!.value(), 10) : 0;
   }
 }
 
@@ -65,7 +65,7 @@ export class ReferenceParser {
 export class OrderedByParser {
   public static parse(el: Element) {
     const orderedByEl = el.get('./yin:ordered-by', ns);
-    return orderedByEl ? OrderedBy[orderedByEl.attr('value').value() as keyof typeof OrderedBy] : OrderedBy.system;
+    return orderedByEl ? OrderedBy[orderedByEl.attr('value')!.value() as keyof typeof OrderedBy] : OrderedBy.system;
   }
 }
 
@@ -73,7 +73,7 @@ export class MandatoryParser {
   public static parse(el: Element) {
     const mandatoryEl = el.get('./yin:mandatory', ns);
 
-    return mandatoryEl ? mandatoryEl.attr('value').value() === 'true' : false;
+    return mandatoryEl ? mandatoryEl.attr('value')!.value() === 'true' : false;
   }
 }
 
@@ -81,7 +81,7 @@ export class UnitsParser {
   public static parse(el: Element) {
     const unitsEl = el.get('./yin:units', ns);
 
-    return unitsEl ? unitsEl.attr('name').value() : null;
+    return unitsEl ? unitsEl.attr('name')!.value() : null;
   }
 }
 
@@ -89,7 +89,7 @@ export class DefaultParser {
   public static parse(el: Element) {
     const defaultEl = el.get('./yin:default', ns);
 
-    return defaultEl ? defaultEl.attr('value').value() : null;
+    return defaultEl ? defaultEl.attr('value')!.value() : null;
   }
 }
 
@@ -97,7 +97,7 @@ export class PresenceParser {
   public static parse(el: Element) {
     const presenceEl = el.get('./yin:presence', ns);
 
-    return presenceEl ? presenceEl.attr('value').value() : null;
+    return presenceEl ? presenceEl.attr('value')!.value() : null;
   }
 }
 
@@ -109,16 +109,15 @@ export class NamespacesParser {
   }
 
   public static getNamespace(el: Element): [string, string] {
-    const moduleEl = el.get('./ancestor-or-self::yin:*[@module-prefix][1]', ns);
-
-    return moduleEl ? this.getNamespaceFromModule(moduleEl) : null;
+    const moduleEl = el.get('./ancestor-or-self::yin:*[@module-prefix][1]', ns)!;
+    return this.getNamespaceFromModule(moduleEl);
   }
 
   public static getNamespaceFromModule(el: Element): [string, string] {
-    const prefix = el.attr('module-prefix').value();
+    const prefix = el.attr('module-prefix')!.value();
     const href = el
       .namespaces()
-      .find((namespace: Namespace) => namespace.prefix() === prefix)
+      .find((namespace: Namespace) => namespace.prefix() === prefix)!
       .href();
 
     return [prefix, href];
@@ -141,7 +140,7 @@ export class WhenParser {
 
     if (whenEls && whenEls.length > 0) {
       return whenEls.map(whenEl => {
-        const condition = whenEl.attr('condition').value();
+        const condition = whenEl.attr('condition')!.value();
         const prefix = NamespacesParser.getModulePrefix(el);
         const prefixed = WhenParser.ensureXPathNamesPrefixed(condition, prefix);
 

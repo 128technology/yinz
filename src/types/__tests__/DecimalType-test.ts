@@ -11,7 +11,7 @@ describe('Decimal Type', () => {
   `);
 
   it('should match a decimal type', () => {
-    const name = typeEl.attr('name').value();
+    const name = typeEl.attr('name')!.value();
 
     expect(DecimalType.matches(name)).to.equal(true);
   });

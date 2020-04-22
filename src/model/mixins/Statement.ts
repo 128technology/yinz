@@ -10,15 +10,15 @@ import { Model, Case } from '../';
 export default class Statement {
   public name: string;
   public ns: [string, string];
-  public description: string;
+  public description: string | null;
   public otherProps: Map<string, string | boolean>;
-  public parentModel: Model;
-  public status: Status;
+  public parentModel: Model | null;
+  public status: Status | null;
   public visibility: Visibility | null;
   public choiceCase: Case;
 
-  public addStatementProps(el: Element, parentModel?: Model) {
-    this.name = el.attr('name').value();
+  public addStatementProps(el: Element, parentModel: Model | null) {
+    this.name = el.attr('name')!.value();
     this.ns = NamespacesParser.getNamespace(el);
     this.parentModel = parentModel;
 

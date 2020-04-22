@@ -9,7 +9,7 @@ describe('Integer Type', () => {
   TYPES.forEach(type => {
     it(`should match ${type} type`, () => {
       const typeEl = xmlUtil.toElement(`<type ${yinNS} name="${type}" />`);
-      const name = typeEl.attr('name').value();
+      const name = typeEl.attr('name')!.value();
 
       expect(IntegerType.matches(name)).to.equal(true);
     });

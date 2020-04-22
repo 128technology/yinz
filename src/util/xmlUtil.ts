@@ -13,7 +13,7 @@ export function defineNamespaceSafe(el: Element, prefix: string, href: string) {
 }
 
 export function defineNamespaceOnRoot(el: Element, prefix: string, href: string) {
-  const root = el.doc().root();
+  const root = el.doc().root()!;
   const hasNamespace = _.some(root.namespaces(), ns => ns.prefix() === prefix);
   if (!hasNamespace) {
     root.defineNamespace(prefix, href);

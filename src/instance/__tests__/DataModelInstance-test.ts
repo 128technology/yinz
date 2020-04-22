@@ -39,7 +39,7 @@ describe('Data Model Instance', () => {
 
   function getInstance(instancePath: string) {
     const instance = readConfigFile(instancePath);
-    const config = instance.get('//t128:config', { t128: 'http://128technology.com/t128' });
+    const config = instance.get('//t128:config', { t128: 'http://128technology.com/t128' })!;
     return new DataModelInstance(dataModel, config);
   }
 
@@ -301,7 +301,7 @@ describe('Data Model Instance', () => {
         const targetXML = dataModelInstance.rawInstance.get(
           '/t128:config/authy:authority/svc:session-type[svc:name = "HTTP"]/svc:name',
           dataModelInstance.model.namespaces
-        );
+        )!;
 
         const match = dataModelInstance.getInstanceFromElement(targetXML);
 
@@ -385,13 +385,13 @@ describe('Data Model Instance', () => {
             t128: 'http://128technology.com/t128'
           };
           const localInstance = readConfigFile('./data/instance.xml');
-          const localConfig = localInstance.get('//t128:config', ns);
+          const localConfig = localInstance.get('//t128:config', ns)!;
 
           // Drop the leafref item from the tree
           const localNode = localInstance.get(
             "//t128:config/authy:authority/authy:router/sys:node[*[local-name()='name']='TestNode2']",
             ns
-          );
+          )!;
           localNode.remove();
 
           dataModelInstance = new DataModelInstance(dataModel, localConfig);
@@ -434,7 +434,7 @@ describe('Data Model Instance', () => {
         // living under a different node. Nodes and device interfaces have unique names.
 
         const testInstance = readConfigFile('./data/instanceNonUniqueNetworkIntf.xml');
-        const testConfig = testInstance.get('//t128:config', { t128: 'http://128technology.com/t128' });
+        const testConfig = testInstance.get('//t128:config', { t128: 'http://128technology.com/t128' })!;
 
         beforeEach(() => {
           dataModelInstance = new DataModelInstance(dataModel, testConfig);
@@ -510,7 +510,7 @@ describe('Data Model Instance', () => {
 
     const userModel = readDataModel('../../model/__tests__/data/consolidatedUserModel.xml');
     const instance = readConfigFile('./data/userInstance.xml');
-    const config = instance.get('//user:config', { user: 'http://128technology.com/user' });
+    const config = instance.get('//user:config', { user: 'http://128technology.com/user' })!;
 
     beforeEach(() => {
       dataModelInstance = new DataModelInstance(userModel, config);

@@ -13,7 +13,7 @@ describe('XML Utility', () => {
           </bar>
         </foo>
       `);
-      const innerEl = tree.get('//baz');
+      const innerEl = tree.get('//baz')!;
       defineNamespaceOnRoot(innerEl, 'foo', 'http://foo.com');
 
       expect(tree.toString()).xml.to.equal(`

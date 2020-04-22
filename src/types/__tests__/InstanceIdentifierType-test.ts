@@ -7,7 +7,7 @@ describe('Instance Identifier Type', () => {
   const typeEl = xmlUtil.toElement(`<type ${yinNS} name="instance-identifier" />`);
 
   it('should match a instance-identifier type', () => {
-    const name = typeEl.attr('name').value();
+    const name = typeEl.attr('name')!.value();
 
     expect(InstanceIdentifierType.matches(name)).to.equal(true);
   });
