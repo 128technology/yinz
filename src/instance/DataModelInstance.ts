@@ -200,7 +200,7 @@ export default class DataModelInstance {
         const { element, cleanUp } = this.getElementForPath(path);
 
         try {
-          const suggestions = paths.reduce((acc, suggestionPath) => {
+          const suggestions = paths.reduce<Set<string>>((acc, suggestionPath) => {
             (element!.find(suggestionPath, this.model.namespaces) || []).filter(isElement).forEach(refEl => {
               const text = refEl.text();
               if (text && text.length > 0) {
