@@ -26,9 +26,9 @@ export default class DerivedType implements Named, Traversable {
   public baseType: Type;
   public suggestionRefs: string[];
 
-  constructor(el: Element, identities?: Identities) {
+  constructor(el: Element, identities: Identities) {
     this.addNamedProps(el);
-    const typeDefEl = el.get('yin:typedef', ns);
+    const typeDefEl = el.get('yin:typedef', ns)!;
 
     this.parseBaseType(el, typeDefEl, identities);
     this.parseUnits(typeDefEl);
@@ -45,7 +45,7 @@ export default class DerivedType implements Named, Traversable {
     const defaultEl = typeDefEl.get('./yin:default', ns);
 
     if (defaultEl) {
-      this.default = defaultEl.attr('value').value();
+      this.default = defaultEl.attr('value')!.value();
     } else if (this.baseType instanceof DerivedType && this.baseType.default) {
       this.default = this.baseType.default;
     }
@@ -55,7 +55,7 @@ export default class DerivedType implements Named, Traversable {
     const unitsEl = typeDefEl.get('./yin:units', ns);
 
     if (unitsEl) {
-      this.units = unitsEl.attr('name').value();
+      this.units = unitsEl.attr('name')!.value();
     }
   }
 
@@ -67,8 +67,8 @@ export default class DerivedType implements Named, Traversable {
     }
   }
 
-  public parseBaseType(typeEl: Element, typeDefEl: Element, identities?: Identities) {
-    const baseTypeEl = typeDefEl.get('./yin:type', ns);
+  public parseBaseType(typeEl: Element, typeDefEl: Element, identities: Identities) {
+    const baseTypeEl = typeDefEl.get('./yin:type', ns)!;
 
     // Really you only need to avoid typedef in the XPATH below, but a bug in yinsolidated
     // also copies the child type into the derived type in some cases.

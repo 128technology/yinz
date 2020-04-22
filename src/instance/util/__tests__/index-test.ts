@@ -83,7 +83,7 @@ describe('Instance Util', () => {
       rootPath: '//yin:container[@name="authority"]'
     };
     const dataModel = new DataModel(options);
-    const config = xmlUtil.toElement(instanceText).get('//t128:config', { t128: 'http://128technology.com/t128' });
+    const config = xmlUtil.toElement(instanceText).get('//t128:config', { t128: 'http://128technology.com/t128' })!;
     const instance = new DataModelInstance(dataModel, config);
 
     it('should build out a tree with keys', () => {

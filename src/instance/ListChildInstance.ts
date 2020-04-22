@@ -82,8 +82,8 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   }
 
   public get keys() {
-    return Array.from(this.model.keys.values()).reduce((acc: IKeys, key) => {
-      acc[key] = (this.instance.get(key) as LeafInstance).value;
+    return Array.from(this.model.keys.values()).reduce<IKeys>((acc, key) => {
+      acc[key] = (this.instance.get(key) as LeafInstance).value!;
       return acc;
     }, {});
   }
@@ -96,7 +96,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
         const childName = this.model.hasChild(rawChildName) ? rawChildName : _.kebabCase(rawChildName);
         if (this.model.hasChild(childName)) {
           const child = config[rawChildName];
-          const childModel = this.model.getChild(childName);
+          const childModel = this.model.getChild(childName)!;
 
           if (childModel.choiceCase) {
             this.activeChoices.set(childModel.choiceCase.parentChoice.name, childModel.choiceCase.name);
@@ -137,7 +137,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
               child.add(el);
             }
           } else {
-            const childModel = this.model.getChild(localName);
+            const childModel = this.model.getChild(localName)!;
 
             if (childModel.choiceCase) {
               this.activeChoices.set(childModel.choiceCase.parentChoice.name, childModel.choiceCase.name);
@@ -177,13 +177,13 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   public getInstance(
     path: Path,
     noMatchHandler: NoMatchHandler = this.handleNoMatch
-  ): Instance | LeafListChildInstance {
+  ): Instance | LeafListChildInstance | undefined {
     if (path.length === 0) {
       return this;
     } else {
       const nextSegment = _.head(path);
-      if (this.instance.has(nextSegment.name)) {
-        return this.instance.get(nextSegment.name).getInstance(path, noMatchHandler);
+      if (nextSegment && this.instance.has(nextSegment.name)) {
+        return this.instance.get(nextSegment.name)!.getInstance(path, noMatchHandler);
       }
     }
 

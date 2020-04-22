@@ -1,0 +1,11 @@
+{
+  "authority": {
+    "name": { "_attributes": [{ "name": "operation", "value": "delete" }] },
+    "router": [
+      {
+        "name": "Fabric128",
+        "inter-node-security": { "_operation": "remove" }
+      }
+    ]
+  }
+}

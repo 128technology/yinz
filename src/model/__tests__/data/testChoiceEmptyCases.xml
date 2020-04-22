@@ -1,4 +1,6 @@
-<yin:choice name="type" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+<yin:choice name="type" 
+  xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" 
+  xmlns:test="http://foo.bar" module-prefix="test">
   <yin:case name="service-agent">
     <yin:leaf name="destination">
       <yin:type name="inet:ip-address">
@@ -274,7 +276,8 @@
       </yin:leaf>
     </yin:list>
   </yin:case>
-  <yin:case name="im-empty" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+  <yin:case name="im-empty" 
+    xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
     <yin:leaf name="im-emptier">
       <yin:type name="t128ext:fizzlesticks">
         <yin:typedef name="fizzlesticks">

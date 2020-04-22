@@ -7,7 +7,7 @@ describe('Boolean Type', () => {
   const typeEl = xmlUtil.toElement(`<type ${yinNS} name="boolean" />`);
 
   it('should match a boolean type', () => {
-    const name = typeEl.attr('name').value();
+    const name = typeEl.attr('name')!.value();
 
     expect(BooleanType.matches(name)).to.equal(true);
   });

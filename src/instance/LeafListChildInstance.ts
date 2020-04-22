@@ -4,7 +4,7 @@ import applyMixins from '../util/applyMixins';
 import { LeafList } from '../model';
 
 import { WithAttributes } from './mixins';
-import { LeafJSON, Visitor, XMLSerializationOptions, LeafJSONValue } from './types';
+import { LeafJSON, Visitor, XMLSerializationOptions } from './types';
 import { Path, LeafListInstance } from './';
 
 export default class LeafListChildInstance implements WithAttributes {
@@ -23,7 +23,7 @@ export default class LeafListChildInstance implements WithAttributes {
   public addOperation: WithAttributes['addOperation'];
   public addPosition: WithAttributes['addPosition'];
 
-  constructor(model: LeafList, config: Element | LeafJSON, parent?: LeafListInstance) {
+  constructor(model: LeafList, config: Element | LeafJSON, parent: LeafListInstance) {
     this.model = model;
     this.parent = parent;
 
@@ -42,7 +42,7 @@ export default class LeafListChildInstance implements WithAttributes {
   }
 
   public injestConfigJSON(configJSON: LeafJSON) {
-    const config = this.getValueFromJSON(configJSON) as LeafJSONValue;
+    const config = this.getValueFromJSON(configJSON) as string | number | boolean;
     this.rawValue = config.toString();
   }
 

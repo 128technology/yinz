@@ -12,7 +12,7 @@ describe('Bits Type', () => {
   `);
 
   it('should match a bits type', () => {
-    const name = typeEl.attr('name').value();
+    const name = typeEl.attr('name')!.value();
 
     expect(BitsType.matches(name)).to.equal(true);
   });

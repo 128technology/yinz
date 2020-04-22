@@ -28,7 +28,7 @@ export default class IdentityRefType implements Named, StringSerialize, Required
   }
 
   public parseType(el: Element, identities: Identities) {
-    const base = el.get('./yin:base', ns).attr('name').value();
+    const base = el.get('./yin:base', ns)!.attr('name')!.value();
 
     this.options = identities.getOptions(base);
   }

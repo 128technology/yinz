@@ -24,16 +24,16 @@ export default class LeafRefType implements Named, RequiredField {
   public path: string;
   public refType: Type;
 
-  constructor(el: Element, identities?: Identities) {
+  constructor(el: Element, identities: Identities) {
     this.addNamedProps(el);
     this.validateRequiredFields(el, ['path'], this.type);
     this.parseType(el, identities);
   }
 
-  public parseType(el: Element, identities?: Identities) {
-    const typeEl = el.get('./yin:type', ns);
+  public parseType(el: Element, identities: Identities) {
+    const typeEl = el.get('./yin:type', ns)!;
     this.refType = TypeParser.parse(typeEl, identities);
-    this.path = el.get('./yin:path', ns).attr('value').value();
+    this.path = el.get('./yin:path', ns)!.attr('value')!.value();
   }
 
   public serialize(val: string): SerializationReturnType {

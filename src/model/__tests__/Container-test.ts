@@ -40,7 +40,7 @@ describe('Container Model', () => {
 
     const container = new Container(model);
 
-    const instance = container.buildInstance(config);
+    const instance = container.buildInstance(config, null);
     expect(instance.model).to.equal(container);
   });
 
@@ -77,7 +77,7 @@ describe('Container Model', () => {
   it('should get a child', () => {
     const container = new Container(model);
 
-    expect(container.getChild('state').name).to.equal('state');
+    expect(container.getChild('state')!.name).to.equal('state');
   });
 
   it('should get children', () => {

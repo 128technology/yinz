@@ -1,4 +1,7 @@
-<yin:leaf name="priority" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions">
+<yin:leaf name="priority" 
+    xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" 
+    xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" 
+    xmlns:test="http://foo.bar" module-prefix="test">
     <yin:type name="t128ext:vector-priority">
         <yin:typedef name="vector-priority">
             <yin:type name="union">

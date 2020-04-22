@@ -5,7 +5,7 @@ import { OrderedBy } from '../../enum';
 import { MaxElementsParser, MinElementsParser, OrderedByParser } from '../parsers';
 
 export default class ListLike {
-  public maxElements: number;
+  public maxElements: number | null;
   public minElements: number;
   public orderedBy: OrderedBy;
 

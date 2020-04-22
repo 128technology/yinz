@@ -1,4 +1,7 @@
-<yin:leaf name="neighborhood" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" xmlns:t128ext="http://128technology.com/t128-extensions">
+<yin:leaf name="neighborhood" 
+    xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" 
+    xmlns:t128ext="http://128technology.com/t128-extensions" 
+    xmlns:test="http://foo.bar" module-prefix="test">
     <yin:type name="t128ext:neighborhood-id">
         <yin:typedef name="neighborhood-id">
             <yin:description>

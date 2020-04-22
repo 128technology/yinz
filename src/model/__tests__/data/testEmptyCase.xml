@@ -1,4 +1,6 @@
-<yin:case name="im-empty" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+<yin:case name="im-empty" 
+  xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" 
+  xmlns:test="http://foo.bar" module-prefix="test">
   <yin:leaf name="im-emptier">
     <yin:type name="t128ext:fizzlesticks">
       <yin:typedef name="fizzlesticks">

@@ -22,7 +22,8 @@ const SERIALIZATION_TYPE = SerializationType.number;
 
 export default class IntegerType implements Named {
   public static matches(typeName: string) {
-    return TYPES.indexOf(enumValueOf(typeName)) !== -1;
+    const type = enumValueOf(typeName);
+    return type !== null ? TYPES.indexOf(type) !== -1 : false;
   }
 
   public addNamedProps: Named['addNamedProps'];

@@ -23,7 +23,7 @@ import { Path, Instance, ListInstance, LeafListInstance, LeafListChildInstance }
 export default class ContainerInstance implements Searchable, WithAttributes {
   public model: Container;
   public config: Element;
-  public parent: Parent;
+  public parent: Parent | null;
   public children: Map<string, Instance>;
   public activeChoices: Map<string, string>;
 
@@ -42,7 +42,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
 
-  constructor(model: Container, config: Element | ContainerJSON, parent?: Parent) {
+  constructor(model: Container, config: Element | ContainerJSON, parent: Parent | null) {
     this.model = model;
     this.parent = parent;
     this.children = new Map();
@@ -97,15 +97,15 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public getInstance(
     path: Path,
     noMatchHandler: NoMatchHandler = this.handleNoMatch
-  ): Instance | LeafListChildInstance {
+  ): Instance | LeafListChildInstance | undefined {
     if (this.isTryingToMatchMe(path) && this.isMatch(path)) {
       return this;
     } else if (path.length > 1) {
       const tail = _.tail(path);
       const nextSegment = _.head(tail);
 
-      if (this.children.has(nextSegment.name)) {
-        return this.children.get(nextSegment.name).getInstance(tail, noMatchHandler);
+      if (nextSegment && this.children.has(nextSegment.name)) {
+        return this.children.get(nextSegment.name)!.getInstance(tail, noMatchHandler);
       }
     }
 
@@ -128,7 +128,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
         const childName = this.model.hasChild(rawChildName) ? rawChildName : _.kebabCase(rawChildName);
         if (this.model.hasChild(childName)) {
           const child = config[rawChildName];
-          const childModel = this.model.getChild(childName);
+          const childModel = this.model.getChild(childName)!;
 
           // Note: This does not support nested choices
           if (childModel.choiceCase) {
@@ -170,7 +170,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
               child.add(el);
             }
           } else {
-            const childModel = this.model.getChild(localName);
+            const childModel = this.model.getChild(localName)!;
 
             // Note: This does not support nested choices
             if (childModel.choiceCase) {

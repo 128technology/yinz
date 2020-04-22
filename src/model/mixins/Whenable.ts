@@ -5,11 +5,11 @@ import { ContextNode } from '../../enum';
 
 export interface IWhen {
   condition: string;
-  context?: ContextNode;
+  context: ContextNode | null;
 }
 
 export default class Whenable {
-  public when: IWhen[];
+  public when: IWhen[] | null;
   public hasWhenAncestorOrSelf: boolean;
 
   public addWhenableProps(el: Element) {

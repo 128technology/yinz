@@ -1,4 +1,9 @@
-<yin:list name="router" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" xmlns:t128-internal="http://128technology.com/t128-internal-extensions" xmlns:t128ext="http://128technology.com/t128-extensions">
+<yin:list name="router" 
+  xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" 
+  xmlns:t128-codegen="http://128technology.com/t128-codegen-extensions" 
+  xmlns:t128-internal="http://128technology.com/t128-internal-extensions" 
+  xmlns:t128ext="http://128technology.com/t128-extensions" 
+  xmlns:test="http://foo.bar" module-prefix="test">
   <yin:key value="name"/>
   <yin:unique tag="id"/>
   <yin:description>
@@ -23,7 +28,7 @@ lowercase characters.
 
 The following is an example of a UUID in string representation:
 f81d4fae-7dec-11d0-a765-00a0c91e6bf6
-</yin:text>
+              </yin:text>
             </yin:description>
             <yin:reference>
               <yin:text>RFC 4122: A Universally Unique IDentifier (UUID) URN
@@ -884,7 +889,8 @@ instance.</yin:text>
 from the 'routing-protocol' base identity.</yin:text>
         </yin:description>
       </yin:leaf>
-      <yin:leaf xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" name="local-as" module-prefix="bgp">
+      <yin:leaf xmlns:bgp="http://128technology.com/t128/config/bgp-config" 
+        xmlns:rp="http://128technology.com/t128/config/routing-policy-config" name="local-as" module-prefix="bgp">
         <yin:type name="inet:as-number">
           <yin:typedef name="as-number">
             <yin:type name="uint32"/>
@@ -924,7 +930,8 @@ the 32-bit as-number type from the model in RFC 6991.</yin:text>
         </yin:description>
         <yin:when condition="rt:type = 'rt:bgp'" context-node="parent"/>
       </yin:leaf>
-      <yin:container xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" name="timers" module-prefix="bgp">
+      <yin:container xmlns:bgp="http://128technology.com/t128/config/bgp-config" 
+        xmlns:rp="http://128technology.com/t128/config/routing-policy-config" name="timers" module-prefix="bgp">
         <yin:description>
           <yin:text>Config parameters related to timers associated with the BGP
 neighbor</yin:text>
@@ -954,7 +961,8 @@ the neighbor.  Typically set to 1/3 the hold-time.</yin:text>
           </yin:description>
         </yin:leaf>
       </yin:container>
-      <yin:leaf xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" name="router-id" module-prefix="bgp">
+      <yin:leaf xmlns:bgp="http://128technology.com/t128/config/bgp-config" 
+        xmlns:rp="http://128technology.com/t128/config/routing-policy-config" name="router-id" module-prefix="bgp">
         <yin:type name="inet:ipv4-address">
           <yin:typedef name="ipv4-address">
             <yin:type name="string">
@@ -982,7 +990,8 @@ format</yin:text>
         </yin:description>
         <yin:when condition="rt:type = 'rt:bgp'" context-node="parent"/>
       </yin:leaf>
-      <yin:container xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" name="confederation" module-prefix="bgp">
+      <yin:container xmlns:bgp="http://128technology.com/t128/config/bgp-config" 
+        xmlns:rp="http://128technology.com/t128/config/routing-policy-config" name="confederation" module-prefix="bgp">
         <yin:description>
           <yin:text>Configuration options specifying parameters when the local
 router is within an autonomous system which is part of a BGP
@@ -1067,7 +1076,8 @@ as part of the local confederation.</yin:text>
           </yin:description>
         </yin:leaf-list>
       </yin:container>
-      <yin:container xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" name="route-selection-options" module-prefix="bgp">
+      <yin:container xmlns:bgp="http://128technology.com/t128/config/bgp-config" 
+        xmlns:rp="http://128technology.com/t128/config/routing-policy-config" name="route-selection-options" module-prefix="bgp">
         <yin:description>
           <yin:text>Set of configuration options that govern best
 path selection.</yin:text>
@@ -1102,7 +1112,8 @@ the active path.</yin:text>
           </yin:description>
         </yin:leaf>
       </yin:container>
-      <yin:list xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" name="address-family" module-prefix="bgp">
+      <yin:list xmlns:bgp="http://128technology.com/t128/config/bgp-config" 
+        xmlns:rp="http://128technology.com/t128/config/routing-policy-config" name="address-family" module-prefix="bgp">
         <yin:key value="afi-safi"/>
         <yin:description>
           <yin:text>Address family configuration</yin:text>
@@ -1467,7 +1478,8 @@ or dashes, and cannot exceed 63 characters.</yin:text>
           </yin:leaf>
         </yin:list>
       </yin:list>
-      <yin:list xmlns:bgp="http://128technology.com/t128/config/bgp-config" xmlns:rp="http://128technology.com/t128/config/routing-policy-config" name="neighbor" module-prefix="bgp">
+      <yin:list xmlns:bgp="http://128technology.com/t128/config/bgp-config" 
+        xmlns:rp="http://128technology.com/t128/config/routing-policy-config" name="neighbor" module-prefix="bgp">
         <yin:key value="neighbor-address"/>
         <yin:description>
           <yin:text>List of BGP neighbors configured on the local system,
@@ -5269,7 +5281,7 @@ lowercase characters.
 
 The following is an example of a UUID in string representation:
 f81d4fae-7dec-11d0-a765-00a0c91e6bf6
-</yin:text>
+              </yin:text>
             </yin:description>
             <yin:reference>
               <yin:text>RFC 4122: A Universally Unique IDentifier (UUID) URN
@@ -6170,7 +6182,9 @@ will be scheduled to transmit versus other priorities.</yin:text>
       </yin:description>
     </yin:leaf>
   </yin:list>
-  <yin:list xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:svc="http://128technology.com/t128/config/service-config" xmlns:sys="http://128technology.com/t128/config/system-config" name="service-route" module-prefix="svc">
+  <yin:list xmlns:if="http://128technology.com/t128/config/interface-config" 
+    xmlns:svc="http://128technology.com/t128/config/service-config" 
+    xmlns:sys="http://128technology.com/t128/config/system-config" name="service-route" module-prefix="svc">
     <yin:key value="name"/>
     <yin:description>
       <yin:text>Defines a route for a service or an instance of a service
@@ -6525,7 +6539,9 @@ by allowing zone identifiers in the address format.</yin:text>
       </yin:leaf>
     </yin:list>
   </yin:list>
-  <yin:list xmlns:if="http://128technology.com/t128/config/interface-config" xmlns:svc="http://128technology.com/t128/config/service-config" xmlns:sys="http://128technology.com/t128/config/system-config" name="service-route-policy" module-prefix="svc">
+  <yin:list xmlns:if="http://128technology.com/t128/config/interface-config" 
+    xmlns:svc="http://128technology.com/t128/config/service-config" 
+    xmlns:sys="http://128technology.com/t128/config/system-config" name="service-route-policy" module-prefix="svc">
     <yin:key value="name"/>
     <yin:description>
       <yin:text>A service route policy</yin:text>

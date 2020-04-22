@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 
 import { ContextNode } from '../enum';
 import { DerivedType, LeafRefType } from '../types';
-import DataModel, { Model, List, Leaf, Choice, LeafList } from '../model';
+import DataModel, { Model, List, Leaf, Choice, LeafList, Container } from '../model';
 import { isElement } from '../util/xmlUtil';
 
 import Path from './Path';
@@ -38,13 +38,14 @@ export default class DataModelInstance {
     this.root = new Map();
 
     const rootName = [...model.root.keys()][0];
+    const modelRoot = model.root.get(rootName)!;
 
     if (instance instanceof Element) {
       this.rawInstance = instance;
-      this.root.set(rootName, new ContainerInstance(model.root.get(rootName), instance.get('./*[1]')));
+      this.root.set(rootName, new ContainerInstance(modelRoot, instance.get('./*[1]')!, null));
     } else {
-      this.root.set(rootName, new ContainerInstance(model.root.get(rootName), Object.values(instance)[0]));
-      this.rawInstance = this.toXML().root();
+      this.root.set(rootName, new ContainerInstance(modelRoot, Object.values(instance)[0], null));
+      this.rawInstance = this.toXML().root()!;
 
       this.visit(instanceToVisit => {
         if (
@@ -54,7 +55,7 @@ export default class DataModelInstance {
           instanceToVisit instanceof ContainerInstance
         ) {
           const xPath = getPathXPath(instanceToVisit.getPath());
-          instanceToVisit.config = this.rawInstance.get(xPath, this.model.namespaces);
+          instanceToVisit.config = this.rawInstance.get(xPath, this.model.namespaces)!;
         }
       });
     }
@@ -82,6 +83,10 @@ export default class DataModelInstance {
     const sourceType = model.getResolvedType();
 
     if (sourceType instanceof LeafRefType) {
+      if (!value) {
+        throw new Error('Leaf value required for LeafRef evaluation.');
+      }
+
       const leafRefXPath = applyConditionToPath(sourceType.path, value);
       const matchCandidates = config
         .find(leafRefXPath, this.model.namespaces)
@@ -109,7 +114,7 @@ export default class DataModelInstance {
    * can be set, and thus the children could never be displayed.
    */
   public evaluateWhenCondition(path: Path) {
-    const model = this.model.getModelForPath(path.map(({ name }) => name).join('.'));
+    const model = this.model.getModelForPath(path.map(({ name }) => name).join('.')) as Model;
     if (!model.hasWhenAncestorOrSelf) {
       return true;
     }
@@ -117,15 +122,15 @@ export default class DataModelInstance {
     const { element, cleanUp } = this.getElementForPath(path);
 
     try {
-      let modelRoot = model;
+      let modelRoot: Model | null = model;
       let instanceRoot = element;
-      while (modelRoot.parentModel) {
+      while (modelRoot && modelRoot.parentModel) {
         if (modelRoot.when) {
           for (const when of modelRoot.when) {
             const { condition, context } = when;
             const contextNode =
-              context === ContextNode.parent || modelRoot instanceof Choice ? instanceRoot.parent() : instanceRoot;
-            const result = contextNode.get(condition, this.model.namespaces);
+              context === ContextNode.parent || modelRoot instanceof Choice ? instanceRoot!.parent() : instanceRoot;
+            const result = contextNode!.get(condition, this.model.namespaces);
 
             if (!result) {
               cleanUp();
@@ -135,7 +140,7 @@ export default class DataModelInstance {
         }
 
         modelRoot = modelRoot.parentModel;
-        instanceRoot = instanceRoot.parent() as Element;
+        instanceRoot = instanceRoot!.parent() as Element;
       }
 
       cleanUp();
@@ -152,7 +157,7 @@ export default class DataModelInstance {
     const { element, cleanUp } = this.getElementForPath(path);
 
     try {
-      const result = element.get(targetXPath).find(xPath, this.model.namespaces).filter(isElement);
+      const result = element!.get(targetXPath)!.find(xPath, this.model.namespaces).filter(isElement);
 
       cleanUp();
       return result;
@@ -170,7 +175,7 @@ export default class DataModelInstance {
       const { element, cleanUp } = this.getElementForPath(path);
 
       try {
-        const result = (element.find(leafRefPath, this.model.namespaces) || [])
+        const result = (element!.find(leafRefPath, this.model.namespaces) || [])
           .filter(isElement)
           .map(refEl => refEl.text());
         cleanUp();
@@ -196,7 +201,7 @@ export default class DataModelInstance {
 
         try {
           const suggestions = paths.reduce((acc, suggestionPath) => {
-            (element.find(suggestionPath, this.model.namespaces) || []).filter(isElement).forEach(refEl => {
+            (element!.find(suggestionPath, this.model.namespaces) || []).filter(isElement).forEach(refEl => {
               const text = refEl.text();
               if (text && text.length > 0) {
                 acc.add(text);
@@ -224,7 +229,7 @@ export default class DataModelInstance {
 
   public getInstanceFromElement(element: Element): Instance | LeafListChildInstance {
     const fieldId = getFieldIdFromParentAxis(element);
-    const model = this.model.getModelForPath(fieldId) as Model;
+    const model = this.model.getModelForPath(fieldId) as Leaf | List | Container | LeafList | null;
     const path: Path = [];
 
     let currentModel = model;
@@ -233,7 +238,7 @@ export default class DataModelInstance {
       if (currentModel instanceof List) {
         const keys = Array.from(currentModel.keys).map(key => ({
           key,
-          value: currentElement.get(`*[local-name()='${key}']`).text()
+          value: currentElement.get(`*[local-name()='${key}']`)!.text()
         }));
         path.push({ name: currentModel.name, keys });
       } else {
@@ -244,7 +249,7 @@ export default class DataModelInstance {
       currentElement = currentElement.parent() as Element;
     }
 
-    return this.getInstance(path.reverse());
+    return this.getInstance(path.reverse())!;
   }
 
   public getInstance(path: Path, noMatchHandler?: NoMatchHandler) {
@@ -252,7 +257,7 @@ export default class DataModelInstance {
       const firstSegmentName = path[0].name;
 
       if (this.root.has(firstSegmentName)) {
-        return this.root.get(firstSegmentName).getInstance(path, noMatchHandler);
+        return this.root.get(firstSegmentName)!.getInstance(path, noMatchHandler);
       } else {
         throw new Error(`Path must start with ${[...this.root.keys()][0]}.`);
       }
@@ -271,7 +276,7 @@ export default class DataModelInstance {
     let requestedElement: Element | undefined;
     let cleanUp = _.noop;
     let closestAncestor: Instance | undefined;
-    let remainingPath: Path | undefined;
+    let remainingPath: Path;
 
     const foundInstance = this.getInstance(path, (stopInstance, remaining) => {
       closestAncestor = stopInstance;
@@ -292,7 +297,7 @@ export default class DataModelInstance {
         requestedElement = foundInstance.children[0].config;
       }
     } else {
-      const { cleanUpHiddenTree, contextEl } = addEmptyTree(remainingPath, this.model, closestAncestor);
+      const { cleanUpHiddenTree, contextEl } = addEmptyTree(remainingPath!, this.model, closestAncestor);
       requestedElement = contextEl;
       cleanUp = cleanUpHiddenTree;
     }

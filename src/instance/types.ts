@@ -33,7 +33,7 @@ export type ListJSON = ListChildJSON[];
 export type LeafListJSONValue = LeafJSONValue[];
 export type LeafListJSON = LeafJSON[];
 
-export type LeafJSONValue = Readonly<string | number | boolean>;
+export type LeafJSONValue = Readonly<string | number | boolean | null>;
 export type LeafJSON = CanHaveAttributes<LeafJSONValue>;
 
 export type JSONConfigNode = ContainerJSON | ListChildJSON | ListJSON | LeafListJSON | LeafJSON;

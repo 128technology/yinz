@@ -14,7 +14,7 @@ export default class Searchable {
   public isMatch(path: Path) {
     const firstSegment = _.head(path);
 
-    return firstSegment.name === this.model.name;
+    return firstSegment && firstSegment.name === this.model.name;
   }
 
   public handleNoMatch() {

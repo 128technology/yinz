@@ -31,7 +31,7 @@ export default class ListInstance implements Searchable {
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
 
-  constructor(model: List, config: Element | ListJSON, parent?: Parent) {
+  constructor(model: List, config: Element | ListJSON, parent: Parent) {
     this.model = model;
     this.parent = parent;
     this.children = new Map();
@@ -88,12 +88,11 @@ export default class ListInstance implements Searchable {
   }
 
   public getInstance(path: Path, noMatchHandler: NoMatchHandler = this.handleNoMatch) {
-    if (this.isTryingToMatchMe(path) && this.isMatch(path) && !isKeyedSegment(_.head(path))) {
+    const firstSegment = _.head(path);
+    if (firstSegment && this.isTryingToMatchMe(path) && this.isMatch(path) && !isKeyedSegment(firstSegment)) {
       // Returns the entire list if no keys provided
       return this;
-    } else if (path.length >= 1) {
-      const firstSegment = _.head(path);
-
+    } else if (firstSegment && path.length >= 1) {
       if (isKeyedSegment(firstSegment)) {
         const keyMap = firstSegment.keys.reduce((acc, { key, value }) => acc.set(key, value), new Map());
         const modelKeys = [...this.model.keys];
@@ -102,7 +101,7 @@ export default class ListInstance implements Searchable {
           const keyString = modelKeys.map(key => keyMap.get(key)).join(',');
 
           if (this.children.has(keyString)) {
-            return this.children.get(keyString).getInstance(_.tail(path), noMatchHandler);
+            return this.children.get(keyString)!.getInstance(_.tail(path), noMatchHandler);
           }
         }
       }

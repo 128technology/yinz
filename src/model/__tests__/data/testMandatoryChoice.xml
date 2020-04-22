@@ -1,4 +1,6 @@
-<yin:choice name="type" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+<yin:choice name="type" 
+  xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" 
+  xmlns:test="http://foo.bar" module-prefix="test">
   <yin:mandatory value="true"/>
   <yin:case name="service-agent">
     <yin:leaf name="destination">

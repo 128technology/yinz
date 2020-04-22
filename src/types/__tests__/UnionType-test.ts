@@ -2,6 +2,7 @@ import { expect } from 'chai';
 
 import xmlUtil, { yinNS } from '../../__tests__/xmlUtil';
 import { UnionType } from '../';
+import { Identities } from '../../model';
 
 describe('Union Type', () => {
   const typeEl = xmlUtil.toElement(`
@@ -12,7 +13,7 @@ describe('Union Type', () => {
   `);
 
   it('should match a union type', () => {
-    const name = typeEl.attr('name').value();
+    const name = typeEl.attr('name')!.value();
 
     expect(UnionType.matches(name)).to.equal(true);
   });
@@ -20,17 +21,17 @@ describe('Union Type', () => {
   it('should fail to parse if no subtypes specified', () => {
     const badTypeEl = xmlUtil.toElement(`<type ${yinNS} name="union" />`);
 
-    expect(() => new UnionType(badTypeEl)).to.throw();
+    expect(() => new UnionType(badTypeEl, {} as Identities)).to.throw();
   });
 
   it('should parse', () => {
-    const type = new UnionType(typeEl);
+    const type = new UnionType(typeEl, {} as Identities);
 
     expect(type.type).to.equal('union');
   });
 
   it('should serialize to a string', () => {
-    const type = new UnionType(typeEl);
+    const type = new UnionType(typeEl, {} as Identities);
 
     expect(type.serialize('foo')).to.equal('foo');
   });
@@ -46,7 +47,7 @@ describe('Union Type', () => {
       </type>
     `);
 
-    const type = new UnionType(nestedTypeEl);
+    const type = new UnionType(nestedTypeEl, {} as Identities);
 
     let count = 0;
     type.traverse(() => count++);

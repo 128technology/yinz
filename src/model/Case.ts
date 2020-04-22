@@ -16,17 +16,17 @@ export default class Case implements Whenable {
   public modelType: string;
   public otherProps: Map<string, string | boolean> = new Map();
   public parentChoice: Choice;
-  public status: Status;
+  public status: Status | null;
   public when: IWhen[];
   public visibility: Visibility | null;
   public hasWhenAncestorOrSelf: boolean;
 
   public addWhenableProps: (el: Element) => void;
 
-  constructor(el: Element, parentChoice: Choice, parentModel?: Model) {
+  constructor(el: Element, parentChoice: Choice, parentModel: Model) {
     this.modelType = 'case';
     this.parentChoice = parentChoice;
-    this.name = el.attr('name').value();
+    this.name = el.attr('name')!.value();
     this.status = StatusParser.parse(el);
     this.visibility = VisibilityParser.parse(el);
     this.addWhenableProps(el);
@@ -75,18 +75,18 @@ export default class Case implements Whenable {
     }
   }
 
-  private buildChildrenFromCase(el: Element, parentModel?: Model) {
+  private buildChildrenFromCase(el: Element, parentModel: Model) {
     // TODO: Handle another choice nested in a case.
     const { children } = buildChildren(el, parentModel);
     this.children = children;
   }
 
-  private buildChildrenFromImplicitCase(el: Element, parentModel?: Model) {
+  private buildChildrenFromImplicitCase(el: Element, parentModel: Model) {
     const child = buildChild(el, parentModel);
 
     if (child instanceof Choice) {
       this.children = child.children;
-    } else {
+    } else if (child) {
       this.children = new Map([[child.name, child]]);
     }
   }

@@ -43,7 +43,7 @@ export default class LeafList implements ListLike, Statement, Typed, Whenable, W
   public keys: Set<string>;
   public modelType: string;
 
-  constructor(el: Element, parentModel?: Model) {
+  constructor(el: Element, parentModel: Model) {
     this.modelType = 'leafList';
     this.addStatementProps(el, parentModel);
     this.addIdentityProps(parentModel);
@@ -59,7 +59,7 @@ export default class LeafList implements ListLike, Statement, Typed, Whenable, W
     return this.type instanceof DerivedType ? this.type.builtInType : this.type;
   }
 
-  public buildInstance(config: Element | LeafListJSON, parent?: ListChildInstance | ContainerInstance) {
+  public buildInstance(config: Element | LeafListJSON, parent: ListChildInstance | ContainerInstance) {
     return new LeafListInstance(this, config, parent);
   }
 

@@ -1,4 +1,6 @@
-<yin:case name="peer-service-route" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1">
+<yin:case name="peer-service-route" 
+  xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" 
+  xmlns:test="http://foo.bar" module-prefix="test">
   <yin:status value="obsolete" />
   <yin:leaf name="peer">
     <yin:type name="leafref">

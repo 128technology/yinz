@@ -4,7 +4,7 @@ import { Type, DerivedType } from '../../types';
 import { UnitsParser } from '../parsers';
 
 export default class WithUnits {
-  public definedUnits: string;
+  public definedUnits: string | null;
   public type: Type;
 
   public addDefinedUnits(el: Element) {

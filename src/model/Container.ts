@@ -33,14 +33,14 @@ export default class Container implements Statement, Whenable, WithRegistry {
 
   public children: Map<string, Model>;
   public choices: Map<string, Choice>;
-  public identities: Identities;
-  public modelRegistry: ModelRegistry;
+  public identities?: Identities;
+  public modelRegistry?: ModelRegistry;
   public modelType: string;
-  public presence: string;
+  public presence: string | null;
 
   constructor(el: Element, parentModel?: Model, identities?: Identities, modelRegistry?: ModelRegistry) {
     this.modelType = 'container';
-    this.addStatementProps(el, parentModel);
+    this.addStatementProps(el, parentModel || null);
     this.addWhenableProps(el);
     this.identities = identities;
     this.modelRegistry = modelRegistry;
@@ -78,7 +78,7 @@ export default class Container implements Statement, Whenable, WithRegistry {
     return this.children;
   }
 
-  public buildInstance(config: Element | ContainerJSON, parent?: Parent) {
+  public buildInstance(config: Element | ContainerJSON, parent: Parent | null) {
     return new ContainerInstance(this, config, parent);
   }
 

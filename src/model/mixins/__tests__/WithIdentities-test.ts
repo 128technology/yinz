@@ -1,15 +1,15 @@
 import { expect } from 'chai';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as libXML from 'libxmljs';
 
 import applyMixins from '../../../util/applyMixins';
 import DataModel, { Identities, Model } from '../../';
 import { WithIdentities } from '../';
+import xmlUtil from '../../../__tests__/xmlUtil';
 
 describe('With Identities Mixin', () => {
   const modelText = fs.readFileSync(path.join(__dirname, '../../__tests__/data/consolidatedT128Model.xml'), 'utf-8');
-  const modelElement = libXML.parseXmlString(modelText).root();
+  const modelElement = xmlUtil.toElement(modelText);
 
   const options = {
     modelElement,

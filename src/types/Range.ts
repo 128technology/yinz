@@ -22,7 +22,7 @@ export default class Range {
   }
 
   public parseRange(el: Element) {
-    const value = el.attr('value').value();
+    const value = el.attr('value')!.value();
     this.ranges = value
       .split('|')
       .map(range => range.trim())

@@ -11,7 +11,7 @@ import { Model, Choice, Identities, Visitor } from './';
 
 export default class List implements ListLike, Statement, Whenable, WithRegistry {
   private static getKeys(el: Element) {
-    const keyString = el.get('./yin:key', ns).attr('value').value();
+    const keyString = el.get('./yin:key', ns)!.attr('value')!.value();
     return keyString.split(' ');
   }
 
@@ -41,11 +41,11 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
 
   public children: Map<string, Model>;
   public choices: Map<string, Choice>;
-  public identities: Identities;
+  public identities?: Identities;
   public keys: Set<string>;
   public modelType: string;
 
-  constructor(el: Element, parentModel?: Model, identities?: Identities) {
+  constructor(el: Element, parentModel: Model, identities?: Identities) {
     this.modelType = 'list';
     this.addStatementProps(el, parentModel);
     this.identities = identities;
@@ -74,10 +74,10 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
   }
 
   public getKeyNodes() {
-    return [...this.keys.values()].map(key => this.children.get(key));
+    return [...this.keys.values()].map(key => this.children.get(key)!);
   }
 
-  public buildInstance(config: Element | ListJSON, parent?: ListChildInstance | ContainerInstance) {
+  public buildInstance(config: Element | ListJSON, parent: ListChildInstance | ContainerInstance) {
     return new ListInstance(this, config, parent);
   }
 

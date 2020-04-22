@@ -2,6 +2,7 @@ import { expect } from 'chai';
 
 import xmlUtil, { yinNS } from '../../__tests__/xmlUtil';
 import { DerivedType, StringType, Range } from '../';
+import { Identities } from '../../model';
 
 describe('Derived Type', () => {
   const typeEl = xmlUtil.toElement(`
@@ -91,7 +92,7 @@ describe('Derived Type', () => {
   `);
 
   it('should match a derived type', () => {
-    const name = typeEl.attr('name').value();
+    const name = typeEl.attr('name')!.value();
 
     expect(DerivedType.matches(name)).to.equal(true);
   });
@@ -101,79 +102,79 @@ describe('Derived Type', () => {
   });
 
   it('should parse', () => {
-    const type = new DerivedType(typeEl);
+    const type = new DerivedType(typeEl, {} as Identities);
 
     expect(type.type).to.equal('t128ext:name-id');
   });
 
   it('should parse description', () => {
-    const type = new DerivedType(typeEl);
+    const type = new DerivedType(typeEl, {} as Identities);
 
     expect(type.description).to.equal('A string identifier.');
   });
 
   it('should parse no description', () => {
-    const type = new DerivedType(nestedDerivedTypeMultipleDefault);
+    const type = new DerivedType(nestedDerivedTypeMultipleDefault, {} as Identities);
 
     expect(type.description).to.equal(undefined);
   });
 
   it('should parse default', () => {
-    const type = new DerivedType(typeEl);
+    const type = new DerivedType(typeEl, {} as Identities);
 
     expect(type.default).to.equal('foo');
   });
 
   it('should parse no default', () => {
-    const type = new DerivedType(intDerivedType);
+    const type = new DerivedType(intDerivedType, {} as Identities);
 
     expect(type.default).to.equal(undefined);
   });
 
   it('should parse a nested default', () => {
-    const type = new DerivedType(nestedDerivedType);
+    const type = new DerivedType(nestedDerivedType, {} as Identities);
 
     expect(type.default).to.equal('baz');
   });
 
   it('should parse a nested built in type', () => {
-    const type = new DerivedType(nestedDerivedType);
+    const type = new DerivedType(nestedDerivedType, {} as Identities);
 
     expect(type.builtInType.type).to.equal('string');
   });
 
   it('should make the outer most default win', () => {
-    const type = new DerivedType(nestedDerivedTypeMultipleDefault);
+    const type = new DerivedType(nestedDerivedTypeMultipleDefault, {} as Identities);
 
     expect(type.default).to.equal('kittens');
   });
 
   it('should parse units', () => {
-    const type = new DerivedType(typeEl);
+    const type = new DerivedType(typeEl, {} as Identities);
 
     expect(type.units).to.equal('flips');
   });
 
   it('should contain a child type', () => {
-    const type = new DerivedType(restrictedTypeEl);
+    const type = new DerivedType(restrictedTypeEl, {} as Identities);
 
     expect(type.baseType).to.be.an.instanceof(StringType);
   });
 
   it('should propagate restrictions to the child', () => {
-    const type = new DerivedType(restrictedTypeEl);
+    const type = new DerivedType(restrictedTypeEl, {} as Identities);
 
     expect((type.baseType as StringType).length).to.be.an.instanceof(Range);
   });
 
   it('should serialize as the base type', () => {
-    const type = new DerivedType(intDerivedType);
+    const type = new DerivedType(intDerivedType, {} as Identities);
 
     expect(type.serialize('5')).to.equal(5);
   });
 
   it('should parse suggestion reference', () => {
-    const type = new DerivedType(extendedTypeEl);
+    const type = new DerivedType(extendedTypeEl, {} as Identities);
 
     expect(type.suggestionRefs).to.deep.equal(['/t128:config/authy:authority/svc:security/svc:name']);
   });

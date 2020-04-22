@@ -6,12 +6,12 @@ import * as path from 'path';
 import xmlUtil from '../../__tests__/xmlUtil';
 import { List } from '../../model';
 
-import { ListInstance, ListChildInstance } from '../';
+import { ListInstance, ListChildInstance, ContainerInstance } from '../';
 
 describe('List Instance', () => {
   const modelText = fs.readFileSync(path.join(__dirname, '../../model/__tests__/data/testList.xml'), 'utf-8');
   const model = xmlUtil.toElement(modelText);
-  const listModel = new List(model);
+  const listModel = new List(model, {} as any);
 
   const mockConfig = `
     <test:peer xmlns:test="http://foo.bar">
@@ -21,7 +21,7 @@ describe('List Instance', () => {
   const mockConfigXML = xmlUtil.toElement(mockConfig);
 
   it('should get initialized with a child', () => {
-    const instance = new ListInstance(listModel, mockConfigXML);
+    const instance = new ListInstance(listModel, mockConfigXML, {} as ContainerInstance);
 
     const child = [...instance.children.values()][0];
 
@@ -29,7 +29,7 @@ describe('List Instance', () => {
   });
 
   it('should accept new values after initialization', () => {
-    const instance = new ListInstance(listModel, mockConfigXML);
+    const instance = new ListInstance(listModel, mockConfigXML, {} as ContainerInstance);
 
     const newItemXML = xmlUtil.toElement(`
       <test:peer xmlns:test="http://foo.bar">
@@ -45,7 +45,7 @@ describe('List Instance', () => {
   });
 
   it('should serialize to JSON', () => {
-    const instance = new ListInstance(listModel, mockConfigXML);
+    const instance = new ListInstance(listModel, mockConfigXML, {} as ContainerInstance);
 
     expect(instance.toJSON()).to.deep.equal({
       peer: [{ name: 'foo' }]
@@ -53,7 +53,7 @@ describe('List Instance', () => {
   });
 
   it('should serialize to JSON without skipped fields', () => {
-    const instance = new ListInstance(listModel, mockConfigXML);
+    const instance = new ListInstance(listModel, mockConfigXML, {} as ContainerInstance);
 
     expect(instance.toJSON(false, true, ins => ins instanceof ListChildInstance)).to.deep.equal({
       peer: []
@@ -61,7 +61,7 @@ describe('List Instance', () => {
   });
 
   it('should serialize to XML', () => {
-    const instance = new ListInstance(listModel, mockConfigXML);
+    const instance = new ListInstance(listModel, mockConfigXML, {} as ContainerInstance);
 
     const newItemXML = xmlUtil.toElement(`
       <test:peer xmlns:test="http://foo.bar">

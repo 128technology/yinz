@@ -7,6 +7,18 @@ import { Statement, Whenable, WithRegistry } from './mixins';
 import { MandatoryParser } from './parsers';
 import { Model, Case, Visitor } from './';
 
+function union<T>(iterables: Array<Map<string, T>>) {
+  const set = new Map<string, T>();
+
+  for (const iterable of iterables) {
+    for (const [k, v] of iterable) {
+      set.set(k, v);
+    }
+  }
+
+  return set;
+}
+
 export default class Choice implements Statement, Whenable, WithRegistry {
   private static CASE_TYPES = new Set(['case', 'leaf', 'leaf-list', 'list', 'container']);
 
@@ -39,7 +51,7 @@ export default class Choice implements Statement, Whenable, WithRegistry {
   public mandatory: boolean;
   public modelType: string;
 
-  constructor(el: Element, parentModel?: Model) {
+  constructor(el: Element, parentModel: Model) {
     this.modelType = 'choice';
     this.addStatementProps(el, parentModel);
     this.addWhenableProps(el);
@@ -47,14 +59,7 @@ export default class Choice implements Statement, Whenable, WithRegistry {
     this.mandatory = MandatoryParser.parse(el);
     this.cases = this.buildCases(el, parentModel);
 
-    // Merge the child maps together
-    this.children = new Map(
-      function* (): Iterable<[string, Model]> {
-        for (let i = 0, lenI = this.cases.length; i < lenI; i++) {
-          yield* this.cases[i].children;
-        }
-      }.bind(this)()
-    );
+    this.children = union(this.cases.map(x => x.children));
 
     this.register(parentModel, this);
   }
@@ -75,7 +80,7 @@ export default class Choice implements Statement, Whenable, WithRegistry {
     });
   }
 
-  private buildCases(el: Element, parentModel?: Model) {
+  private buildCases(el: Element, parentModel: Model) {
     return el
       .childNodes()
       .filter(isElement)

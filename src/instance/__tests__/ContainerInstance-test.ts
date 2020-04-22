@@ -20,7 +20,7 @@ describe('Container Instance', () => {
   `);
 
   it('should get initialized with a value', () => {
-    const instance = new ContainerInstance(leafModel, mockConfigXML);
+    const instance = new ContainerInstance(leafModel, mockConfigXML, null);
 
     const child = instance.children.get('state');
     if (child instanceof LeafInstance) {
@@ -31,7 +31,7 @@ describe('Container Instance', () => {
   });
 
   it('should serialize to JSON', () => {
-    const instance = new ContainerInstance(leafModel, mockConfigXML);
+    const instance = new ContainerInstance(leafModel, mockConfigXML, null);
 
     expect(instance.toJSON()).to.deep.equal({
       bfd: {
@@ -43,7 +43,7 @@ describe('Container Instance', () => {
   it('should serialize to XML', () => {
     const document = new Document();
     const el = document.node('mockEl');
-    const instance = new ContainerInstance(leafModel, mockConfigXML);
+    const instance = new ContainerInstance(leafModel, mockConfigXML, null);
     instance.toXML(el);
 
     expect(document.toString()).xml.to.equal(`
@@ -57,7 +57,7 @@ describe('Container Instance', () => {
   });
 
   it('should delete a child that exists', () => {
-    const instance = new ContainerInstance(leafModel, mockConfigXML);
+    const instance = new ContainerInstance(leafModel, mockConfigXML, null);
     instance.delete('state');
     expect(instance.toJSON()).to.deep.equal({
       bfd: {}
@@ -65,7 +65,7 @@ describe('Container Instance', () => {
   });
 
   it('should throw if child does not exist', () => {
-    const instance = new ContainerInstance(leafModel, mockConfigXML);
+    const instance = new ContainerInstance(leafModel, mockConfigXML, null);
     expect(() => instance.delete('foo')).to.throw();
   });
 });

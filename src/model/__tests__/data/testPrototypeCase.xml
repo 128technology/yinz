@@ -1,4 +1,7 @@
-<yin:case name="peer-service-route" xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" xmlns:t128-internal="http://128technology.com/t128-internal-extensions">
+<yin:case name="peer-service-route" 
+  xmlns:yin="urn:ietf:params:xml:ns:yang:yin:1" 
+  xmlns:t128-internal="http://128technology.com/t128-internal-extensions" 
+  xmlns:test="http://foo.bar" module-prefix="test">
   <t128-internal:visibility>prototype</t128-internal:visibility>
   <yin:leaf name="peer">
     <yin:type name="leafref">

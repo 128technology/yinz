@@ -1,15 +1,15 @@
-import * as libXML from 'libxmljs';
 import * as fs from 'fs';
 import * as path from 'path';
 import { expect } from 'chai';
 
 import { buildChildren } from '../childBuilder';
 import { Container, Leaf, List, LeafList } from '../../';
+import xmlUtil from '../../../__tests__/xmlUtil';
 
 describe('Child Builder', () => {
   const modelText = fs.readFileSync(path.join(__dirname, './data/testElement.xml'), 'utf-8');
-  const modelXMLDoc = libXML.parseXmlString(modelText);
-  const { children } = buildChildren(modelXMLDoc.root(), {} as Leaf);
+  const modelXMLDoc = xmlUtil.toElement(modelText);
+  const { children } = buildChildren(modelXMLDoc, {} as Leaf);
 
   it('builds an entry for each child', () => {
     expect([...children.keys()]).to.deep.equal([

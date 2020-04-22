@@ -1,7 +1,7 @@
 import * as libXML from 'libxmljs';
 
 function toElement(xmlText: string) {
-  return libXML.parseXmlString(xmlText).root();
+  return libXML.parseXmlString(xmlText).root()!;
 }
 
 export const t128InternalNS = 'xmlns:t128-internal="http://128technology.com/t128-internal-extensions"';

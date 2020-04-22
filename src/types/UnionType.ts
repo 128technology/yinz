@@ -25,13 +25,13 @@ export default class UnionType implements Named, RequiredField, StringSerialize,
 
   public types: Type[];
 
-  constructor(el: Element, identities?: Identities) {
+  constructor(el: Element, identities: Identities) {
     this.addNamedProps(el);
     this.validateRequiredFields(el, ['type'], this.type);
     this.parseType(el, identities);
   }
 
-  public parseType(el: Element, identities?: Identities) {
+  public parseType(el: Element, identities: Identities) {
     this.types = el
       .find('./yin:type', ns)
       .filter(isElement)

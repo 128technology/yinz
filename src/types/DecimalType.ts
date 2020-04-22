@@ -31,13 +31,13 @@ export default class DecimalType implements Named, RequiredField {
 
   public parseType(el: Element) {
     const rangeEl = el.get('./yin:range', ns);
-    const fractionDigitsEl = el.get('./yin:fraction-digits', ns);
+    const fractionDigitsEl = el.get('./yin:fraction-digits', ns)!;
 
     if (rangeEl) {
       this.range = new Range(rangeEl);
     }
 
-    this.fractionDigits = parseInt(fractionDigitsEl.attr('value').value(), 10);
+    this.fractionDigits = parseInt(fractionDigitsEl.attr('value')!.value(), 10);
   }
 
   public serialize(val: string): SerializationReturnType {

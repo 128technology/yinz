@@ -342,7 +342,7 @@ describe('Model Parsers', () => {
         </yin:container>
       `);
 
-      expect(Parsers.WhenParser.hasWhenAncestorOrSelf(el.get('//yin:container[@name="porter"]', ns))).to.equal(true);
+      expect(Parsers.WhenParser.hasWhenAncestorOrSelf(el.get('//yin:container[@name="porter"]', ns)!)).to.equal(true);
     });
 
     it('should detect if element ancestor has no when statement', () => {
@@ -354,7 +354,7 @@ describe('Model Parsers', () => {
         </yin:container>
       `);
 
-      expect(Parsers.WhenParser.hasWhenAncestorOrSelf(el.get('//yin:container[@name="porter"]', ns))).to.equal(false);
+      expect(Parsers.WhenParser.hasWhenAncestorOrSelf(el.get('//yin:container[@name="porter"]', ns)!)).to.equal(false);
     });
   });
 
@@ -438,7 +438,7 @@ describe('Model Parsers', () => {
         </yin:container>
       `);
 
-      expect(Parsers.NamespacesParser.getNamespace(el.get('//yin:leaf', ns))).to.deep.equal([
+      expect(Parsers.NamespacesParser.getNamespace(el.get('//yin:leaf', ns)!)).to.deep.equal([
         'ps',
         'http://128technology.com/t128/popsickle-sticks'
       ]);
@@ -453,7 +453,7 @@ describe('Model Parsers', () => {
         </yin:container>
       `);
 
-      expect(Parsers.NamespacesParser.getModulePrefix(el.get('//yin:leaf', ns))).to.equal('ps');
+      expect(Parsers.NamespacesParser.getModulePrefix(el.get('//yin:leaf', ns)!)).to.equal('ps');
     });
   });
 });

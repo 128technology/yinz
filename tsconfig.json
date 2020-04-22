@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
@@ -13,7 +12,9 @@
       "*": ["*", "./types/*"]
     },
     "noErrorTruncation": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "strict": true,
+    "strictPropertyInitialization": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "src/**/__test__/*"]

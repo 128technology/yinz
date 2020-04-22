@@ -28,7 +28,7 @@ export default class LeafListInstance implements Searchable {
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
 
-  constructor(model: LeafList, config: Element | LeafListJSON, parent?: Parent) {
+  constructor(model: LeafList, config: Element | LeafListJSON, parent: Parent) {
     this.model = model;
     this.parent = parent;
     this.children = [];
@@ -71,7 +71,7 @@ export default class LeafListInstance implements Searchable {
   public getInstance(path: Path, noMatchHandler: NoMatchHandler = this.handleNoMatch) {
     const head = _.head(path);
 
-    if (this.isTryingToMatchMe(path) && this.isMatch(path)) {
+    if (head && this.isTryingToMatchMe(path) && this.isMatch(path)) {
       if (!isSegmentWithValue(head)) {
         return this;
       } else {

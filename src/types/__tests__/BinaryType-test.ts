@@ -11,7 +11,7 @@ describe('Binary Type', () => {
   `);
 
   it('should match a binary type', () => {
-    const name = typeEl.attr('name').value();
+    const name = typeEl.attr('name')!.value();
 
     expect(BinaryType.matches(name)).to.equal(true);
   });

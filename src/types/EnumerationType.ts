@@ -39,7 +39,7 @@ export default class EnumerationType implements Named, RequiredField, StringSeri
       .find('./yin:enum', ns)
       .filter(isElement)
       .reduce(
-        (acc, enumEl) => acc.set(enumEl.attr('name').value(), new EnumerationMemberType(enumEl)),
+        (acc, enumEl) => acc.set(enumEl.attr('name')!.value(), new EnumerationMemberType(enumEl)),
         new Map<string, EnumerationMemberType>()
       );
   }

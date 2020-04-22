@@ -18,7 +18,7 @@ describe('Identities', () => {
   it('should parse all extensions to a base', () => {
     const identities = new Identities(idenEl);
 
-    expect(identities.identities.get('action-type').length).to.equal(18);
+    expect(identities.identities.get('action-type')!.length).to.equal(18);
   });
 
   it('should get options for a given base', () => {
