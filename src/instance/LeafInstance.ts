@@ -83,7 +83,8 @@ export default class LeafInstance implements Searchable, WithAttributes {
   }
 
   private injestConfigXML(config: Element) {
-    this.value = config.text();
+    const text = config.text();
+    this.value = _.isNil(text) ? null : text;
   }
 }
 
