@@ -56,6 +56,10 @@ export default class Leaf implements Statement, Typed, Whenable, WithIdentities,
     this.register(parentModel, this);
   }
 
+  get isUnique() {
+    return this.parentModel instanceof List && this.parentModel.unique.has(this.name);
+  }
+
   get isKey() {
     return this.parentModel instanceof List && this.parentModel.keys.has(this.name);
   }

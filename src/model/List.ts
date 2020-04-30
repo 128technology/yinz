@@ -8,6 +8,7 @@ import { ListJSON } from '../instance/types';
 import { Statement, ListLike, Whenable, WithRegistry } from './mixins';
 import { buildChildren } from './util/childBuilder';
 import { Model, Choice, Identities, Visitor } from './';
+import { UniqueParser } from './parsers';
 
 export default class List implements ListLike, Statement, Whenable, WithRegistry {
   private static getKeys(el: Element) {
@@ -44,6 +45,7 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
   public identities?: Identities;
   public keys: Set<string>;
   public modelType: string;
+  public unique: Set<string>;
 
   constructor(el: Element, parentModel: Model, identities?: Identities) {
     this.modelType = 'list';
@@ -53,12 +55,17 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
     this.keys = new Set(List.getKeys(el));
     this.addListLikeProps(el);
     this.addWhenableProps(el);
+    this.parseUnique(el);
 
     const { children, choices } = buildChildren(el, this);
     this.children = children;
     this.choices = choices;
 
     this.register(parentModel, this);
+  }
+
+  public parseUnique(el: Element) {
+    this.unique = UniqueParser.parse(el);
   }
 
   public hasChild(name: string) {

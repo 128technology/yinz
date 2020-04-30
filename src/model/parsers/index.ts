@@ -51,6 +51,21 @@ export class DescriptionParser {
   }
 }
 
+export class UniqueParser {
+  public static parse(el: Element) {
+    const uniqueEls = el.find('./yin:unique', ns);
+    return uniqueEls
+      ? uniqueEls
+          .filter(isElement)
+          .map(uniqueEl => uniqueEl.attr('tag')!.value())
+          .reduce((acc, tag) => {
+            tag.split(' ').forEach(x => acc.add(x));
+            return acc;
+          }, new Set<string>())
+      : new Set<string>();
+  }
+}
+
 export class ReferenceParser {
   public static convertNewlinesToSpaces(stringToReplace: string) {
     return stringToReplace.replace(/(\r\n|\n|\r)/gm, ' ');

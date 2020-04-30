@@ -60,6 +60,14 @@ describe('Data Model', () => {
     it('should get the model if it is a choice for a given path', () => {
       expect(configModel.getModelForPath('authority.router.service-route.type')).to.be.an.instanceOf(Choice);
     });
+
+    it('leafs should be marked as unique', () => {
+      expect((configModel.getModelForPath('authority.router.id') as Leaf).isUnique).to.equal(true);
+    });
+
+    it('leafs should be marked as not unique', () => {
+      expect((configModel.getModelForPath('authority.router.location') as Leaf).isUnique).to.equal(false);
+    });
   });
 
   describe('Stats Model', () => {
