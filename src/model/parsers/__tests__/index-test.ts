@@ -398,6 +398,55 @@ describe('Model Parsers', () => {
     });
   });
 
+  describe('Unique Parser', () => {
+    it('should parse one unique node with one child tag', () => {
+      const el = xmlUtil.toElement(`
+        <mock ${yinNS}>
+          <yin:unique tag="foo"/>
+        </mock>
+      `);
+
+      expect(Array.from(Parsers.UniqueParser.parse(el).entries())).to.deep.equal([['foo', []]]);
+    });
+
+    it('should parse multiple unique nodes with one child tag', () => {
+      const el = xmlUtil.toElement(`
+        <mock ${yinNS}>
+          <yin:unique tag="foo"/>
+          <yin:unique tag="bar"/>
+        </mock>
+      `);
+
+      expect(Array.from(Parsers.UniqueParser.parse(el).entries())).to.deep.equal([
+        ['foo', []],
+        ['bar', []]
+      ]);
+    });
+
+    it('should parse multiple unique nodes with multiple child tags', () => {
+      const el = xmlUtil.toElement(`
+        <mock ${yinNS}>
+          <yin:unique tag="foo bizz"/>
+          <yin:unique tag="bar"/>
+        </mock>
+      `);
+
+      expect(Array.from(Parsers.UniqueParser.parse(el).entries())).to.deep.equal([
+        ['foo', ['bizz']],
+        ['bizz', ['foo']],
+        ['bar', []]
+      ]);
+    });
+
+    it('should parse no unique element', () => {
+      const el = xmlUtil.toElement(`
+        <mock ${yinNS} />
+      `);
+
+      expect(Array.from(Parsers.UniqueParser.parse(el).entries())).to.deep.equal([]);
+    });
+  });
+
   describe('Namespaces Parser', () => {
     it('should aggregate all namespaces from a model', () => {
       const el = xmlUtil.toElement(`
