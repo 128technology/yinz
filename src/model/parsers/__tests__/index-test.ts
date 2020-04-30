@@ -406,7 +406,7 @@ describe('Model Parsers', () => {
         </mock>
       `);
 
-      expect(Array.from(Parsers.UniqueParser.parse(el).values())).to.deep.equal(['foo']);
+      expect(Array.from(Parsers.UniqueParser.parse(el).entries())).to.deep.equal([['foo', []]]);
     });
 
     it('should parse multiple unique nodes with one child tag', () => {
@@ -417,7 +417,10 @@ describe('Model Parsers', () => {
         </mock>
       `);
 
-      expect(Array.from(Parsers.UniqueParser.parse(el).values())).to.deep.equal(['foo', 'bar']);
+      expect(Array.from(Parsers.UniqueParser.parse(el).entries())).to.deep.equal([
+        ['foo', []],
+        ['bar', []]
+      ]);
     });
 
     it('should parse multiple unique nodes with multiple child tags', () => {
@@ -428,7 +431,11 @@ describe('Model Parsers', () => {
         </mock>
       `);
 
-      expect(Array.from(Parsers.UniqueParser.parse(el).values())).to.deep.equal(['foo', 'bizz', 'bar']);
+      expect(Array.from(Parsers.UniqueParser.parse(el).entries())).to.deep.equal([
+        ['foo', ['bizz']],
+        ['bizz', ['foo']],
+        ['bar', []]
+      ]);
     });
 
     it('should parse no unique element', () => {
@@ -436,7 +443,7 @@ describe('Model Parsers', () => {
         <mock ${yinNS} />
       `);
 
-      expect(Array.from(Parsers.UniqueParser.parse(el).values())).to.deep.equal([]);
+      expect(Array.from(Parsers.UniqueParser.parse(el).entries())).to.deep.equal([]);
     });
   });
 

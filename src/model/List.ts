@@ -45,7 +45,7 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
   public identities?: Identities;
   public keys: Set<string>;
   public modelType: string;
-  public unique: Set<string>;
+  public unique: Map<string, string[]>;
 
   constructor(el: Element, parentModel: Model, identities?: Identities) {
     this.modelType = 'list';

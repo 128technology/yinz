@@ -59,10 +59,18 @@ export class UniqueParser {
           .filter(isElement)
           .map(uniqueEl => uniqueEl.attr('tag')!.value())
           .reduce((acc, tag) => {
-            tag.split(' ').forEach(x => acc.add(x));
+            const uniqueSet = tag.split(' ');
+
+            uniqueSet.forEach(x => {
+              acc.set(
+                x,
+                uniqueSet.filter(y => y !== x)
+              );
+            });
+
             return acc;
-          }, new Set<string>())
-      : new Set<string>();
+          }, new Map<string, string[]>())
+      : new Map<string, string[]>();
   }
 }
 
