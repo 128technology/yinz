@@ -13,16 +13,19 @@ import {
   ShouldSkip,
   XMLSerializationOptions,
   ListChildJSON,
-  ListJSONValue
+  ListJSONValue,
+  Authorized
 } from './types';
 import { Path, ListChildInstance, LeafInstance } from './';
 import { isKeyedSegment } from './Path';
+import { allow } from './util';
 
 // Comma separated string of key values
 export type Key = string;
 
 export default class ListInstance implements Searchable {
-  public children: Map<Key, ListChildInstance>;
+  private children: Map<Key, ListChildInstance>;
+
   public parent: Parent;
   public model: List;
 
@@ -45,15 +48,27 @@ export default class ListInstance implements Searchable {
     }
   }
 
+  public getChildren(authorized: Authorized) {
+    const children: Map<Key, ListChildInstance> = new Map();
+
+    for (const [k, v] of this.children) {
+      if (authorized(v)) {
+        children.set(k, v);
+      }
+    }
+
+    return children;
+  }
+
   public add(config: Element | ListChildJSON) {
     const newChild = new ListChildInstance(this.model, config, this.parent, this);
 
     const keys = [...this.model.keys]
       .map(key => {
-        const keyLeaf = newChild.instance.get(key);
+        const keyLeaf = newChild.getChildren(allow).get(key);
 
         if (keyLeaf instanceof LeafInstance) {
-          return keyLeaf.value;
+          return keyLeaf.getValue(allow);
         } else {
           throw new Error(`Key is not a leaf. Model: ${this.model.name} Key: ${key}`);
         }
@@ -63,17 +78,22 @@ export default class ListInstance implements Searchable {
     this.children.set(keys, newChild);
   }
 
-  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): { [name: string]: ListJSONValue } {
+  public toJSON(
+    authorized: Authorized,
+    camelCase = false,
+    convert = true,
+    shouldSkip?: ShouldSkip
+  ): { [name: string]: ListJSONValue } {
     const value = [];
     if (shouldSkip) {
       for (const child of this.children.values()) {
         if (!shouldSkip(child)) {
-          value.push(child.toJSON(camelCase, convert, shouldSkip));
+          value.push(child.toJSON(authorized, camelCase, convert, shouldSkip));
         }
       }
     } else {
       for (const child of this.children.values()) {
-        value.push(child.toJSON(camelCase, convert));
+        value.push(child.toJSON(authorized, camelCase, convert));
       }
     }
     return {

@@ -5,8 +5,8 @@ import * as path from 'path';
 
 import xmlUtil from '../../__tests__/xmlUtil';
 import { Leaf, Container } from '../../model';
-
 import { LeafInstance, ContainerInstance } from '../';
+import { allow } from '../util';
 
 describe('Leaf Instance', () => {
   const modelText = fs.readFileSync(path.join(__dirname, '../../model/__tests__/data/testLeaf.xml'), 'utf-8');
@@ -21,19 +21,19 @@ describe('Leaf Instance', () => {
   it('should get initialized with a value', () => {
     const instance = new LeafInstance(leafModel, mockConfigXML, {} as ContainerInstance);
 
-    expect(instance.value).to.equal('5');
+    expect(instance.getValue(allow)).to.equal('5');
   });
 
   it('should get a value with the converted type', () => {
     const instance = new LeafInstance(leafModel, mockConfigXML, {} as ContainerInstance);
 
-    expect(instance.getConvertedValue()).to.equal(5);
+    expect(instance.getConvertedValue(allow)).to.equal(5);
   });
 
   it('should serialize to JSON', () => {
     const instance = new LeafInstance(leafModel, mockConfigXML, {} as ContainerInstance);
 
-    expect(instance.toJSON()).to.deep.equal({
+    expect(instance.toJSON(allow)).to.deep.equal({
       'qp-value': 5
     });
   });
@@ -41,7 +41,7 @@ describe('Leaf Instance', () => {
   it('should serialize to JSON without converting type', () => {
     const instance = new LeafInstance(leafModel, mockConfigXML, {} as ContainerInstance);
 
-    expect(instance.toJSON(false, false)).to.deep.equal({
+    expect(instance.toJSON(allow, false, false)).to.deep.equal({
       'qp-value': '5'
     });
   });

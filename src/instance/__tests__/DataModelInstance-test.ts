@@ -4,7 +4,6 @@ import * as path from 'path';
 
 import xmlUtil from '../../__tests__/xmlUtil';
 import DataModel from '../../model';
-
 import DataModelInstance, {
   ContainerInstance,
   LeafInstance,
@@ -12,6 +11,7 @@ import DataModelInstance, {
   ListInstance,
   ListChildInstance
 } from '../';
+import { allow } from '../util';
 
 export function readDataModel(filepath: string) {
   const modelText = fs.readFileSync(path.join(__dirname, filepath), 'utf-8');
@@ -58,42 +58,42 @@ describe('Data Model Instance', () => {
       const instanceRawJSON = readJSON('./data/instance.json');
       const instanceFromJSON = new DataModelInstance(dataModel, instanceRawJSON);
 
-      expect(instanceFromJSON.toJSON()).to.deep.equal(instanceRawJSON);
+      expect(instanceFromJSON.toJSON(allow)).to.deep.equal(instanceRawJSON);
     });
 
     it('should be constructable from camelCased JSON', () => {
       const instanceRawJSON = readJSON('./data/instanceCamelCase.json');
       const instanceFromJSON = new DataModelInstance(dataModel, instanceRawJSON);
 
-      expect(instanceFromJSON.toJSON(true)).to.deep.equal(instanceRawJSON);
+      expect(instanceFromJSON.toJSON(allow, true)).to.deep.equal(instanceRawJSON);
     });
 
     it('should serialize an instance to JSON', () => {
       const instanceJSON = readJSON('./data/instance.json');
-      expect(dataModelInstance.toJSON()).to.deep.equal(instanceJSON);
+      expect(dataModelInstance.toJSON(allow)).to.deep.equal(instanceJSON);
     });
 
     it('should serialize an instance to JSON with camel case', () => {
       const instanceJSONCamelCase = readJSON('./data/instanceCamelCase.json');
-      expect(dataModelInstance.toJSON(true)).to.deep.equal(instanceJSONCamelCase);
+      expect(dataModelInstance.toJSON(allow, true)).to.deep.equal(instanceJSONCamelCase);
     });
 
     it('should serialize an instance to JSON without converting types', () => {
       const instanceNotConverted = readJSON('./data/instanceNotConverted.json');
-      expect(dataModelInstance.toJSON(true, false)).to.deep.equal(instanceNotConverted);
+      expect(dataModelInstance.toJSON(allow, true, false)).to.deep.equal(instanceNotConverted);
     });
 
     it('should serialize an instance to JSON without skipped fields', () => {
       const instanceSkippedFields = readJSON('./data/instanceSkippedFields.json');
       expect(
-        dataModelInstance.toJSON(true, false, x => x instanceof ListChildInstance && x.model.name === 'node')
+        dataModelInstance.toJSON(allow, true, false, x => x instanceof ListChildInstance && x.model.name === 'node')
       ).to.deep.equal(instanceSkippedFields);
     });
 
     it('should serialize an instance to JSON and not skip LeafInstance or LeafListInstance', () => {
       const instanceNotConverted = readJSON('./data/instanceNotConverted.json');
       expect(
-        dataModelInstance.toJSON(true, false, x => x instanceof LeafInstance || x instanceof LeafListInstance)
+        dataModelInstance.toJSON(allow, true, false, x => x instanceof LeafInstance || x instanceof LeafListInstance)
       ).to.deep.equal(instanceNotConverted);
     });
 
@@ -106,7 +106,7 @@ describe('Data Model Instance', () => {
       const searchPath = [{ name: 'authority' }, { name: 'name' }];
       const leaf = dataModelInstance.getInstance(searchPath);
 
-      expect((leaf as LeafInstance).value).to.equal('Authority128');
+      expect((leaf as LeafInstance).getValue(allow)).to.equal('Authority128');
     });
 
     it('should traverse lists', () => {
@@ -117,7 +117,7 @@ describe('Data Model Instance', () => {
       ];
       const leaf = dataModelInstance.getInstance(searchPath);
 
-      expect((leaf as LeafInstance).value).to.equal('Standard');
+      expect((leaf as LeafInstance).getValue(allow)).to.equal('Standard');
     });
 
     it('should throw is next segment not found for list', () => {
@@ -167,7 +167,7 @@ describe('Data Model Instance', () => {
       ];
       const leaf = dataModelInstance.getInstance(searchPath);
 
-      expect((leaf as LeafInstance).value).to.equal('443');
+      expect((leaf as LeafInstance).getValue(allow)).to.equal('443');
     });
 
     it('should get leaf lists', () => {
@@ -178,7 +178,7 @@ describe('Data Model Instance', () => {
       ];
       const leafList = dataModelInstance.getInstance(searchPath);
 
-      expect((leafList as LeafListInstance).values).to.deep.equal(['group1', 'group2']);
+      expect((leafList as LeafListInstance).getValues(allow)).to.deep.equal(['group1', 'group2']);
     });
 
     describe('Attributes Handling and Serialization', () => {
@@ -306,7 +306,9 @@ describe('Data Model Instance', () => {
         const match = dataModelInstance.getInstanceFromElement(targetXML);
 
         expect(match.model.name).to.equal('name');
-        expect(((match.parent as ListChildInstance).instance.get('name') as LeafInstance).value).to.equal('HTTP');
+        expect(
+          ((match.parent as ListChildInstance).getChildren(allow).get('name') as LeafInstance).getValue(allow)
+        ).to.equal('HTTP');
       });
     });
 
@@ -335,7 +337,7 @@ describe('Data Model Instance', () => {
           ];
           const leaf = dataModelInstance.getInstance(searchPath);
 
-          expect((leaf as LeafInstance).toJSON()).to.deep.equal({ 'inter-node-security': 'internal' });
+          expect((leaf as LeafInstance).toJSON(allow)).to.deep.equal({ 'inter-node-security': 'internal' });
 
           const expectedLeafRefPath = [
             { name: 'authority' },
@@ -365,7 +367,7 @@ describe('Data Model Instance', () => {
           ];
           const leaf = dataModelInstance.getInstance(searchPath);
 
-          expect((leaf as LeafInstance).toJSON()).to.deep.equal({ 'node-name': 'TestNode2' });
+          expect((leaf as LeafInstance).toJSON(allow)).to.deep.equal({ 'node-name': 'TestNode2' });
 
           const expectedLeafRefPath = [
             { name: 'authority' },
@@ -411,7 +413,7 @@ describe('Data Model Instance', () => {
           ];
           const leaf = dataModelInstance.getInstance(searchPath);
 
-          expect((leaf as LeafInstance).toJSON()).to.deep.equal({ 'node-name': 'TestNode2' });
+          expect((leaf as LeafInstance).toJSON(allow)).to.deep.equal({ 'node-name': 'TestNode2' });
 
           const toTest = dataModelInstance.resolveLeafRefPath.bind(dataModelInstance, searchPath, 'TestNode2');
           expect(toTest).to.throw(Error, 'Referenced entity not found. Has it been deleted?');
@@ -456,7 +458,7 @@ describe('Data Model Instance', () => {
           ];
           const leaf = dataModelInstance.getInstance(searchPath);
 
-          expect((leaf as LeafInstance).toJSON()).to.deep.equal({ interface: 'NetIntf1' });
+          expect((leaf as LeafInstance).toJSON(allow)).to.deep.equal({ interface: 'NetIntf1' });
 
           const expectedLeafRefPath = [
             { name: 'authority' },
@@ -487,7 +489,7 @@ describe('Data Model Instance', () => {
           ];
           const leaf = dataModelInstance.getInstance(searchPath);
 
-          expect((leaf as LeafInstance).toJSON()).to.deep.equal({ interface: 'NetIntf1' });
+          expect((leaf as LeafInstance).toJSON(allow)).to.deep.equal({ interface: 'NetIntf1' });
 
           const expectedLeafRefPath = [
             { name: 'authority' },
@@ -522,14 +524,14 @@ describe('Data Model Instance', () => {
 
     it('should serialize an instance to JSON', () => {
       const instanceJSON = readJSON('./data/userInstance.json');
-      expect(dataModelInstance.toJSON()).to.deep.equal(instanceJSON);
+      expect(dataModelInstance.toJSON(allow)).to.deep.equal(instanceJSON);
     });
 
     it('should get leaves', () => {
       const searchPath = [{ name: 'authority' }, { name: 'name' }];
       const leaf = dataModelInstance.getInstance(searchPath);
 
-      expect((leaf as LeafInstance).value).to.equal('Authority128');
+      expect((leaf as LeafInstance).getValue(allow)).to.equal('Authority128');
     });
 
     it('should get list children', () => {
@@ -541,15 +543,15 @@ describe('Data Model Instance', () => {
 
       const list = dataModelInstance.getInstance(searchPath);
 
-      const children = (list as ListInstance).children;
+      const children = (list as ListInstance).getChildren(allow);
       expect(children.size).to.equal(1);
 
       const childUser = children.get('admin'); // children is a map keyed by 'name' values
       expect(childUser).to.be.an.instanceOf(ListChildInstance);
 
-      const childName = (childUser as ListChildInstance).instance.get('name');
+      const childName = (childUser as ListChildInstance).getChildren(allow).get('name');
       expect(childName).to.be.an.instanceOf(LeafInstance);
-      expect((childName as LeafInstance).value).to.equal('admin');
+      expect((childName as LeafInstance).getValue(allow)).to.equal('admin');
     });
   });
 

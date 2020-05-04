@@ -13,15 +13,18 @@ import {
   XMLSerializationOptions,
   Visitor,
   LeafJSON,
-  LeafListJSONValue
+  LeafListJSONValue,
+  Authorized
 } from './types';
 import Path, { isSegmentWithValue } from './Path';
 import { LeafListChildInstance } from './';
+import { allow } from './util';
 
 export default class LeafListInstance implements Searchable {
+  private children: LeafListChildInstance[];
+
   public model: LeafList;
   public parent: Parent;
-  public children: LeafListChildInstance[];
 
   public getPath: Searchable['getPath'];
   public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
@@ -42,21 +45,25 @@ export default class LeafListInstance implements Searchable {
     }
   }
 
+  public getChildren(authorized: Authorized) {
+    return authorized(this) ? this.children : [];
+  }
+
+  public getValues(authorized: Authorized) {
+    return this.children.filter(child => authorized(child)).map(child => child.value);
+  }
+
+  public getRawValues(authorized: Authorized) {
+    return this.children.map(child => child.getRawValue(authorized));
+  }
+
   public add(config: Element | LeafJSON) {
     this.children.push(new LeafListChildInstance(this.model, config, this));
   }
 
-  public get values() {
-    return this.children.map(child => child.value);
-  }
-
-  public get rawValues() {
-    return this.children.map(child => child.rawValue);
-  }
-
-  public toJSON(camelCase = false, convert = true): { [name: string]: LeafListJSONValue } {
+  public toJSON(authorized: Authorized, camelCase = false, convert = true): { [name: string]: LeafListJSONValue } {
     return {
-      [this.model.getName(camelCase)]: convert ? this.values : this.rawValues
+      [this.model.getName(camelCase)]: convert ? this.getValues(authorized) : this.getRawValues(authorized)
     };
   }
 
@@ -75,7 +82,7 @@ export default class LeafListInstance implements Searchable {
       if (!isSegmentWithValue(head)) {
         return this;
       } else {
-        const match = this.children.find(child => child.rawValue === head.value);
+        const match = this.children.find(child => child.getRawValue(allow) === head.value);
 
         if (match) {
           return match;

@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 
 import { Instance, ListChildInstance, LeafInstance } from '../';
 import Path, { isKeyedSegment, ISegmentKeys } from '../Path';
+import { allow } from './';
 
 export function findBestCandidate(matchCandidates: Instance[], auxiliaryKeys: Map<string, string>) {
   for (const potentialMatch of matchCandidates) {
@@ -31,7 +32,7 @@ export function evaluateCandidate(potentialMatch: Instance, auxiliaryKeys: Map<s
       }
 
       for (const key of parentModel.keys) {
-        const keyNode = (current.instance.get(key) as LeafInstance).value;
+        const keyNode = (current.getChildren(allow).get(key) as LeafInstance).getValue(allow);
         const substituteKeyValue = substituteKeys.length === 1 ? auxiliaryKeys.get(substituteKeys[0]) : null;
 
         if ((substituteKeyValue === null || keyNode === substituteKeyValue) && keyNode) {

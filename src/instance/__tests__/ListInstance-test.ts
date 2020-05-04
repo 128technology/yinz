@@ -5,8 +5,8 @@ import * as path from 'path';
 
 import xmlUtil from '../../__tests__/xmlUtil';
 import { List } from '../../model';
-
 import { ListInstance, ListChildInstance, ContainerInstance } from '../';
+import { allow } from '../util';
 
 describe('List Instance', () => {
   const modelText = fs.readFileSync(path.join(__dirname, '../../model/__tests__/data/testList.xml'), 'utf-8');
@@ -23,7 +23,7 @@ describe('List Instance', () => {
   it('should get initialized with a child', () => {
     const instance = new ListInstance(listModel, mockConfigXML, {} as ContainerInstance);
 
-    const child = [...instance.children.values()][0];
+    const child = [...instance.getChildren(allow).values()][0];
 
     expect(child).to.be.an.instanceOf(ListChildInstance);
   });
@@ -39,7 +39,7 @@ describe('List Instance', () => {
 
     instance.add(newItemXML);
 
-    const child = [...instance.children.values()][1];
+    const child = [...instance.getChildren(allow).values()][1];
 
     expect(child).to.be.an.instanceOf(ListChildInstance);
   });
@@ -47,7 +47,7 @@ describe('List Instance', () => {
   it('should serialize to JSON', () => {
     const instance = new ListInstance(listModel, mockConfigXML, {} as ContainerInstance);
 
-    expect(instance.toJSON()).to.deep.equal({
+    expect(instance.toJSON(allow)).to.deep.equal({
       peer: [{ name: 'foo' }]
     });
   });
@@ -55,7 +55,7 @@ describe('List Instance', () => {
   it('should serialize to JSON without skipped fields', () => {
     const instance = new ListInstance(listModel, mockConfigXML, {} as ContainerInstance);
 
-    expect(instance.toJSON(false, true, ins => ins instanceof ListChildInstance)).to.deep.equal({
+    expect(instance.toJSON(allow, false, true, ins => ins instanceof ListChildInstance)).to.deep.equal({
       peer: []
     });
   });

@@ -38,10 +38,10 @@ export function addEmptyTree(remainingPath: Path, model: DataModel, closestAnces
     closestAncestor instanceof ListChildInstance ||
     closestAncestor instanceof ContainerInstance
   ) {
-    closestXml = closestAncestor.config;
+    closestXml = closestAncestor.getConfig(allow);
     modelPath = closestAncestor.model.path;
   } else {
-    closestXml = closestAncestor.parent.config!;
+    closestXml = closestAncestor.parent.getConfig(allow)!;
     modelPath = closestAncestor.parent.model.path;
   }
 
@@ -97,3 +97,5 @@ export function getFieldIdFromParentAxis(element: Element) {
 
   return stack.reverse().join('.');
 }
+
+export const allow = () => true;

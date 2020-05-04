@@ -4,14 +4,15 @@ import applyMixins from '../util/applyMixins';
 import { LeafList } from '../model';
 
 import { WithAttributes } from './mixins';
-import { LeafJSON, Visitor, XMLSerializationOptions } from './types';
+import { LeafJSON, Visitor, XMLSerializationOptions, Authorized } from './types';
 import { Path, LeafListInstance } from './';
 
 export default class LeafListChildInstance implements WithAttributes {
+  private config: Element;
+  private rawValue: string;
+
   public model: LeafList;
-  public config: Element;
   public parent: LeafListInstance;
-  public rawValue: string;
 
   public customAttributes: WithAttributes['customAttributes'];
   public parseAttributesFromXML: WithAttributes['parseAttributesFromXML'];
@@ -35,6 +36,22 @@ export default class LeafListChildInstance implements WithAttributes {
       this.injestConfigJSON(config);
       this.parseAttributesFromJSON(config);
     }
+  }
+
+  public getConfig(authorized: Authorized) {
+    if (authorized(this)) {
+      return this.config;
+    } else {
+      throw new Error('Unauthorized');
+    }
+  }
+
+  public setConfig(el: Element) {
+    this.config = el;
+  }
+
+  public getRawValue(authorized: Authorized) {
+    return authorized(this) ? this.rawValue : null;
   }
 
   public get value() {

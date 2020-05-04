@@ -6,14 +6,15 @@ import { Leaf } from '../model';
 import { defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
-import { LeafJSON, XMLSerializationOptions, Visitor, NoMatchHandler, Parent, LeafJSONValue } from './types';
+import { LeafJSON, XMLSerializationOptions, Visitor, NoMatchHandler, Parent, LeafJSONValue, Authorized } from './types';
 import { Path } from './';
 
 export default class LeafInstance implements Searchable, WithAttributes {
+  private config: Element;
+  private value: string | null;
+
   public model: Leaf;
-  public config: Element;
   public parent: Parent;
-  public value: string | null;
 
   public customAttributes: WithAttributes['customAttributes'];
   public parseAttributesFromXML: WithAttributes['parseAttributesFromXML'];
@@ -44,13 +45,33 @@ export default class LeafInstance implements Searchable, WithAttributes {
     }
   }
 
-  public getConvertedValue() {
+  public getConfig(authorized: Authorized) {
+    if (authorized(this)) {
+      return this.config;
+    } else {
+      throw new Error('Unauthorized');
+    }
+  }
+
+  public setConfig(el: Element) {
+    this.config = el;
+  }
+
+  public getValue(authorized: Authorized) {
+    return authorized(this) ? this.value : null;
+  }
+
+  public getConvertedValue(authorized: Authorized) {
+    if (!authorized(this)) {
+      return null;
+    }
+
     return this.value ? this.model.type.serialize(this.value) : null;
   }
 
-  public toJSON(camelCase = false, convert = true): { [name: string]: LeafJSONValue } {
+  public toJSON(authorized: Authorized, camelCase = false, convert = true): { [name: string]: LeafJSONValue } {
     return {
-      [this.model.getName(camelCase)]: convert ? this.getConvertedValue() : this.value
+      [this.model.getName(camelCase)]: convert ? this.getConvertedValue(authorized) : this.value
     };
   }
 

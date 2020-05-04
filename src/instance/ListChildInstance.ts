@@ -17,9 +17,11 @@ import {
   Parent,
   ShouldSkip,
   ListChildJSONValue,
-  ContainerJSON
+  ContainerJSON,
+  Authorized
 } from './types';
 import { Path, Instance, LeafInstance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
+import { allow } from './util';
 
 export type ChoiceName = string;
 export type SelectedCaseName = string;
@@ -30,11 +32,12 @@ export interface IKeys {
 }
 
 export default class ListChildInstance implements Searchable, WithAttributes {
+  private instance: Map<ChildName, Instance>;
+  private config: Element;
+
   public model: List;
-  public config: Element;
   public parent: Parent;
   public listParent: ListInstance;
-  public instance: Map<ChildName, Instance>;
   public activeChoices: Map<ChoiceName, SelectedCaseName>;
 
   public customAttributes: WithAttributes['customAttributes'];
@@ -69,6 +72,30 @@ export default class ListChildInstance implements Searchable, WithAttributes {
     }
   }
 
+  public getConfig(authorized: Authorized) {
+    if (authorized(this)) {
+      return this.config;
+    } else {
+      throw new Error('Unauthorized');
+    }
+  }
+
+  public setConfig(el: Element) {
+    this.config = el;
+  }
+
+  public getChildren(authorized: Authorized) {
+    const children: Map<string, Instance> = new Map();
+
+    for (const [k, v] of this.instance) {
+      if (authorized(v)) {
+        children.set(k, v);
+      }
+    }
+
+    return children;
+  }
+
   public delete(childName: string) {
     const child = this.instance.get(childName);
 
@@ -83,7 +110,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
 
   public get keys() {
     return Array.from(this.model.keys.values()).reduce<IKeys>((acc, key) => {
-      acc[key] = (this.instance.get(key) as LeafInstance).value!;
+      acc[key] = (this.instance.get(key) as LeafInstance).getValue(allow)!;
       return acc;
     }, {});
   }
@@ -149,12 +176,17 @@ export default class ListChildInstance implements Searchable, WithAttributes {
       });
   }
 
-  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): ListChildJSONValue {
+  public toJSON(
+    authorized: Authorized,
+    camelCase = false,
+    convert = true,
+    shouldSkip?: ShouldSkip
+  ): ListChildJSONValue {
     return [...this.instance.values()]
       .map(field =>
         field instanceof LeafInstance || field instanceof LeafListInstance
-          ? field.toJSON(camelCase, convert)
-          : field.toJSON(camelCase, convert, shouldSkip)
+          ? field.toJSON(authorized, camelCase, convert)
+          : field.toJSON(authorized, camelCase, convert, shouldSkip)
       )
       .reduce((acc, field) => Object.assign(acc, field), {});
   }
