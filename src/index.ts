@@ -14,7 +14,8 @@ import DataModelInstance, {
   Path,
   pathToInstance,
   pathToJSON,
-  Authorized
+  Authorized,
+  allow
 } from './instance';
 
 export {
@@ -40,5 +41,6 @@ export {
   Types,
   pathToInstance,
   pathToJSON,
-  Authorized
+  Authorized,
+  allow
 };
