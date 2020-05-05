@@ -24,8 +24,6 @@ import { allow } from './util';
 export type Key = string;
 
 export default class ListInstance implements Searchable {
-  private children: Map<Key, ListChildInstance>;
-
   public parent: Parent;
   public model: List;
 
@@ -33,6 +31,8 @@ export default class ListInstance implements Searchable {
   public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
+
+  private children: Map<Key, ListChildInstance>;
 
   constructor(model: List, config: Element | ListJSON, parent: Parent) {
     this.model = model;

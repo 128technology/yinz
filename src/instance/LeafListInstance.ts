@@ -21,8 +21,6 @@ import { LeafListChildInstance } from './';
 import { allow } from './util';
 
 export default class LeafListInstance implements Searchable {
-  private children: LeafListChildInstance[];
-
   public model: LeafList;
   public parent: Parent;
 
@@ -30,6 +28,8 @@ export default class LeafListInstance implements Searchable {
   public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
+
+  private children: LeafListChildInstance[];
 
   constructor(model: LeafList, config: Element | LeafListJSON, parent: Parent) {
     this.model = model;

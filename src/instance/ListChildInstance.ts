@@ -32,9 +32,6 @@ export interface IKeys {
 }
 
 export default class ListChildInstance implements Searchable, WithAttributes {
-  private instance: Map<ChildName, Instance>;
-  private config: Element;
-
   public model: List;
   public parent: Parent;
   public listParent: ListInstance;
@@ -54,6 +51,9 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
+
+  private instance: Map<ChildName, Instance>;
+  private config: Element;
 
   constructor(model: List, config: Element | ListChildJSON, parent: Parent, listParent: ListInstance) {
     this.model = model;

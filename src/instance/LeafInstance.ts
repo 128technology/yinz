@@ -10,9 +10,6 @@ import { LeafJSON, XMLSerializationOptions, Visitor, NoMatchHandler, Parent, Lea
 import { Path } from './';
 
 export default class LeafInstance implements Searchable, WithAttributes {
-  private config: Element;
-  private value: string | null;
-
   public model: Leaf;
   public parent: Parent;
 
@@ -30,6 +27,9 @@ export default class LeafInstance implements Searchable, WithAttributes {
   public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
+
+  private config: Element;
+  private value: string | null;
 
   constructor(model: Leaf, config: Element | LeafJSON, parent: Parent) {
     this.model = model;

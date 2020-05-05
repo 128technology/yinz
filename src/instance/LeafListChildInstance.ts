@@ -8,9 +8,6 @@ import { LeafJSON, Visitor, XMLSerializationOptions, Authorized } from './types'
 import { Path, LeafListInstance } from './';
 
 export default class LeafListChildInstance implements WithAttributes {
-  private config: Element;
-  private rawValue: string;
-
   public model: LeafList;
   public parent: LeafListInstance;
 
@@ -23,6 +20,9 @@ export default class LeafListChildInstance implements WithAttributes {
   public getValueFromJSON: WithAttributes['getValueFromJSON'];
   public addOperation: WithAttributes['addOperation'];
   public addPosition: WithAttributes['addPosition'];
+
+  private config: Element;
+  private rawValue: string;
 
   constructor(model: LeafList, config: Element | LeafJSON, parent: LeafListInstance) {
     this.model = model;

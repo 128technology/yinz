@@ -22,9 +22,6 @@ import {
 import { Path, Instance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
 
 export default class ContainerInstance implements Searchable, WithAttributes {
-  private config: Element;
-  private children: Map<string, Instance>;
-
   public model: Container;
   public parent: Parent | null;
   public activeChoices: Map<string, string>;
@@ -43,6 +40,9 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
+
+  private config: Element;
+  private children: Map<string, Instance>;
 
   constructor(model: Container, config: Element | ContainerJSON, parent: Parent | null) {
     this.model = model;
