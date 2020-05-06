@@ -16,15 +16,14 @@ import {
   Parent,
   XMLSerializationOptions,
   ShouldSkip,
-  ContainerJSONValue
+  ContainerJSONValue,
+  Authorized
 } from './types';
 import { Path, Instance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
 
 export default class ContainerInstance implements Searchable, WithAttributes {
   public model: Container;
-  public config: Element;
   public parent: Parent | null;
-  public children: Map<string, Instance>;
   public activeChoices: Map<string, string>;
 
   public customAttributes: WithAttributes['customAttributes'];
@@ -42,6 +41,9 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
 
+  private config: Element;
+  private children: Map<string, Instance>;
+
   constructor(model: Container, config: Element | ContainerJSON, parent: Parent | null) {
     this.model = model;
     this.parent = parent;
@@ -58,6 +60,30 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     }
   }
 
+  public getConfig(authorized: Authorized) {
+    if (authorized(this)) {
+      return this.config;
+    } else {
+      throw new Error('Unauthorized');
+    }
+  }
+
+  public setConfig(el: Element) {
+    this.config = el;
+  }
+
+  public getChildren(authorized: Authorized) {
+    const children: Map<string, Instance> = new Map();
+
+    for (const [k, v] of this.children) {
+      if (authorized(v)) {
+        children.set(k, v);
+      }
+    }
+
+    return children;
+  }
+
   public delete(childName: string) {
     const child = this.children.get(childName);
 
@@ -68,9 +94,14 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     this.children.delete(childName);
   }
 
-  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): ContainerJSONValue {
+  public toJSON(
+    authorized: Authorized,
+    camelCase = false,
+    convert = true,
+    shouldSkip?: ShouldSkip
+  ): ContainerJSONValue {
     const containerInner = [...this.children.values()].reduce(
-      (acc, child) => Object.assign(acc, child.toJSON(camelCase, convert, shouldSkip)),
+      (acc, child) => Object.assign(acc, child.toJSON(authorized, camelCase, convert, shouldSkip)),
       {}
     );
 

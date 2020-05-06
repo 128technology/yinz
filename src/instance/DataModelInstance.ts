@@ -5,7 +5,6 @@ import { ContextNode } from '../enum';
 import { DerivedType, LeafRefType } from '../types';
 import DataModel, { Model, List, Leaf, Choice, LeafList, Container } from '../model';
 import { isElement } from '../util/xmlUtil';
-
 import Path from './Path';
 import {
   ContainerInstance,
@@ -18,14 +17,15 @@ import {
   LeafListInstance,
   ShouldSkip
 } from './';
-import { XMLSerializationOptions, ContainerJSON, Instance } from './types';
+import { XMLSerializationOptions, ContainerJSON, Instance, Authorized } from './types';
 import {
   getPathXPath,
   getFieldIdFromParentAxis,
   applyConditionToPath,
   buildAuxiliaryKeyMap,
   findBestCandidate,
-  addEmptyTree
+  addEmptyTree,
+  allow
 } from './util';
 
 export default class DataModelInstance {
@@ -55,14 +55,14 @@ export default class DataModelInstance {
           instanceToVisit instanceof ContainerInstance
         ) {
           const xPath = getPathXPath(instanceToVisit.getPath());
-          instanceToVisit.config = this.rawInstance.get(xPath, this.model.namespaces)!;
+          instanceToVisit.setConfig(this.rawInstance.get(xPath, this.model.namespaces)!);
         }
       });
     }
   }
 
-  public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): object {
-    return [...this.root.values()][0].toJSON(camelCase, convert, shouldSkip);
+  public toJSON(authorized: Authorized, camelCase = false, convert = true, shouldSkip?: ShouldSkip): object {
+    return [...this.root.values()][0].toJSON(authorized, camelCase, convert, shouldSkip);
   }
 
   public toXML(rootEl?: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
@@ -79,7 +79,9 @@ export default class DataModelInstance {
 
   public resolveLeafRefPath(path: Path): Path {
     const instance = this.getInstance(path) as LeafInstance;
-    const { model, value, config } = instance;
+    const { model } = instance;
+    const value = instance.getValue(allow);
+    const config = instance.getConfig(allow);
     const sourceType = model.getResolvedType();
 
     if (sourceType instanceof LeafRefType) {
@@ -290,11 +292,11 @@ export default class DataModelInstance {
         foundInstance instanceof ListChildInstance ||
         foundInstance instanceof ContainerInstance
       ) {
-        requestedElement = foundInstance.config;
+        requestedElement = foundInstance.getConfig(allow);
       } else if (foundInstance instanceof ListInstance) {
-        requestedElement = foundInstance.children.values().next().value.config;
+        requestedElement = foundInstance.getChildren(allow).values().next().value.config;
       } else if (foundInstance instanceof LeafListInstance) {
-        requestedElement = foundInstance.children[0].config;
+        requestedElement = foundInstance.getChildren(allow)[0].getConfig(allow);
       }
     } else {
       const { cleanUpHiddenTree, contextEl } = addEmptyTree(remainingPath!, this.model, closestAncestor);

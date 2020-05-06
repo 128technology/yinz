@@ -76,3 +76,4 @@ export type NoMatchHandler = (instance: Instance, remainingPath: Path) => any;
 export type Parent = ListChildInstance | ContainerInstance;
 export type ShouldSkip = (instance: Instance) => boolean;
 export type XMLSerializationOptions = Readonly<{ includeAttributes: boolean }>;
+export type Authorized = (instance: Instance | LeafListChildInstance) => boolean;

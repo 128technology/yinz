@@ -6,6 +6,7 @@ export { default as LeafListInstance } from './LeafListInstance';
 export { default as LeafListChildInstance } from './LeafListChildInstance';
 export { default as LeafInstance } from './LeafInstance';
 export { default as Path, pathToInstance, pathToJSON } from './Path';
-export { Visitor, NoMatchHandler, Parent, ShouldSkip, Instance } from './types';
+export { Visitor, NoMatchHandler, Parent, ShouldSkip, Instance, Authorized } from './types';
+export { allow } from './util';
 
 export default DataModelInstance;

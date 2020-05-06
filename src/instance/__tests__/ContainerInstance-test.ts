@@ -5,8 +5,8 @@ import * as path from 'path';
 
 import xmlUtil from '../../__tests__/xmlUtil';
 import { Container } from '../../model';
-
 import { ContainerInstance, LeafInstance } from '../';
+import { allow } from '../util';
 
 describe('Container Instance', () => {
   const modelText = fs.readFileSync(path.join(__dirname, '../../model/__tests__/data/testContainer.xml'), 'utf-8');
@@ -22,9 +22,9 @@ describe('Container Instance', () => {
   it('should get initialized with a value', () => {
     const instance = new ContainerInstance(leafModel, mockConfigXML, null);
 
-    const child = instance.children.get('state');
+    const child = instance.getChildren(allow).get('state');
     if (child instanceof LeafInstance) {
-      expect(child.value).to.equal('enabled');
+      expect(child.getValue(allow)).to.equal('enabled');
     } else {
       throw new Error('Child is not a leaf!');
     }
@@ -33,7 +33,7 @@ describe('Container Instance', () => {
   it('should serialize to JSON', () => {
     const instance = new ContainerInstance(leafModel, mockConfigXML, null);
 
-    expect(instance.toJSON()).to.deep.equal({
+    expect(instance.toJSON(allow)).to.deep.equal({
       bfd: {
         state: 'enabled'
       }
@@ -59,7 +59,7 @@ describe('Container Instance', () => {
   it('should delete a child that exists', () => {
     const instance = new ContainerInstance(leafModel, mockConfigXML, null);
     instance.delete('state');
-    expect(instance.toJSON()).to.deep.equal({
+    expect(instance.toJSON(allow)).to.deep.equal({
       bfd: {}
     });
   });

@@ -5,8 +5,8 @@ import * as path from 'path';
 
 import xmlUtil from '../../__tests__/xmlUtil';
 import { LeafList, Container } from '../../model';
-
 import { LeafListInstance, ContainerInstance } from '../';
+import { allow } from '../util';
 
 describe('Leaf List Instance', () => {
   const modelText = fs.readFileSync(path.join(__dirname, '../../model/__tests__/data/testLeafList.xml'), 'utf-8');
@@ -21,7 +21,7 @@ describe('Leaf List Instance', () => {
   it('should get initialized with a value', () => {
     const instance = new LeafListInstance(leafListModel, mockConfigXML, {} as ContainerInstance);
 
-    expect(instance.values).to.deep.equal(['foo']);
+    expect(instance.getValues(allow)).to.deep.equal(['foo']);
   });
 
   it('should accept new values after initialization', () => {
@@ -33,13 +33,13 @@ describe('Leaf List Instance', () => {
 
     instance.add(newItemXML);
 
-    expect(instance.values).to.deep.equal(['foo', 'bar']);
+    expect(instance.getValues(allow)).to.deep.equal(['foo', 'bar']);
   });
 
   it('should serialize to JSON', () => {
     const instance = new LeafListInstance(leafListModel, mockConfigXML, {} as ContainerInstance);
 
-    expect(instance.toJSON()).to.deep.equal({
+    expect(instance.toJSON(allow)).to.deep.equal({
       vector: ['foo']
     });
   });

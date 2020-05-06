@@ -5,8 +5,8 @@ import * as path from 'path';
 
 import xmlUtil from '../../__tests__/xmlUtil';
 import { List, Container } from '../../model';
-
 import { ListChildInstance, LeafInstance, ListInstance } from '../';
+import { allow } from '../util';
 
 describe('List Child Instance', () => {
   const modelText = fs.readFileSync(path.join(__dirname, '../../model/__tests__/data/testList.xml'), 'utf-8');
@@ -23,10 +23,10 @@ describe('List Child Instance', () => {
   it('should get initialized with a value', () => {
     const instance = new ListChildInstance(listModel, mockConfigXML, {} as any, {} as ListInstance);
 
-    const child = instance.instance.get('name');
+    const child = instance.getChildren(allow).get('name');
 
     if (child instanceof LeafInstance) {
-      expect(child.value).to.equal('foo');
+      expect(child.getValue(allow)).to.equal('foo');
     } else {
       throw new Error('Child is not a leaf!');
     }
@@ -56,7 +56,7 @@ describe('List Child Instance', () => {
   it('should serialize to JSON', () => {
     const instance = new ListChildInstance(listModel, mockConfigXML, {} as any, {} as ListInstance);
 
-    expect(instance.toJSON()).to.deep.equal({ name: 'foo' });
+    expect(instance.toJSON(allow)).to.deep.equal({ name: 'foo' });
   });
 
   it('should serialize to XML', () => {
@@ -94,7 +94,7 @@ describe('List Child Instance', () => {
       {} as ListInstance
     );
     instance.delete('service-filter');
-    expect(instance.toJSON()).to.deep.equal({ name: 'foo' });
+    expect(instance.toJSON(allow)).to.deep.equal({ name: 'foo' });
   });
 
   it('should throw if child does not exist', () => {
