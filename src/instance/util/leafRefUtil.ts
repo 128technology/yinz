@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 
 import { Instance, ListChildInstance, LeafInstance } from '../';
 import Path, { isKeyedSegment, ISegmentKeys } from '../Path';
-import { allow } from './';
+import { allow } from './util';
 
 export function findBestCandidate(matchCandidates: Instance[], auxiliaryKeys: Map<string, string>) {
   for (const potentialMatch of matchCandidates) {
