@@ -14,7 +14,8 @@ import {
   Visitor,
   LeafJSON,
   LeafListJSONValue,
-  Authorized
+  Authorized,
+  JSONMapper
 } from './types';
 import Path, { isSegmentWithValue } from './Path';
 import { LeafListChildInstance } from './';
@@ -65,6 +66,10 @@ export default class LeafListInstance implements Searchable {
     return {
       [this.model.getName(camelCase)]: convert ? this.getValues(authorized) : this.getRawValues(authorized)
     };
+  }
+
+  public mapToJSON(authorized: Authorized, map: JSONMapper = x => x.toJSON(authorized)) {
+    return map(this);
   }
 
   public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {

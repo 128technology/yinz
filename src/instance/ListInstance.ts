@@ -14,7 +14,8 @@ import {
   XMLSerializationOptions,
   ListChildJSON,
   ListJSONValue,
-  Authorized
+  Authorized,
+  JSONMapper
 } from './types';
 import { Path, ListChildInstance, LeafInstance } from './';
 import { isKeyedSegment } from './Path';
@@ -99,6 +100,23 @@ export default class ListInstance implements Searchable {
     return {
       [this.model.getName(camelCase)]: value
     };
+  }
+
+  public mapToJSON(authorized: Authorized, map: JSONMapper = x => x.toJSON(authorized)) {
+    const value = [];
+
+    for (const child of this.children.values()) {
+      const childJSON = child.mapToJSON(authorized, map);
+      if (childJSON) {
+        value.push(childJSON);
+      }
+    }
+
+    return value.length > 0
+      ? {
+          [this.model.getName()]: value
+        }
+      : {};
   }
 
   public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
