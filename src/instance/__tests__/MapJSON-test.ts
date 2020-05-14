@@ -32,6 +32,19 @@ describe('Mapping Instance Data to JSON', () => {
     return new DataModelInstance(dataModel, config);
   }
 
+  function readJSON(filepath: string) {
+    const instanceJSONText = fs.readFileSync(path.join(__dirname, filepath), 'utf-8');
+    return JSON.parse(instanceJSONText);
+  }
+
+  describe('Passing Through', () => {
+    it('should serialize an instance to JSON', () => {
+      const instanceJSON = readJSON('./data/instance.json');
+      const dataModelInstance = getInstance('./data/instance.xml');
+      expect(dataModelInstance.mapToJSON(allow)).to.deep.equal(instanceJSON);
+    });
+  });
+
   describe('Replacing via Mapping', () => {
     let dataModelInstance: DataModelInstance;
 
