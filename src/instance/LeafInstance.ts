@@ -6,7 +6,16 @@ import { Leaf } from '../model';
 import { defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
-import { LeafJSON, XMLSerializationOptions, Visitor, NoMatchHandler, Parent, LeafJSONValue, Authorized } from './types';
+import {
+  LeafJSON,
+  XMLSerializationOptions,
+  Visitor,
+  NoMatchHandler,
+  Parent,
+  LeafJSONValue,
+  Authorized,
+  JSONMapper
+} from './types';
 import { Path } from './';
 
 export default class LeafInstance implements Searchable, WithAttributes {
@@ -71,8 +80,12 @@ export default class LeafInstance implements Searchable, WithAttributes {
 
   public toJSON(authorized: Authorized, camelCase = false, convert = true): { [name: string]: LeafJSONValue } {
     return {
-      [this.model.getName(camelCase)]: convert ? this.getConvertedValue(authorized) : this.value
+      [this.model.getName(camelCase)]: convert ? this.getConvertedValue(authorized) : this.getValue(authorized)
     };
+  }
+
+  public mapToJSON(authorized: Authorized, map: JSONMapper = x => x.toJSON(authorized)) {
+    return map(this);
   }
 
   public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {

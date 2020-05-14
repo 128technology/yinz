@@ -18,7 +18,8 @@ import {
   ShouldSkip,
   ListChildJSONValue,
   ContainerJSON,
-  Authorized
+  Authorized,
+  JSONMapper
 } from './types';
 import { Path, Instance, LeafInstance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
 import { allow } from './util';
@@ -115,6 +116,13 @@ export default class ListChildInstance implements Searchable, WithAttributes {
     }, {});
   }
 
+  public getKeys(authorized: Authorized) {
+    return Array.from(this.model.keys.values()).reduce<IKeys>((acc, key) => {
+      acc[key] = (this.instance.get(key) as LeafInstance).getValue(authorized)!;
+      return acc;
+    }, {});
+  }
+
   public injestConfigJSON(configJSON: ListChildJSON) {
     const config = this.getValueFromJSON(configJSON) as ListChildJSONValue;
 
@@ -189,6 +197,16 @@ export default class ListChildInstance implements Searchable, WithAttributes {
           : field.toJSON(authorized, camelCase, convert, shouldSkip)
       )
       .reduce((acc, field) => Object.assign(acc, field), {});
+  }
+
+  public mapToJSON(authorized: Authorized, map: JSONMapper = x => x.toJSON(authorized)) {
+    const inner = {};
+
+    for (const child of this.instance.values()) {
+      Object.assign(inner, child.mapToJSON(authorized, map));
+    }
+
+    return _.size(inner) > 0 ? Object.assign(this.getKeys(authorized), inner) : null;
   }
 
   public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
