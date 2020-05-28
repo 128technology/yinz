@@ -18,7 +18,7 @@ import {
   LeafListInstance,
   ShouldSkip
 } from './';
-import { XMLSerializationOptions, ContainerJSON, Instance } from './types';
+import { XMLSerializationOptions, ContainerJSON, Instance, JSONMapper } from './types';
 import {
   getPathXPath,
   getFieldIdFromParentAxis,
@@ -63,6 +63,10 @@ export default class DataModelInstance {
 
   public toJSON(camelCase = false, convert = true, shouldSkip?: ShouldSkip): object {
     return [...this.root.values()][0].toJSON(camelCase, convert, shouldSkip);
+  }
+
+  public mapToJSON(map: JSONMapper = x => x.toJSON()) {
+    return [...this.root.values()][0].mapToJSON(map);
   }
 
   public toXML(rootEl?: Element, options: XMLSerializationOptions = { includeAttributes: false }) {

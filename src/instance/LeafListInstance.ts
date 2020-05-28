@@ -13,7 +13,8 @@ import {
   XMLSerializationOptions,
   Visitor,
   LeafJSON,
-  LeafListJSONValue
+  LeafListJSONValue,
+  JSONMapper
 } from './types';
 import Path, { isSegmentWithValue } from './Path';
 import { LeafListChildInstance } from './';
@@ -58,6 +59,10 @@ export default class LeafListInstance implements Searchable {
     return {
       [this.model.getName(camelCase)]: convert ? this.values : this.rawValues
     };
+  }
+
+  public mapToJSON(map: JSONMapper = x => x.toJSON()) {
+    return map(this);
   }
 
   public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {

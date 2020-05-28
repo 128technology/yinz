@@ -16,7 +16,8 @@ import {
   Parent,
   XMLSerializationOptions,
   ShouldSkip,
-  ContainerJSONValue
+  ContainerJSONValue,
+  JSONMapper
 } from './types';
 import { Path, Instance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
 
@@ -77,6 +78,20 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     return {
       [this.model.getName(camelCase)]: containerInner
     };
+  }
+
+  public mapToJSON(map: JSONMapper = x => x.toJSON()) {
+    const containerInner = {};
+
+    for (const child of this.children.values()) {
+      Object.assign(containerInner, child.mapToJSON(map));
+    }
+
+    return _.size(containerInner) > 0
+      ? {
+          [this.model.getName()]: containerInner
+        }
+      : {};
   }
 
   public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
