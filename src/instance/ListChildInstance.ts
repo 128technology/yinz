@@ -17,7 +17,8 @@ import {
   Parent,
   ShouldSkip,
   ListChildJSONValue,
-  ContainerJSON
+  ContainerJSON,
+  JSONMapper
 } from './types';
 import { Path, Instance, LeafInstance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
 
@@ -82,6 +83,13 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   }
 
   public get keys() {
+    return Array.from(this.model.keys.values()).reduce<IKeys>((acc, key) => {
+      acc[key] = (this.instance.get(key) as LeafInstance).value!;
+      return acc;
+    }, {});
+  }
+
+  public getKeys() {
     return Array.from(this.model.keys.values()).reduce<IKeys>((acc, key) => {
       acc[key] = (this.instance.get(key) as LeafInstance).value!;
       return acc;
@@ -157,6 +165,16 @@ export default class ListChildInstance implements Searchable, WithAttributes {
           : field.toJSON(camelCase, convert, shouldSkip)
       )
       .reduce((acc, field) => Object.assign(acc, field), {});
+  }
+
+  public mapToJSON(map: JSONMapper = x => x.toJSON()) {
+    const inner = {};
+
+    for (const child of this.instance.values()) {
+      Object.assign(inner, child.mapToJSON(map));
+    }
+
+    return _.size(inner) > 0 ? Object.assign(this.getKeys(), inner) : null;
   }
 
   public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {
