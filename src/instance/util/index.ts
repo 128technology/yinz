@@ -3,7 +3,15 @@ import * as _ from 'lodash';
 
 import DataModel from '../../model';
 import Path, { isKeyedSegment, PathSegment } from '../Path';
-import { Instance, LeafInstance, ContainerInstance, LeafListChildInstance, ListChildInstance } from '../';
+import {
+  Instance,
+  LeafInstance,
+  ContainerInstance,
+  LeafListChildInstance,
+  ListChildInstance,
+  LeafListInstance
+} from '../';
+import { JSONMapper } from '../types';
 
 export * from './leafRefUtil';
 
@@ -97,3 +105,11 @@ export function getFieldIdFromParentAxis(element: Element) {
 
   return stack.reverse().join('.');
 }
+
+export const defaultMapper: JSONMapper = instance => {
+  if (instance instanceof LeafInstance || instance instanceof LeafListInstance) {
+    return instance.toJSON();
+  } else if (instance instanceof ListChildInstance) {
+    return [instance.toJSON()];
+  }
+};

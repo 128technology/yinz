@@ -18,14 +18,15 @@ import {
   LeafListInstance,
   ShouldSkip
 } from './';
-import { XMLSerializationOptions, ContainerJSON, Instance, JSONMapper } from './types';
+import { XMLSerializationOptions, ContainerJSON, Instance, JSONMapper, MapToJSONOptions } from './types';
 import {
   getPathXPath,
   getFieldIdFromParentAxis,
   applyConditionToPath,
   buildAuxiliaryKeyMap,
   findBestCandidate,
-  addEmptyTree
+  addEmptyTree,
+  defaultMapper
 } from './util';
 
 export default class DataModelInstance {
@@ -65,8 +66,8 @@ export default class DataModelInstance {
     return [...this.root.values()][0].toJSON(camelCase, convert, shouldSkip);
   }
 
-  public mapToJSON(map: JSONMapper = x => x.toJSON()) {
-    return [...this.root.values()][0].mapToJSON(map);
+  public mapToJSON(map: JSONMapper = defaultMapper, options: MapToJSONOptions = { overrideOnKeyMap: false }) {
+    return [...this.root.values()][0].mapToJSON(map, options);
   }
 
   public toXML(rootEl?: Element, options: XMLSerializationOptions = { includeAttributes: false }) {

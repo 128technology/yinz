@@ -17,8 +17,10 @@ import {
   XMLSerializationOptions,
   ShouldSkip,
   ContainerJSONValue,
-  JSONMapper
+  JSONMapper,
+  MapToJSONOptions
 } from './types';
+import { defaultMapper } from './util';
 import { Path, Instance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
 
 export default class ContainerInstance implements Searchable, WithAttributes {
@@ -80,11 +82,11 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     };
   }
 
-  public mapToJSON(map: JSONMapper = x => x.toJSON()) {
+  public mapToJSON(map: JSONMapper = defaultMapper, options: MapToJSONOptions = { overrideOnKeyMap: false }) {
     const containerInner = {};
 
     for (const child of this.children.values()) {
-      Object.assign(containerInner, child.mapToJSON(map));
+      Object.assign(containerInner, child.mapToJSON(map, options));
     }
 
     return _.size(containerInner) > 0
