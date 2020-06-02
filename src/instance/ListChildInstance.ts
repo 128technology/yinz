@@ -19,8 +19,10 @@ import {
   ListChildJSONValue,
   ContainerJSON,
   Authorized,
-  JSONMapper
+  JSONMapper,
+  MapToJSONOptions
 } from './types';
+import { getDefaultMapper } from './util';
 import { Path, Instance, LeafInstance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
 import { allow } from './util';
 
@@ -199,14 +201,35 @@ export default class ListChildInstance implements Searchable, WithAttributes {
       .reduce((acc, field) => Object.assign(acc, field), {});
   }
 
-  public mapToJSON(authorized: Authorized, map: JSONMapper = x => x.toJSON(authorized)) {
+  public mapToJSON(
+    authorized: Authorized,
+    map: JSONMapper = getDefaultMapper(authorized),
+    options: MapToJSONOptions = { overrideOnKeyMap: false }
+  ) {
     const inner = {};
+    let shouldMapSelf = false;
 
     for (const child of this.instance.values()) {
-      Object.assign(inner, child.mapToJSON(authorized, map));
+      const mappedChild = child.mapToJSON(authorized, map, options);
+
+      if (options.overrideOnKeyMap && _.size(mappedChild) > 0 && child instanceof LeafInstance && child.model.isKey) {
+        shouldMapSelf = true;
+        break;
+      }
+
+      Object.assign(inner, mappedChild);
     }
 
-    return _.size(inner) > 0 ? Object.assign(this.getKeys(authorized), inner) : null;
+    if (shouldMapSelf) {
+      const result = map(this);
+      if (!_.isArray(result)) {
+        throw new Error('Must map a list child to an array of list children.');
+      }
+
+      return result;
+    } else {
+      return _.size(inner) > 0 ? [Object.assign(this.getKeys(authorized), inner)] : null;
+    }
   }
 
   public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {

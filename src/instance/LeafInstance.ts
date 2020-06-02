@@ -14,8 +14,10 @@ import {
   Parent,
   LeafJSONValue,
   Authorized,
-  JSONMapper
+  JSONMapper,
+  MapToJSONOptions
 } from './types';
+import { getDefaultMapper } from './util';
 import { Path } from './';
 
 export default class LeafInstance implements Searchable, WithAttributes {
@@ -84,7 +86,11 @@ export default class LeafInstance implements Searchable, WithAttributes {
     };
   }
 
-  public mapToJSON(authorized: Authorized, map: JSONMapper = x => x.toJSON(authorized)) {
+  public mapToJSON(
+    authorized: Authorized,
+    map: JSONMapper = getDefaultMapper(authorized),
+    options: MapToJSONOptions = { overrideOnKeyMap: false }
+  ) {
     return map(this);
   }
 

@@ -17,7 +17,7 @@ import {
   LeafListInstance,
   ShouldSkip
 } from './';
-import { XMLSerializationOptions, ContainerJSON, Instance, Authorized, JSONMapper } from './types';
+import { XMLSerializationOptions, ContainerJSON, Instance, JSONMapper, MapToJSONOptions, Authorized } from './types';
 import {
   getPathXPath,
   getFieldIdFromParentAxis,
@@ -25,7 +25,8 @@ import {
   buildAuxiliaryKeyMap,
   findBestCandidate,
   addEmptyTree,
-  allow
+  allow,
+  getDefaultMapper
 } from './util';
 
 export default class DataModelInstance {
@@ -65,8 +66,12 @@ export default class DataModelInstance {
     return [...this.root.values()][0].toJSON(authorized, camelCase, convert, shouldSkip);
   }
 
-  public mapToJSON(authorized: Authorized, map: JSONMapper = x => x.toJSON(authorized)) {
-    return [...this.root.values()][0].mapToJSON(authorized, map);
+  public mapToJSON(
+    authorized: Authorized,
+    map: JSONMapper = getDefaultMapper(authorized),
+    options: MapToJSONOptions = { overrideOnKeyMap: false }
+  ) {
+    return [...this.root.values()][0].mapToJSON(authorized, map, options);
   }
 
   public toXML(rootEl?: Element, options: XMLSerializationOptions = { includeAttributes: false }) {

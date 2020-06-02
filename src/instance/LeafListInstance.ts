@@ -15,9 +15,11 @@ import {
   LeafJSON,
   LeafListJSONValue,
   Authorized,
-  JSONMapper
+  JSONMapper,
+  MapToJSONOptions
 } from './types';
 import Path, { isSegmentWithValue } from './Path';
+import { getDefaultMapper } from './util';
 import { LeafListChildInstance } from './';
 import { allow } from './util';
 
@@ -68,7 +70,11 @@ export default class LeafListInstance implements Searchable {
     };
   }
 
-  public mapToJSON(authorized: Authorized, map: JSONMapper = x => x.toJSON(authorized)) {
+  public mapToJSON(
+    authorized: Authorized,
+    map: JSONMapper = getDefaultMapper(authorized),
+    options: MapToJSONOptions = { overrideOnKeyMap: false }
+  ) {
     return map(this);
   }
 

@@ -18,8 +18,10 @@ import {
   ShouldSkip,
   ContainerJSONValue,
   Authorized,
-  JSONMapper
+  JSONMapper,
+  MapToJSONOptions
 } from './types';
+import { getDefaultMapper } from './util';
 import { Path, Instance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
 
 export default class ContainerInstance implements Searchable, WithAttributes {
@@ -111,11 +113,15 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     };
   }
 
-  public mapToJSON(authorized: Authorized, map: JSONMapper = x => x.toJSON(authorized)) {
+  public mapToJSON(
+    authorized: Authorized,
+    map: JSONMapper = getDefaultMapper(authorized),
+    options: MapToJSONOptions = { overrideOnKeyMap: false }
+  ) {
     const containerInner = {};
 
     for (const child of this.children.values()) {
-      Object.assign(containerInner, child.mapToJSON(authorized, map));
+      Object.assign(containerInner, child.mapToJSON(authorized, map, options));
     }
 
     return _.size(containerInner) > 0
