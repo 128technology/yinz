@@ -6,7 +6,17 @@ import { Leaf } from '../model';
 import { defineNamespaceOnRoot } from '../util/xmlUtil';
 
 import { Searchable, WithAttributes } from './mixins';
-import { LeafJSON, XMLSerializationOptions, Visitor, NoMatchHandler, Parent, LeafJSONValue, JSONMapper } from './types';
+import {
+  LeafJSON,
+  XMLSerializationOptions,
+  Visitor,
+  NoMatchHandler,
+  Parent,
+  LeafJSONValue,
+  JSONMapper,
+  MapToJSONOptions
+} from './types';
+import { defaultMapper } from './util';
 import { Path } from './';
 
 export default class LeafInstance implements Searchable, WithAttributes {
@@ -54,7 +64,7 @@ export default class LeafInstance implements Searchable, WithAttributes {
     };
   }
 
-  public mapToJSON(map: JSONMapper = x => x.toJSON()) {
+  public mapToJSON(map: JSONMapper = defaultMapper, options: MapToJSONOptions = { overrideOnKeyMap: false }) {
     return map(this);
   }
 

@@ -18,8 +18,10 @@ import {
   ShouldSkip,
   ListChildJSONValue,
   ContainerJSON,
-  JSONMapper
+  JSONMapper,
+  MapToJSONOptions
 } from './types';
+import { defaultMapper } from './util';
 import { Path, Instance, LeafInstance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
 
 export type ChoiceName = string;
@@ -167,14 +169,31 @@ export default class ListChildInstance implements Searchable, WithAttributes {
       .reduce((acc, field) => Object.assign(acc, field), {});
   }
 
-  public mapToJSON(map: JSONMapper = x => x.toJSON()) {
+  public mapToJSON(map: JSONMapper = defaultMapper, options: MapToJSONOptions = { overrideOnKeyMap: false }) {
     const inner = {};
+    let shouldMapSelf = false;
 
     for (const child of this.instance.values()) {
-      Object.assign(inner, child.mapToJSON(map));
+      const mappedChild = child.mapToJSON(map, options);
+
+      if (options.overrideOnKeyMap && _.size(mappedChild) > 0 && child instanceof LeafInstance && child.model.isKey) {
+        shouldMapSelf = true;
+        break;
+      }
+
+      Object.assign(inner, mappedChild);
     }
 
-    return _.size(inner) > 0 ? Object.assign(this.getKeys(), inner) : null;
+    if (shouldMapSelf) {
+      const result = map(this);
+      if (!_.isArray(result)) {
+        throw new Error('Must map a list child to an array of list children.');
+      }
+
+      return result;
+    } else {
+      return _.size(inner) > 0 ? [Object.assign(this.getKeys(), inner)] : null;
+    }
   }
 
   public toXML(parent: Element, options: XMLSerializationOptions = { includeAttributes: false }) {

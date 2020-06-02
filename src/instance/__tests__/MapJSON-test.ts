@@ -4,7 +4,7 @@ import * as path from 'path';
 
 import xmlUtil from '../../__tests__/xmlUtil';
 import DataModel from '../../model';
-import DataModelInstance, { LeafInstance, LeafListInstance } from '../';
+import DataModelInstance, { LeafInstance, LeafListInstance, ListChildInstance } from '../';
 import {} from '../util';
 
 export function readDataModel(filepath: string) {
@@ -74,6 +74,37 @@ describe('Mapping Instance Data to JSON', () => {
                 state: 'disabled'
               }
             }
+          ]
+        }
+      });
+    });
+
+    it('should handle a key replace', () => {
+      const result = dataModelInstance.mapToJSON(
+        instance => {
+          if (instance instanceof LeafInstance) {
+            if (instance.value === 'Fabric128') {
+              return { [instance.model.getName()]: 'Fabric129' };
+            } else {
+              return {};
+            }
+          } else if (instance instanceof ListChildInstance) {
+            return [
+              { _operation: 'delete', _value: { name: 'Fabric128' } },
+              { _operation: 'create', _value: { name: 'Fabric129' } }
+            ];
+          } else {
+            return {};
+          }
+        },
+        { overrideOnKeyMap: true }
+      );
+
+      expect(result).to.deep.equal({
+        authority: {
+          router: [
+            { _operation: 'delete', _value: { name: 'Fabric128' } },
+            { _operation: 'create', _value: { name: 'Fabric129' } }
           ]
         }
       });

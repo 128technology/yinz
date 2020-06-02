@@ -14,8 +14,10 @@ import {
   XMLSerializationOptions,
   ListChildJSON,
   ListJSONValue,
-  JSONMapper
+  JSONMapper,
+  MapToJSONOptions
 } from './types';
+import { defaultMapper } from './util';
 import { Path, ListChildInstance, LeafInstance } from './';
 import { isKeyedSegment } from './Path';
 
@@ -82,13 +84,13 @@ export default class ListInstance implements Searchable {
     };
   }
 
-  public mapToJSON(map: JSONMapper = x => x.toJSON()) {
+  public mapToJSON(map: JSONMapper = defaultMapper, options: MapToJSONOptions = { overrideOnKeyMap: false }) {
     const value = [];
 
     for (const child of this.children.values()) {
-      const childJSON = child.mapToJSON(map);
+      const childJSON = child.mapToJSON(map, options);
       if (childJSON) {
-        value.push(childJSON);
+        value.push(...childJSON);
       }
     }
 
