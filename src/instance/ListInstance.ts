@@ -15,8 +15,10 @@ import {
   ListChildJSON,
   ListJSONValue,
   Authorized,
-  JSONMapper
+  JSONMapper,
+  MapToJSONOptions
 } from './types';
+import { getDefaultMapper } from './util';
 import { Path, ListChildInstance, LeafInstance } from './';
 import { isKeyedSegment } from './Path';
 import { allow } from './util';
@@ -102,13 +104,17 @@ export default class ListInstance implements Searchable {
     };
   }
 
-  public mapToJSON(authorized: Authorized, map: JSONMapper = x => x.toJSON(authorized)) {
+  public mapToJSON(
+    authorized: Authorized,
+    map: JSONMapper = getDefaultMapper(authorized),
+    options: MapToJSONOptions = { overrideOnKeyMap: false }
+  ) {
     const value = [];
 
     for (const child of this.children.values()) {
-      const childJSON = child.mapToJSON(authorized, map);
+      const childJSON = child.mapToJSON(authorized, map, options);
       if (childJSON) {
-        value.push(childJSON);
+        value.push(...childJSON);
       }
     }
 

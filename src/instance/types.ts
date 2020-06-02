@@ -77,4 +77,7 @@ export type Parent = ListChildInstance | ContainerInstance;
 export type ShouldSkip = (instance: Instance) => boolean;
 export type XMLSerializationOptions = Readonly<{ includeAttributes: boolean }>;
 export type Authorized = (instance: Instance | LeafListChildInstance) => boolean;
-export type JSONMapper = (x: LeafInstance | LeafListInstance) => Record<string, LeafJSON | LeafListJSON>;
+export type MapToJSONOptions = Readonly<{ overrideOnKeyMap: boolean }>;
+export type JSONMapper = (
+  x: LeafInstance | LeafListInstance | ListChildInstance
+) => Record<string, LeafJSON | LeafListJSON> | ListChildJSON[] | undefined;
