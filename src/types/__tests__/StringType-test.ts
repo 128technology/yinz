@@ -45,11 +45,11 @@ describe('String Type', () => {
   it('should parse text property', () => {
     const type = new StringType(typeEl);
 
-    expect(type.otherProps.get('moo')).to.equal(true)
+    expect(type.otherProps.get('moo')).to.equal(true);
   });
   it('should parse presence property', () => {
     const type = new StringType(typeEl);
 
-    expect(type.otherProps.get('foo')).to.equal('bar')
-  })
+    expect(type.otherProps.get('foo')).to.equal('bar');
+  });
 });

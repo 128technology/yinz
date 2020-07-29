@@ -25,7 +25,6 @@ export default class EnumerationType implements Named, RequiredField, StringSeri
   public addCustomProperties: WithCustomProperties['addCustomProperties'];
   public otherProps: WithCustomProperties['otherProps'];
 
-
   get options() {
     return Array.from(this.members.entries())
       .filter(([key, member]) => !member.isObsolete())
@@ -46,7 +45,7 @@ export default class EnumerationType implements Named, RequiredField, StringSeri
         (acc, enumEl) => acc.set(enumEl.attr('name')!.value(), new EnumerationMemberType(enumEl)),
         new Map<string, EnumerationMemberType>()
       );
-      this.addCustomProperties(el);
+    this.addCustomProperties(el);
   }
 }
 

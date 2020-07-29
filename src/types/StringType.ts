@@ -41,7 +41,7 @@ export default class StringType implements Named, StringSerialize, WithCustomPro
       this.pattern = patternEl.attr('value')!.value();
     }
 
-    this.addCustomProperties(el, ["length", "pattern"]);
+    this.addCustomProperties(el, ['length', 'pattern']);
   }
 }
 

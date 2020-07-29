@@ -27,7 +27,6 @@ export default class LeafRefType implements Named, RequiredField, WithCustomProp
   public addCustomProperties: WithCustomProperties['addCustomProperties'];
   public otherProps: WithCustomProperties['otherProps'];
 
-
   constructor(el: Element, identities: Identities) {
     this.addNamedProps(el);
     this.validateRequiredFields(el, ['path'], this.type);

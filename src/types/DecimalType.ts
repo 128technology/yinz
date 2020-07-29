@@ -26,7 +26,6 @@ export default class DecimalType implements Named, RequiredField, WithCustomProp
   public addCustomProperties: WithCustomProperties['addCustomProperties'];
   public otherProps: WithCustomProperties['otherProps'];
 
-
   constructor(el: Element) {
     this.addNamedProps(el);
     this.validateRequiredFields(el, ['fraction-digits'], this.type);

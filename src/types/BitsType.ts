@@ -20,7 +20,6 @@ export default class BitsType implements Named, RequiredField, StringSerialize, 
   public addCustomProperties: WithCustomProperties['addCustomProperties'];
   public otherProps: WithCustomProperties['otherProps'];
 
-
   constructor(el: Element) {
     this.addNamedProps(el);
     this.validateRequiredFields(el, ['bit'], this.type);

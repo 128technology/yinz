@@ -19,7 +19,6 @@ export default class BooleanType implements Named, WithCustomProperties {
   public addCustomProperties: WithCustomProperties['addCustomProperties'];
   public otherProps: WithCustomProperties['otherProps'];
 
-
   constructor(el: Element) {
     this.addNamedProps(el);
     this.addCustomProperties(el);

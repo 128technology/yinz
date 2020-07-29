@@ -23,7 +23,6 @@ export default class BinaryType implements Named, StringSerialize, WithCustomPro
   public addCustomProperties: WithCustomProperties['addCustomProperties'];
   public otherProps: WithCustomProperties['otherProps'];
 
-
   constructor(el: Element) {
     this.addNamedProps(el);
     this.parseType(el);
