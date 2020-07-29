@@ -5,7 +5,7 @@ import xmlUtil, { yinNS } from '../../../__tests__/xmlUtil';
 import { WithCustomProperties } from '../';
 
 describe('Custom Properties Mixin', () => {
-    const typeEl = xmlUtil.toElement(`
+  const typeEl = xmlUtil.toElement(`
     <type ${yinNS} name="string">
       <foo>bar</foo>
       <moo/>
@@ -13,7 +13,7 @@ describe('Custom Properties Mixin', () => {
     </type>
   `);
   class Test implements WithCustomProperties {
-    public otherProps: Map<string, string | boolean>;;
+    public otherProps: Map<string, string | boolean>;
     public addCustomProperties: (el: Element, ignoreList: string[]) => void;
   }
 

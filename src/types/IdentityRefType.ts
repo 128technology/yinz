@@ -24,7 +24,6 @@ export default class IdentityRefType implements Named, StringSerialize, Required
   public addCustomProperties: WithCustomProperties['addCustomProperties'];
   public otherProps: WithCustomProperties['otherProps'];
 
-
   constructor(el: Element, identities: Identities) {
     this.addNamedProps(el);
     this.validateRequiredFields(el, ['base'], this.type);
