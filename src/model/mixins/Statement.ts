@@ -26,7 +26,7 @@ export default class Statement {
     this.visibility = VisibilityParser.parse(el);
     this.status = StatusParser.parse(el);
 
-    this.otherProps = PropertiesParser.parse(el);
+    this.otherProps = PropertiesParser.parse(el, ['visibility', 'type']);
   }
 
   get path(): string {

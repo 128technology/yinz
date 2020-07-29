@@ -209,8 +209,7 @@ export class PropertiesParser {
     return childNodes.length === 0 && el.attrs().length === 0;
   }
 
-  public static parse(el: Element) {
-    const ignoreList = ['visibility', 'type'];
+  public static parse(el: Element, ignoreList: string[]) {
     const children = el.find('./child::*', ns).filter(isElement);
 
     return children

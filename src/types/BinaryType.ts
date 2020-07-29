@@ -5,11 +5,11 @@ import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import ns from '../util/ns';
 
 import Range from './Range';
-import { Named, StringSerialize } from './mixins';
+import { Named, StringSerialize, WithCustomProperties } from './mixins';
 
 const TYPE = BuiltInType.binary;
 
-export default class BinaryType implements Named, StringSerialize {
+export default class BinaryType implements Named, StringSerialize, WithCustomProperties {
   public static matches(typeName: string) {
     return enumValueOf(typeName) === TYPE;
   }
@@ -19,6 +19,10 @@ export default class BinaryType implements Named, StringSerialize {
   public type: Named['type'];
 
   public length: Range;
+
+  public addCustomProperties: WithCustomProperties['addCustomProperties'];
+  public otherProps: WithCustomProperties['otherProps'];
+
 
   constructor(el: Element) {
     this.addNamedProps(el);
@@ -31,7 +35,8 @@ export default class BinaryType implements Named, StringSerialize {
     if (lengthEl) {
       this.length = new Range(lengthEl);
     }
+    this.addCustomProperties(el, ['length']);
   }
 }
 
-applyMixins(BinaryType, [Named, StringSerialize]);
+applyMixins(BinaryType, [Named, StringSerialize, WithCustomProperties]);

@@ -8,6 +8,8 @@ describe('String Type', () => {
     <type ${yinNS} name="string">
       <yin:length value="0..253" />
       <yin:pattern value="*" />
+      <foo>bar</foo>
+      <moo/>
     </type>
   `);
 
@@ -40,4 +42,14 @@ describe('String Type', () => {
 
     expect(type.serialize('foo')).to.equal('foo');
   });
+  it('should parse text property', () => {
+    const type = new StringType(typeEl);
+
+    expect(type.otherProps.get('moo')).to.equal(true)
+  });
+  it('should parse presence property', () => {
+    const type = new StringType(typeEl);
+
+    expect(type.otherProps.get('foo')).to.equal('bar')
+  })
 });

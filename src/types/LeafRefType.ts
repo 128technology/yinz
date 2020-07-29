@@ -7,12 +7,12 @@ import { Identities } from '../model';
 import { SerializationReturnType } from '../enum/SerializationType';
 
 import TypeParser from './util/TypeParser';
-import { Named, RequiredField } from './mixins';
+import { Named, RequiredField, WithCustomProperties } from './mixins';
 import { Type } from './';
 
 const TYPE = BuiltInType.leafref;
 
-export default class LeafRefType implements Named, RequiredField {
+export default class LeafRefType implements Named, RequiredField, WithCustomProperties {
   public static matches(typeName: string) {
     return enumValueOf(typeName) === TYPE;
   }
@@ -24,6 +24,10 @@ export default class LeafRefType implements Named, RequiredField {
   public path: string;
   public refType: Type;
 
+  public addCustomProperties: WithCustomProperties['addCustomProperties'];
+  public otherProps: WithCustomProperties['otherProps'];
+
+
   constructor(el: Element, identities: Identities) {
     this.addNamedProps(el);
     this.validateRequiredFields(el, ['path'], this.type);
@@ -34,6 +38,8 @@ export default class LeafRefType implements Named, RequiredField {
     const typeEl = el.get('./yin:type', ns)!;
     this.refType = TypeParser.parse(typeEl, identities);
     this.path = el.get('./yin:path', ns)!.attr('value')!.value();
+
+    this.addCustomProperties(el, ['type', 'path']);
   }
 
   public serialize(val: string): SerializationReturnType {
@@ -41,4 +47,4 @@ export default class LeafRefType implements Named, RequiredField {
   }
 }
 
-applyMixins(LeafRefType, [Named, RequiredField]);
+applyMixins(LeafRefType, [Named, RequiredField, WithCustomProperties]);

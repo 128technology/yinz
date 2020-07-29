@@ -67,9 +67,10 @@ describe('Leaf List Model', () => {
     const leafList = new LeafList(testModel, {} as Container);
     const expectedType = {
       baseType: {
+        otherProps: new Map(),
         type: 'union',
         types: [
-          { type: 'uint32', range: { ranges: [{ min: 0, max: 999999999 }] } },
+          { type: 'uint32', range: { ranges: [{ min: 0, max: 999999999 }] }, otherProps: new Map() },
           {
             members: new Map([
               [
@@ -85,7 +86,8 @@ describe('Leaf List Model', () => {
                 }
               ]
             ]),
-            type: 'enumeration'
+            type: 'enumeration',
+            otherProps: new Map()
           }
         ]
       },

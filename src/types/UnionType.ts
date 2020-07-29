@@ -7,12 +7,12 @@ import { Identities } from '../model';
 import { isElement } from '../util/xmlUtil';
 
 import TypeParser from './util/TypeParser';
-import { Named, RequiredField, StringSerialize, Traversable } from './mixins';
+import { Named, RequiredField, StringSerialize, Traversable, WithCustomProperties } from './mixins';
 import { Type } from './';
 
 const TYPE = BuiltInType.union;
 
-export default class UnionType implements Named, RequiredField, StringSerialize, Traversable {
+export default class UnionType implements Named, RequiredField, StringSerialize, Traversable, WithCustomProperties {
   public static matches(typeName: string) {
     return enumValueOf(typeName) === TYPE;
   }
@@ -25,6 +25,9 @@ export default class UnionType implements Named, RequiredField, StringSerialize,
 
   public types: Type[];
 
+  public addCustomProperties: WithCustomProperties['addCustomProperties'];
+  public otherProps: WithCustomProperties['otherProps'];
+
   constructor(el: Element, identities: Identities) {
     this.addNamedProps(el);
     this.validateRequiredFields(el, ['type'], this.type);
@@ -36,6 +39,7 @@ export default class UnionType implements Named, RequiredField, StringSerialize,
       .find('./yin:type', ns)
       .filter(isElement)
       .map(typeEl => TypeParser.parse(typeEl, identities));
+    this.addCustomProperties(el, ['type']);
   }
 
   public childTypes(): Type[] {
@@ -48,4 +52,4 @@ export default class UnionType implements Named, RequiredField, StringSerialize,
   }
 }
 
-applyMixins(UnionType, [Named, RequiredField, StringSerialize, Traversable]);
+applyMixins(UnionType, [Named, RequiredField, StringSerialize, Traversable, WithCustomProperties]);
