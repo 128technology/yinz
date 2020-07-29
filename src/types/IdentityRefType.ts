@@ -28,7 +28,8 @@ export default class IdentityRefType implements Named, StringSerialize, Required
   }
 
   public parseType(el: Element, identities: Identities) {
-    const base = el.get('./yin:base', ns)!.attr('name')!.value();
+    const splitVal = el.get('./yin:base', ns)!.attr('name')!.value().split(':');
+    const base = splitVal.length > 1 ? splitVal[1] : splitVal[0];
 
     this.options = identities.getOptions(base);
   }
