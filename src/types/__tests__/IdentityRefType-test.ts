@@ -10,6 +10,11 @@ describe('IdentityRef Type', () => {
       <yin:base name="action-type" />
     </type>
   `);
+  const typeWithPrefixEl = xmlUtil.toElement(`
+    <type ${yinNS} name="identityref">
+      <yin:base name="t128-access:capability-type"/>
+    </type>
+  `);
   const mockIdentitiesEl = xmlUtil.toElement(`
     <mock ${yinNS}>
       <yin:identity name="modify-metric" module-prefix="rp">
@@ -22,6 +27,12 @@ describe('IdentityRef Type', () => {
         <yin:base name="rt:routing-protocol" />
         <yin:description>
           <yin:text>bgp routing protocol</yin:text>
+        </yin:description>
+      </yin:identity>
+      <yin:identity name="config-read" module-prefix="t128-access">
+        <yin:base name="capability-type"/>
+        <yin:description>
+          <yin:text>Configuration Read Capability</yin:text>
         </yin:description>
       </yin:identity>
     </mock>
@@ -53,8 +64,20 @@ describe('IdentityRef Type', () => {
     expect(type.options).to.deep.equal(['rp:modify-metric']);
   });
 
+  it('should get options from identities with type containing prefix', () => {
+    const type = new IdentityRefType(typeWithPrefixEl, mockIdentities);
+
+    expect(type.options).to.deep.equal(['t128-access:config-read']);
+  });
+
   it('should get options if identity does not exist', () => {
     const type = new IdentityRefType(typeEl, emptyIdentities);
+
+    expect(type.options).to.deep.equal([]);
+  });
+
+  it('should get options if identity does not exist and type has prefix', () => {
+    const type = new IdentityRefType(typeWithPrefixEl, emptyIdentities);
 
     expect(type.options).to.deep.equal([]);
   });
