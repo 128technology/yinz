@@ -12,6 +12,7 @@ describe('Custom Properties Mixin', () => {
       <zoo/>
     </type>
   `);
+
   class Test implements WithCustomProperties {
     public otherProps: Map<string, string | boolean>;
     public addCustomProperties: (el: Element, ignoreList: string[]) => void;

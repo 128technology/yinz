@@ -42,11 +42,13 @@ describe('String Type', () => {
 
     expect(type.serialize('foo')).to.equal('foo');
   });
+
   it('should parse text property', () => {
     const type = new StringType(typeEl);
 
     expect(type.otherProps.get('moo')).to.equal(true);
   });
+
   it('should parse presence property', () => {
     const type = new StringType(typeEl);
 
