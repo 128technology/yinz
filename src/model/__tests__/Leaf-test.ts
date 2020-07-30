@@ -126,8 +126,9 @@ describe('Leaf Model', () => {
       expect(leaf.name).to.equal('rekey-interval');
       const expectedType = {
         type: 'union',
+        otherProps: new Map(),
         types: [
-          { type: 'uint32', range: { ranges: [{ min: 1, max: 720 }] } },
+          { type: 'uint32', range: { ranges: [{ min: 1, max: 720 }] }, otherProps: new Map() },
           {
             members: new Map([
               [
@@ -137,7 +138,8 @@ describe('Leaf Model', () => {
                 }
               ]
             ]),
-            type: 'enumeration'
+            type: 'enumeration',
+            otherProps: new Map()
           }
         ]
       };
@@ -155,9 +157,10 @@ describe('Leaf Model', () => {
       expect(leaf.name).to.equal('priority');
       const expectedType = {
         baseType: {
+          otherProps: new Map(),
           type: 'union',
           types: [
-            { type: 'uint32', range: { ranges: [{ min: 0, max: 999999999 }] } },
+            { type: 'uint32', range: { ranges: [{ min: 0, max: 999999999 }] }, otherProps: new Map() },
             {
               members: new Map([
                 [
@@ -173,7 +176,8 @@ describe('Leaf Model', () => {
                   }
                 ]
               ]),
-              type: 'enumeration'
+              type: 'enumeration',
+              otherProps: new Map()
             }
           ]
         },
@@ -200,6 +204,7 @@ describe('Leaf Model', () => {
           length: {
             ranges: [{ min: 0, max: 63 }]
           },
+          otherProps: new Map(),
           pattern: '([a-zA-Z0-9]([a-zA-Z0-9\\-_]){0,61})?[a-zA-Z0-9]',
           type: 'string'
         },

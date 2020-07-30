@@ -6,12 +6,12 @@ import ns from '../util/ns';
 import SerializationType, { convert, SerializationReturnType } from '../enum/SerializationType';
 
 import Range from './Range';
-import { Named, RequiredField } from './mixins';
+import { Named, RequiredField, WithCustomProperties } from './mixins';
 
 const TYPE = BuiltInType.decimal64;
 const SERIALIZATION_TYPE = SerializationType.number;
 
-export default class DecimalType implements Named, RequiredField {
+export default class DecimalType implements Named, RequiredField, WithCustomProperties {
   public static matches(typeName: string) {
     return enumValueOf(typeName) === TYPE;
   }
@@ -22,6 +22,9 @@ export default class DecimalType implements Named, RequiredField {
 
   public range: Range;
   public fractionDigits: number;
+
+  public addCustomProperties: WithCustomProperties['addCustomProperties'];
+  public otherProps: WithCustomProperties['otherProps'];
 
   constructor(el: Element) {
     this.addNamedProps(el);
@@ -38,6 +41,8 @@ export default class DecimalType implements Named, RequiredField {
     }
 
     this.fractionDigits = parseInt(fractionDigitsEl.attr('value')!.value(), 10);
+
+    this.addCustomProperties(el, ['range', 'fraction-digits']);
   }
 
   public serialize(val: string): SerializationReturnType {
@@ -45,4 +50,4 @@ export default class DecimalType implements Named, RequiredField {
   }
 }
 
-applyMixins(DecimalType, [Named, RequiredField]);
+applyMixins(DecimalType, [Named, RequiredField, WithCustomProperties]);

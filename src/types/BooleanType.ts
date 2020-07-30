@@ -3,12 +3,12 @@ import { Element } from 'libxmljs';
 import applyMixins from '../util/applyMixins';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import SerializationType, { convert, SerializationReturnType } from '../enum/SerializationType';
-import { Named } from './mixins';
+import { Named, WithCustomProperties } from './mixins';
 
 const TYPE = BuiltInType.boolean;
 const SERIALIZATION_TYPE = SerializationType.boolean;
 
-export default class BooleanType implements Named {
+export default class BooleanType implements Named, WithCustomProperties {
   public static matches(typeName: string) {
     return enumValueOf(typeName) === TYPE;
   }
@@ -16,8 +16,12 @@ export default class BooleanType implements Named {
   public addNamedProps: Named['addNamedProps'];
   public type: Named['type'];
 
+  public addCustomProperties: WithCustomProperties['addCustomProperties'];
+  public otherProps: WithCustomProperties['otherProps'];
+
   constructor(el: Element) {
     this.addNamedProps(el);
+    this.addCustomProperties(el);
   }
 
   public serialize(val: string): SerializationReturnType {
@@ -25,4 +29,4 @@ export default class BooleanType implements Named {
   }
 }
 
-applyMixins(BooleanType, [Named]);
+applyMixins(BooleanType, [Named, WithCustomProperties]);

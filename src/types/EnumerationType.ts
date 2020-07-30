@@ -6,11 +6,11 @@ import ns from '../util/ns';
 import { isElement } from '../util/xmlUtil';
 
 import EnumerationMemberType from './EnumerationMemberType';
-import { Named, RequiredField, StringSerialize } from './mixins';
+import { Named, RequiredField, StringSerialize, WithCustomProperties } from './mixins';
 
 const TYPE = BuiltInType.enumeration;
 
-export default class EnumerationType implements Named, RequiredField, StringSerialize {
+export default class EnumerationType implements Named, RequiredField, StringSerialize, WithCustomProperties {
   public static matches(typeName: string) {
     return enumValueOf(typeName) === TYPE;
   }
@@ -21,6 +21,9 @@ export default class EnumerationType implements Named, RequiredField, StringSeri
   public validateRequiredFields: RequiredField['validateRequiredFields'];
 
   public members: Map<string, EnumerationMemberType>;
+
+  public addCustomProperties: WithCustomProperties['addCustomProperties'];
+  public otherProps: WithCustomProperties['otherProps'];
 
   get options() {
     return Array.from(this.members.entries())
@@ -42,7 +45,8 @@ export default class EnumerationType implements Named, RequiredField, StringSeri
         (acc, enumEl) => acc.set(enumEl.attr('name')!.value(), new EnumerationMemberType(enumEl)),
         new Map<string, EnumerationMemberType>()
       );
+    this.addCustomProperties(el);
   }
 }
 
-applyMixins(EnumerationType, [Named, RequiredField, StringSerialize]);
+applyMixins(EnumerationType, [Named, RequiredField, StringSerialize, WithCustomProperties]);

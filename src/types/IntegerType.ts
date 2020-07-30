@@ -6,7 +6,7 @@ import ns from '../util/ns';
 import SerializationType, { convert, SerializationReturnType } from '../enum/SerializationType';
 
 import Range from './Range';
-import { Named } from './mixins';
+import { Named, WithCustomProperties } from './mixins';
 
 const TYPES = [
   BuiltInType.int8,
@@ -20,7 +20,7 @@ const TYPES = [
 ];
 const SERIALIZATION_TYPE = SerializationType.number;
 
-export default class IntegerType implements Named {
+export default class IntegerType implements Named, WithCustomProperties {
   public static matches(typeName: string) {
     const type = enumValueOf(typeName);
     return type !== null ? TYPES.indexOf(type) !== -1 : false;
@@ -30,6 +30,9 @@ export default class IntegerType implements Named {
   public type: Named['type'];
 
   public range: Range;
+
+  public addCustomProperties: WithCustomProperties['addCustomProperties'];
+  public otherProps: WithCustomProperties['otherProps'];
 
   constructor(el: Element) {
     this.addNamedProps(el);
@@ -42,6 +45,7 @@ export default class IntegerType implements Named {
     if (rangeEl) {
       this.range = new Range(rangeEl);
     }
+    this.addCustomProperties(el, ['range']);
   }
 
   public serialize(val: string): SerializationReturnType {
@@ -49,4 +53,4 @@ export default class IntegerType implements Named {
   }
 }
 
-applyMixins(IntegerType, [Named]);
+applyMixins(IntegerType, [Named, WithCustomProperties]);
