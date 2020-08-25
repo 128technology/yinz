@@ -55,9 +55,7 @@ describe('List Instance', () => {
   it('should serialize to JSON without skipped fields', () => {
     const instance = new ListInstance(listModel, mockConfigXML, {} as ContainerInstance);
 
-    expect(instance.toJSON(allow, false, true, ins => ins instanceof ListChildInstance)).to.deep.equal({
-      peer: []
-    });
+    expect(instance.toJSON(allow, false, true, ins => ins instanceof ListChildInstance)).to.deep.equal({});
   });
 
   it('should serialize to XML', () => {

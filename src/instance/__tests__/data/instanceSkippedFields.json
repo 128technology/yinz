@@ -409,7 +409,6 @@
         "name": "Fabric128",
         "interNodeSecurity": "internal",
         "group": ["group1", "group2"],
-        "node": [],
         "id": "00000000-0000-0000-0000-000000000000",
         "system": {
           "services": {
