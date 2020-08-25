@@ -1,0 +1,68 @@
+{
+  "authority": {
+    "name": "Authority128",
+    "role": [
+      {
+        "name": "admin",
+        "rule": [
+          "admin-configure"
+        ]
+      },
+      {
+        "name": "user",
+        "rule": [
+          "user-show"
+        ]
+      }
+    ],
+    "rule": [
+      {
+        "name": "admin-configure",
+        "access": "allow",
+        "features": "configure"
+      },
+      {
+        "name": "user-show",
+        "access": "allow",
+        "features": "show-commands"
+      }
+    ],
+    "router": [
+      {
+        "name": "Fabric128",
+        "user": [
+          {
+            "name": "admin",
+            "password": "(removed)",
+            "role": [
+              "admin"
+            ],
+            "enabled": true
+          }
+        ]
+      },
+      {
+        "name": "BasicFabric128",
+        "user": [
+          {
+            "name": "admin",
+            "password": "(removed)",
+            "role": [
+              "admin"
+            ],
+            "enabled": true
+          },
+          {
+            "name": "baseUser",
+            "password": "(removed)",
+            "role": [
+              "user"
+            ],
+            "enabled": true
+          }
+        ]
+      }
+    ],
+    "mode": "moderate"
+  }
+}
