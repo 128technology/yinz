@@ -80,6 +80,6 @@ describe('Authorization Test', () => {
   });
 
   it('should return empty object when not authorized', () => {
-    expect(dataModelInstance.toJSON(() => false)).to.deep.equal({ authority: {} });
+    expect(dataModelInstance.toJSON(() => false)).to.deep.equal({});
   });
 });
