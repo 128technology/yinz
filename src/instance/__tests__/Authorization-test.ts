@@ -8,9 +8,10 @@ import _ = require('lodash');
 
 function accessToRouter(routerName: string) {
   return (i: any) => {
+    const instancePath = i.getPath();
     return (
-      i.getPath().filter((v: any) => _.isEqual(v, { name: 'router', keys: [{ key: 'name', value: routerName }] }))
-        .length > 0
+      instancePath.filter((v: any) => _.isEqual(v, { name: 'router', keys: [{ key: 'name', value: routerName }] }))
+        .length > 0 || _.isEqual(instancePath, [{ name: 'authority' }])
     );
   };
 }

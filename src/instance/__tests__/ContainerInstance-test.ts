@@ -59,7 +59,9 @@ describe('Container Instance', () => {
   it('should delete a child that exists', () => {
     const instance = new ContainerInstance(leafModel, mockConfigXML, null);
     instance.delete('state');
-    expect(instance.toJSON(allow)).to.deep.equal({});
+    expect(instance.toJSON(allow)).to.deep.equal({
+      bfd: {}
+    });
   });
 
   it('should throw if child does not exist', () => {
