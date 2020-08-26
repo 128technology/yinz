@@ -99,9 +99,8 @@ export default class ListInstance implements Searchable {
         value.push(child.toJSON(authorized, camelCase, convert));
       }
     }
-    return {
-      [this.model.getName(camelCase)]: value
-    };
+    const returnVal = value.filter(item => !_.isEmpty(item));
+    return _.isEmpty(returnVal) ? {} : { [this.model.getName(camelCase)]: returnVal };
   }
 
   public mapToJSON(

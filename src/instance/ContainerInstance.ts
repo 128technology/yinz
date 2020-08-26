@@ -103,6 +103,10 @@ export default class ContainerInstance implements Searchable, WithAttributes {
     convert = true,
     shouldSkip?: ShouldSkip
   ): ContainerJSONValue {
+    if (!authorized(this)) {
+      return {};
+    }
+
     const containerInner = [...this.children.values()].reduce(
       (acc, child) => Object.assign(acc, child.toJSON(authorized, camelCase, convert, shouldSkip)),
       {}

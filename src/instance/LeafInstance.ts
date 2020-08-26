@@ -81,6 +81,10 @@ export default class LeafInstance implements Searchable, WithAttributes {
   }
 
   public toJSON(authorized: Authorized, camelCase = false, convert = true): { [name: string]: LeafJSONValue } {
+    if (!authorized(this)) {
+      return {};
+    }
+
     return {
       [this.model.getName(camelCase)]: convert ? this.getConvertedValue(authorized) : this.getValue(authorized)
     };

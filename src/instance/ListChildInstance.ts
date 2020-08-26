@@ -198,6 +198,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
           ? field.toJSON(authorized, camelCase, convert)
           : field.toJSON(authorized, camelCase, convert, shouldSkip)
       )
+      .filter(item => !_.isEmpty(item))
       .reduce((acc, field) => Object.assign(acc, field), {});
   }
 

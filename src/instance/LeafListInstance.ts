@@ -65,6 +65,10 @@ export default class LeafListInstance implements Searchable {
   }
 
   public toJSON(authorized: Authorized, camelCase = false, convert = true): { [name: string]: LeafListJSONValue } {
+    if (!authorized(this)) {
+      return {};
+    }
+
     return {
       [this.model.getName(camelCase)]: convert ? this.getValues(authorized) : this.getRawValues(authorized)
     };
