@@ -39,7 +39,7 @@ export default class LeafInstance implements Searchable, WithAttributes {
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
 
-  private config: Element;
+  private config?: Element;
   private value: string | null;
 
   constructor(model: Leaf, config: Element | LeafJSON, parent: Parent) {

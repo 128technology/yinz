@@ -71,6 +71,17 @@ export interface IAttribute {
   href?: string;
 }
 
+export interface IJSONModeEvaluators {
+  evaluateWhenCondition: (path: Path) => Promise<boolean>;
+  evaluateLeafRef: (path: Path) => Promise<string[]>;
+  evaluateSuggestionRef: (path: Path) => Promise<string[]>;
+  resolveLeafRefPath: (path: Path) => Promise<Path>;
+}
+
+export interface IInstanceOptions {
+  jsonMode?: IJSONModeEvaluators;
+}
+
 export type Visitor = (instance: Instance | LeafListChildInstance) => void;
 export type NoMatchHandler = (instance: Instance, remainingPath: Path) => any;
 export type Parent = ListChildInstance | ContainerInstance;
