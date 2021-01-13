@@ -56,7 +56,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   public handleNoMatch: Searchable['handleNoMatch'];
 
   private instance: Map<ChildName, Instance>;
-  private config: Element;
+  private config?: Element;
 
   constructor(model: List, config: Element | ListChildJSON, parent: Parent, listParent: ListInstance) {
     this.model = model;

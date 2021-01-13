@@ -17,7 +17,15 @@ import {
   LeafListInstance,
   ShouldSkip
 } from './';
-import { XMLSerializationOptions, ContainerJSON, Instance, JSONMapper, MapToJSONOptions, Authorized } from './types';
+import {
+  XMLSerializationOptions,
+  ContainerJSON,
+  Instance,
+  JSONMapper,
+  MapToJSONOptions,
+  Authorized,
+  IInstanceOptions
+} from './types';
 import {
   getPathXPath,
   getFieldIdFromParentAxis,
@@ -28,14 +36,17 @@ import {
   allow,
   getDefaultMapper
 } from './util';
+import NoDomError from '../util/noDomError';
 
 export default class DataModelInstance {
   public rawInstance: Element;
-  public model: DataModel;
   public root: Map<string, ContainerInstance>;
 
-  constructor(model: DataModel, instance: Element | { [rootName: string]: ContainerJSON }) {
-    this.model = model;
+  constructor(
+    public model: DataModel,
+    instance: Element | { [rootName: string]: ContainerJSON },
+    private options?: IInstanceOptions
+  ) {
     this.root = new Map();
 
     const rootName = [...model.root.keys()][0];
@@ -46,19 +57,22 @@ export default class DataModelInstance {
       this.root.set(rootName, new ContainerInstance(modelRoot, instance.get('./*[1]')!, null));
     } else {
       this.root.set(rootName, new ContainerInstance(modelRoot, Object.values(instance)[0], null));
-      this.rawInstance = this.toXML().root()!;
 
-      this.visit(instanceToVisit => {
-        if (
-          instanceToVisit instanceof ListChildInstance ||
-          instanceToVisit instanceof LeafListChildInstance ||
-          instanceToVisit instanceof LeafInstance ||
-          instanceToVisit instanceof ContainerInstance
-        ) {
-          const xPath = getPathXPath(instanceToVisit.getPath());
-          instanceToVisit.setConfig(this.rawInstance.get(xPath, this.model.namespaces)!);
-        }
-      });
+      if (!options?.jsonMode) {
+        this.rawInstance = this.toXML().root()!;
+
+        this.visit(instanceToVisit => {
+          if (
+            instanceToVisit instanceof ListChildInstance ||
+            instanceToVisit instanceof LeafListChildInstance ||
+            instanceToVisit instanceof LeafInstance ||
+            instanceToVisit instanceof ContainerInstance
+          ) {
+            const xPath = getPathXPath(instanceToVisit.getPath());
+            instanceToVisit.setConfig(this.rawInstance.get(xPath, this.model.namespaces)!);
+          }
+        });
+      }
     }
   }
 
@@ -86,11 +100,20 @@ export default class DataModelInstance {
     }
   }
 
-  public resolveLeafRefPath(path: Path): Path {
+  public async resolveLeafRefPath(path: Path) {
+    if (this.options?.jsonMode) {
+      return this.options?.jsonMode.resolveLeafRefPath(path);
+    }
+
     const instance = this.getInstance(path) as LeafInstance;
+    const config = instance.getConfig(allow);
+
+    if (!config) {
+      throw new NoDomError();
+    }
+
     const { model } = instance;
     const value = instance.getValue(allow);
-    const config = instance.getConfig(allow);
     const sourceType = model.getResolvedType();
 
     if (sourceType instanceof LeafRefType) {
@@ -124,10 +147,14 @@ export default class DataModelInstance {
    * doesn't matter is almost all cases because if a choice itself has a when which is false, then no case
    * can be set, and thus the children could never be displayed.
    */
-  public evaluateWhenCondition(path: Path) {
+  public async evaluateWhenCondition(path: Path) {
     const model = this.model.getModelForPath(path.map(({ name }) => name).join('.')) as Model;
     if (!model.hasWhenAncestorOrSelf) {
       return true;
+    }
+
+    if (this.options?.jsonMode) {
+      return this.options?.jsonMode.evaluateWhenCondition(path);
     }
 
     const { element, cleanUp } = this.getElementForPath(path);
@@ -162,23 +189,11 @@ export default class DataModelInstance {
     }
   }
 
-  public evaluateXPath(path: Path, xPath: string) {
-    const targetXPath = getPathXPath(path);
-
-    const { element, cleanUp } = this.getElementForPath(path);
-
-    try {
-      const result = element!.get(targetXPath)!.find(xPath, this.model.namespaces).filter(isElement);
-
-      cleanUp();
-      return result;
-    } catch (e) {
-      cleanUp();
-      throw e;
+  public async evaluateLeafRef(path: Path) {
+    if (this.options?.jsonMode) {
+      return this.options?.jsonMode.evaluateLeafRef(path);
     }
-  }
 
-  public evaluateLeafRef(path: Path) {
     const model = this.model.getModelForPath(path.map(({ name }) => name).join('.'));
     if ((model instanceof Leaf || model instanceof LeafList) && model.getResolvedType() instanceof LeafRefType) {
       const leafRefPath = (model.getResolvedType() as LeafRefType).path;
@@ -200,7 +215,11 @@ export default class DataModelInstance {
     }
   }
 
-  public evaluateSuggestionRef(path: Path) {
+  public async evaluateSuggestionRef(path: Path) {
+    if (this.options?.jsonMode) {
+      return this.options?.jsonMode.evaluateSuggestionRef(path);
+    }
+
     const model = this.model.getModelForPath(path.map(({ name }) => name).join('.'));
 
     if (model instanceof Leaf || model instanceof LeafList) {

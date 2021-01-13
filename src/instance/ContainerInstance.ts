@@ -44,7 +44,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
 
-  private config: Element;
+  private config?: Element;
   private children: Map<string, Instance>;
 
   constructor(model: Container, config: Element | ContainerJSON, parent: Parent | null) {

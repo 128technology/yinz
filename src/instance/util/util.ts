@@ -12,6 +12,7 @@ import {
   LeafListInstance
 } from '../';
 import { JSONMapper, Authorized } from '../types';
+import NoDomError from '../../util/noDomError';
 
 export * from './leafRefUtil';
 
@@ -51,6 +52,10 @@ export function addEmptyTree(remainingPath: Path, model: DataModel, closestAnces
   } else {
     closestXml = closestAncestor.parent.getConfig(allow)!;
     modelPath = closestAncestor.parent.model.path;
+  }
+
+  if (!closestXml) {
+    throw new NoDomError();
   }
 
   let walkRef = closestXml;

@@ -312,20 +312,9 @@ describe('Data Model Instance', () => {
       });
     });
 
-    describe('#evaluateXPath()', () => {
-      it('evaluate an XPath at a Path', () => {
-        const result = dataModelInstance.evaluateXPath(
-          [{ name: 'authority' }],
-          './svc:session-type[svc:name = "HTTP"]/svc:name'
-        );
-
-        expect(result[0].text()).to.equal('HTTP');
-      });
-    });
-
     describe('#resolveLeafRefPath()', () => {
       describe('absolute leafrefs', () => {
-        it('should follow reference to leafref', () => {
+        it('should follow reference to leafref', async () => {
           // Example leaf ref:
           // authority::router::inter-node-security -> authority::security
           // <yin:path value="/t128:config/authy:authority/authy:security/authy:name"/>
@@ -345,13 +334,13 @@ describe('Data Model Instance', () => {
             { name: 'name' }
           ];
 
-          const actualLeafRefPath = dataModelInstance.resolveLeafRefPath(searchPath);
+          const actualLeafRefPath = await dataModelInstance.resolveLeafRefPath(searchPath);
           expect(actualLeafRefPath).to.deep.equal(expectedLeafRefPath);
         });
       });
 
       describe('simple relative leaf refs', () => {
-        it('should follow reference to leafref', () => {
+        it('should follow reference to leafref', async () => {
           // Example leaf ref:
           // router::system::services::server::webserver::node-name -> authority::router::node
           // <yin:path value="../../../../../sys:node/sys:name"/>
@@ -376,11 +365,11 @@ describe('Data Model Instance', () => {
             { name: 'name' }
           ];
 
-          const actualLeafRefPath = dataModelInstance.resolveLeafRefPath(searchPath);
+          const actualLeafRefPath = await dataModelInstance.resolveLeafRefPath(searchPath);
           expect(actualLeafRefPath).to.deep.equal(expectedLeafRefPath);
         });
 
-        it('should handle missing leafref instance', () => {
+        it('should handle missing leafref instance', async () => {
           const ns = {
             authy: 'http://128technology.com/t128/config/authority-config',
             sys: 'http://128technology.com/t128/config/system-config',
@@ -415,8 +404,14 @@ describe('Data Model Instance', () => {
 
           expect((leaf as LeafInstance).toJSON(allow)).to.deep.equal({ 'node-name': 'TestNode2' });
 
-          const toTest = dataModelInstance.resolveLeafRefPath.bind(dataModelInstance, searchPath, 'TestNode2');
-          expect(toTest).to.throw(Error, 'Referenced entity not found. Has it been deleted?');
+          try {
+            await dataModelInstance.resolveLeafRefPath(searchPath);
+            expect(true).to.equal(false, 'Expected error was not thrown');
+          } catch (e) {
+            expect(() => {
+              throw e;
+            }).to.throw(Error, 'Referenced entity not found. Has it been deleted?');
+          }
         });
       });
 
@@ -442,7 +437,7 @@ describe('Data Model Instance', () => {
           dataModelInstance = new DataModelInstance(dataModel, testConfig);
         });
 
-        it('finds first list member', () => {
+        it('finds first list member', async () => {
           const searchPath = [
             { name: 'authority' },
             { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
@@ -469,11 +464,11 @@ describe('Data Model Instance', () => {
             { name: 'name' }
           ];
 
-          const actualLeafRefPath = dataModelInstance.resolveLeafRefPath(searchPath);
+          const actualLeafRefPath = await dataModelInstance.resolveLeafRefPath(searchPath);
           expect(actualLeafRefPath).to.deep.equal(expectedLeafRefPath);
         });
 
-        it('finds second list member', () => {
+        it('finds second list member', async () => {
           const searchPath = [
             { name: 'authority' },
             { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
@@ -500,7 +495,7 @@ describe('Data Model Instance', () => {
             { name: 'name' }
           ];
 
-          const actualLeafRefPath = dataModelInstance.resolveLeafRefPath(searchPath);
+          const actualLeafRefPath = await dataModelInstance.resolveLeafRefPath(searchPath);
           expect(actualLeafRefPath).to.deep.equal(expectedLeafRefPath);
         });
       });
@@ -556,7 +551,7 @@ describe('Data Model Instance', () => {
   });
 
   describe('When Condition Evaluation', () => {
-    it('should evaluate a true when condition', () => {
+    it('should evaluate a true when condition', async () => {
       const dataModelInstance = getInstance('./data/when/interfaceInstanceTrue.xml');
       const whenPath = [
         { name: 'authority' },
@@ -567,11 +562,11 @@ describe('Data Model Instance', () => {
         { name: 'user-name' }
       ];
 
-      const result = dataModelInstance.evaluateWhenCondition(whenPath);
+      const result = await dataModelInstance.evaluateWhenCondition(whenPath);
       expect(result).to.equal(true);
     });
 
-    it('should evaluate a false when condition', () => {
+    it('should evaluate a false when condition', async () => {
       const dataModelInstance = getInstance('./data/when/interfaceInstanceFalse.xml');
       const whenPath = [
         { name: 'authority' },
@@ -582,11 +577,11 @@ describe('Data Model Instance', () => {
         { name: 'user-name' }
       ];
 
-      const result = dataModelInstance.evaluateWhenCondition(whenPath);
+      const result = await dataModelInstance.evaluateWhenCondition(whenPath);
       expect(result).to.equal(false);
     });
 
-    it('should evaluate a false when condition on a list', () => {
+    it('should evaluate a false when condition on a list', async () => {
       const dataModelInstance = getInstance('./data/when/interfaceListFalse.xml');
       const whenPath = [
         { name: 'authority' },
@@ -595,11 +590,11 @@ describe('Data Model Instance', () => {
         { name: 'device-interface' }
       ];
 
-      const result = dataModelInstance.evaluateWhenCondition(whenPath);
+      const result = await dataModelInstance.evaluateWhenCondition(whenPath);
       expect(result).to.equal(false);
     });
 
-    it('should evaluate a true when condition on a list', () => {
+    it('should evaluate a true when condition on a list', async () => {
       const dataModelInstance = getInstance('./data/when/interfaceListTrue.xml');
       const whenPath = [
         { name: 'authority' },
@@ -608,11 +603,11 @@ describe('Data Model Instance', () => {
         { name: 'device-interface' }
       ];
 
-      const result = dataModelInstance.evaluateWhenCondition(whenPath);
+      const result = await dataModelInstance.evaluateWhenCondition(whenPath);
       expect(result).to.equal(true);
     });
 
-    it('should handle true when statements with a parent context-node', () => {
+    it('should handle true when statements with a parent context-node', async () => {
       const dataModelInstance = getInstance('./data/when/contextNodeTrue.xml');
       const base = [
         { name: 'authority' },
@@ -623,13 +618,13 @@ describe('Data Model Instance', () => {
       const whenPathLocal = [...base, { name: 'local-as' }];
       const whenPathHold = [...base, { name: 'timers' }, { name: 'hold-time' }];
 
-      [whenPathLocal, whenPathHold].forEach(whenPath => {
-        const result = dataModelInstance.evaluateWhenCondition(whenPath);
+      [whenPathLocal, whenPathHold].forEach(async whenPath => {
+        const result = await dataModelInstance.evaluateWhenCondition(whenPath);
         expect(result).to.equal(true);
       });
     });
 
-    it('should handle false when statements with a parent context-node', () => {
+    it('should handle false when statements with a parent context-node', async () => {
       const dataModelInstance = getInstance('./data/when/contextNodeFalse.xml');
       const whenPath = [
         { name: 'authority' },
@@ -639,11 +634,11 @@ describe('Data Model Instance', () => {
         { name: 'local-as' }
       ];
 
-      const result = dataModelInstance.evaluateWhenCondition(whenPath);
+      const result = await dataModelInstance.evaluateWhenCondition(whenPath);
       expect(result).to.equal(false);
     });
 
-    it('should handle a true when condition on a choice', () => {
+    it('should handle a true when condition on a choice', async () => {
       const dataModelInstance = getInstance('./data/when/choiceWhenTrue.xml');
       const whenPath = [
         { name: 'authority' },
@@ -654,11 +649,11 @@ describe('Data Model Instance', () => {
         { name: 'set-community-type' }
       ];
 
-      const result = dataModelInstance.evaluateWhenCondition(whenPath);
+      const result = await dataModelInstance.evaluateWhenCondition(whenPath);
       expect(result).to.equal(true);
     });
 
-    it('should handle a false when condition on a choice', () => {
+    it('should handle a false when condition on a choice', async () => {
       const dataModelInstance = getInstance('./data/when/choiceWhenFalse.xml');
       const whenPath = [
         { name: 'authority' },
@@ -669,11 +664,11 @@ describe('Data Model Instance', () => {
         { name: 'set-community-type' }
       ];
 
-      const result = dataModelInstance.evaluateWhenCondition(whenPath);
+      const result = await dataModelInstance.evaluateWhenCondition(whenPath);
       expect(result).to.equal(false);
     });
 
-    it('should handle a choice where a parent node has a true when clause', () => {
+    it('should handle a choice where a parent node has a true when clause', async () => {
       const dataModelInstance = getInstance('./data/when/choiceWhenParentTrue.xml');
       const whenPath = [
         { name: 'authority' },
@@ -686,11 +681,11 @@ describe('Data Model Instance', () => {
         { name: 'source' }
       ];
 
-      const result = dataModelInstance.evaluateWhenCondition(whenPath);
+      const result = await dataModelInstance.evaluateWhenCondition(whenPath);
       expect(result).to.equal(true);
     });
 
-    it('should handle a choice where a parent node has a false when clause', () => {
+    it('should handle a choice where a parent node has a false when clause', async () => {
       const dataModelInstance = getInstance('./data/when/choiceWhenParentFalse.xml');
       const whenPath = [
         { name: 'authority' },
@@ -703,13 +698,13 @@ describe('Data Model Instance', () => {
         { name: 'source' }
       ];
 
-      const result = dataModelInstance.evaluateWhenCondition(whenPath);
+      const result = await dataModelInstance.evaluateWhenCondition(whenPath);
       expect(result).to.equal(false);
     });
   });
 
   describe('LeafRef Evaluation', () => {
-    it('should evaluate an absolute leafref', () => {
+    it('should evaluate an absolute leafref', async () => {
       const dataModelInstance = getInstance('./data/instance.xml');
       const leafRefPath = [
         { name: 'authority' },
@@ -717,11 +712,11 @@ describe('Data Model Instance', () => {
         { name: 'inter-node-security' }
       ];
 
-      const result = dataModelInstance.evaluateLeafRef(leafRefPath);
+      const result = await dataModelInstance.evaluateLeafRef(leafRefPath);
       expect(result).to.deep.equal(['internal']);
     });
 
-    it('should evaluate a leafref on a leaf list', () => {
+    it('should evaluate a leafref on a leaf list', async () => {
       const dataModelInstance = getInstance('./data/instanceLeafListReference.xml');
       const leafRefPath = [
         { name: 'authority' },
@@ -730,11 +725,11 @@ describe('Data Model Instance', () => {
         { name: 'next-peer' }
       ];
 
-      const result = dataModelInstance.evaluateLeafRef(leafRefPath);
+      const result = await dataModelInstance.evaluateLeafRef(leafRefPath);
       expect(result).to.deep.equal(['testPeer']);
     });
 
-    it('should evaluate an absolute leafref if no context node in instance', () => {
+    it('should evaluate an absolute leafref if no context node in instance', async () => {
       const dataModelInstance = getInstance('./data/instance.xml');
       const leafRefPath = [
         { name: 'authority' },
@@ -742,11 +737,11 @@ describe('Data Model Instance', () => {
         { name: 'inter-node-security' }
       ];
 
-      const result = dataModelInstance.evaluateLeafRef(leafRefPath);
+      const result = await dataModelInstance.evaluateLeafRef(leafRefPath);
       expect(result).to.deep.equal(['internal']);
     });
 
-    it('should evaluate an absolute leafref if no references exist', () => {
+    it('should evaluate an absolute leafref if no references exist', async () => {
       const dataModelInstance = getInstance('./data/instance.xml');
       const leafRefPath = [
         { name: 'authority' },
@@ -757,11 +752,11 @@ describe('Data Model Instance', () => {
         { name: 'traffic-profile' }
       ];
 
-      const result = dataModelInstance.evaluateLeafRef(leafRefPath);
+      const result = await dataModelInstance.evaluateLeafRef(leafRefPath);
       expect(result).to.deep.equal([]);
     });
 
-    it('should evaluate a relative leafref if no context node in instance', () => {
+    it('should evaluate a relative leafref if no context node in instance', async () => {
       const dataModelInstance = getInstance('./data/instanceNonUniqueNetworkIntf.xml');
       const leafRefPath = [
         { name: 'authority' },
@@ -773,12 +768,12 @@ describe('Data Model Instance', () => {
         { name: 'peer' }
       ];
 
-      const result = dataModelInstance.evaluateLeafRef(leafRefPath);
+      const result = await dataModelInstance.evaluateLeafRef(leafRefPath);
       expect(result).to.deep.equal(['foo']);
     });
   });
 
-  it('should evaluate a relative leafref from a key field', () => {
+  it('should evaluate a relative leafref from a key field', async () => {
     const dataModelInstance = getInstance('./data/instanceNonUniqueNetworkIntf.xml');
     const leafRefPath = [
       { name: 'authority' },
@@ -794,12 +789,12 @@ describe('Data Model Instance', () => {
       { name: 'node-name' }
     ];
 
-    const result = dataModelInstance.evaluateLeafRef(leafRefPath);
+    const result = await dataModelInstance.evaluateLeafRef(leafRefPath);
     expect(result).to.deep.equal(['TestNode1', 'TestNode2']);
   });
 
   describe('SuggestionRef Evaluation', () => {
-    it('should evaluate a suggestionref', () => {
+    it('should evaluate a suggestionref', async () => {
       const dataModelInstance = getInstance('./data/instanceNonUniqueNetworkIntf.xml');
       const leafRefPath = [
         { name: 'authority' },
@@ -808,11 +803,11 @@ describe('Data Model Instance', () => {
         { name: 'authority-name' }
       ];
 
-      const result = dataModelInstance.evaluateSuggestionRef(leafRefPath);
+      const result = await dataModelInstance.evaluateSuggestionRef(leafRefPath);
       expect(result).to.deep.equal(['Authority128', 'foreignAuthority']);
     });
 
-    it('should handle a circular suggestionref', () => {
+    it('should handle a circular suggestionref', async () => {
       const dataModelInstance = getInstance('./data/instanceCircularSuggestionRef.xml');
       const leafRefPath = [
         { name: 'authority' },
@@ -821,7 +816,7 @@ describe('Data Model Instance', () => {
         { name: 'authority-name' }
       ];
 
-      const result = dataModelInstance.evaluateSuggestionRef(leafRefPath);
+      const result = await dataModelInstance.evaluateSuggestionRef(leafRefPath);
       expect(result).to.deep.equal(['Authority128', 'foreignAuthority']);
     });
   });

@@ -21,7 +21,7 @@ export default class LeafListChildInstance implements WithAttributes {
   public addOperation: WithAttributes['addOperation'];
   public addPosition: WithAttributes['addPosition'];
 
-  private config: Element;
+  private config?: Element;
   private rawValue: string;
 
   constructor(model: LeafList, config: Element | LeafJSON, parent: LeafListInstance) {
