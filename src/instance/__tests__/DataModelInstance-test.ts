@@ -12,6 +12,7 @@ import DataModelInstance, {
   ListChildInstance
 } from '../';
 import { allow } from '../util';
+import { IJSONModeEvaluators } from '../types';
 
 export function readDataModel(filepath: string) {
   const modelText = fs.readFileSync(path.join(__dirname, filepath), 'utf-8');
@@ -41,6 +42,19 @@ describe('Data Model Instance', () => {
     const instance = readConfigFile(instancePath);
     const config = instance.get('//t128:config', { t128: 'http://128technology.com/t128' })!;
     return new DataModelInstance(dataModel, config);
+  }
+
+  function getInstanceJsonOnlyMode(
+    instancePath: string,
+    evaluators: IJSONModeEvaluators = {
+      evaluateWhenCondition: async () => false,
+      evaluateLeafRef: async () => ['testLeafRef'],
+      evaluateSuggestionRef: async () => ['testSuggestionRef'],
+      resolveLeafRefPath: async () => [{ name: 'goo' }]
+    }
+  ) {
+    const instanceRawJSON = readJSON(instancePath);
+    return new DataModelInstance(dataModel, instanceRawJSON, { jsonMode: evaluators });
   }
 
   describe('T128 Model', () => {
@@ -551,6 +565,18 @@ describe('Data Model Instance', () => {
   });
 
   describe('When Condition Evaluation', () => {
+    it('should return true if leaf has no applicable whens', async () => {
+      const dataModelInstance = getInstance('./data/when/interfaceInstanceTrue.xml');
+      const whenPath = [
+        { name: 'authority' },
+        { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
+        { name: 'name' }
+      ];
+
+      const result = await dataModelInstance.evaluateWhenCondition(whenPath);
+      expect(result).to.equal(true);
+    });
+
     it('should evaluate a true when condition', async () => {
       const dataModelInstance = getInstance('./data/when/interfaceInstanceTrue.xml');
       const whenPath = [
@@ -809,15 +835,80 @@ describe('Data Model Instance', () => {
 
     it('should handle a circular suggestionref', async () => {
       const dataModelInstance = getInstance('./data/instanceCircularSuggestionRef.xml');
-      const leafRefPath = [
+      const path = [
         { name: 'authority' },
         { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
         { name: 'peer', keys: [{ key: 'name', value: 'bar' }] },
         { name: 'authority-name' }
       ];
 
-      const result = await dataModelInstance.evaluateSuggestionRef(leafRefPath);
+      const result = await dataModelInstance.evaluateSuggestionRef(path);
       expect(result).to.deep.equal(['Authority128', 'foreignAuthority']);
+    });
+  });
+
+  describe('JSON Only Mode', () => {
+    it('should use provided method for leafref evaluation', async () => {
+      const dataModelInstance = getInstanceJsonOnlyMode('./data/instance.json');
+      const leafRefPath = [
+        { name: 'authority' },
+        { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
+        { name: 'test' }
+      ];
+
+      const result = await dataModelInstance.evaluateLeafRef(leafRefPath);
+      expect(result).to.deep.equal(['testLeafRef']);
+    });
+
+    it('should use provided method for suggestionref evaluation', async () => {
+      const dataModelInstance = getInstanceJsonOnlyMode('./data/instance.json');
+      const path = [
+        { name: 'authority' },
+        { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
+        { name: 'test' }
+      ];
+
+      const result = await dataModelInstance.evaluateSuggestionRef(path);
+      expect(result).to.deep.equal(['testSuggestionRef']);
+    });
+
+    it('should still immediately return true if leaf has no applicable whens', async () => {
+      const dataModelInstance = getInstanceJsonOnlyMode('./data/instance.json');
+      const path = [
+        { name: 'authority' },
+        { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
+        { name: 'name' }
+      ];
+
+      const result = await dataModelInstance.evaluateWhenCondition(path);
+      expect(result).to.equal(true);
+    });
+
+    it('should use provided method for when evaluation', async () => {
+      const dataModelInstance = getInstanceJsonOnlyMode('./data/instance.json');
+      const path = [
+        { name: 'authority' },
+        { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
+        { name: 'node', keys: [{ key: 'name', value: 'TestNode1' }] },
+        { name: 'device-interface', keys: [{ key: 'name', value: '0' }] },
+        { name: 'pppoe' },
+        { name: 'user-name' }
+      ];
+
+      const result = await dataModelInstance.evaluateWhenCondition(path);
+      expect(result).to.deep.equal(false);
+    });
+
+    it('should use provided method for leafref following', async () => {
+      const dataModelInstance = getInstanceJsonOnlyMode('./data/instance.json');
+      const path = [
+        { name: 'authority' },
+        { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
+        { name: 'test' }
+      ];
+
+      const result = await dataModelInstance.resolveLeafRefPath(path);
+      expect(result).to.deep.equal([{ name: 'goo' }]);
     });
   });
 });
