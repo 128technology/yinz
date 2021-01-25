@@ -835,14 +835,13 @@ describe('Data Model Instance', () => {
 
     it('should handle a circular suggestionref', async () => {
       const dataModelInstance = getInstance('./data/instanceCircularSuggestionRef.xml');
-      const path = [
+      const result = await dataModelInstance.evaluateSuggestionRef([
         { name: 'authority' },
         { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
         { name: 'peer', keys: [{ key: 'name', value: 'bar' }] },
         { name: 'authority-name' }
-      ];
+      ]);
 
-      const result = await dataModelInstance.evaluateSuggestionRef(path);
       expect(result).to.deep.equal(['Authority128', 'foreignAuthority']);
     });
   });
