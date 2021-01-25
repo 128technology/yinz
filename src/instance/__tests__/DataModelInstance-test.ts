@@ -850,64 +850,59 @@ describe('Data Model Instance', () => {
   describe('JSON Only Mode', () => {
     it('should use provided method for leafref evaluation', async () => {
       const dataModelInstance = getInstanceJsonOnlyMode('./data/instance.json');
-      const leafRefPath = [
+      const result = await dataModelInstance.evaluateLeafRef([
         { name: 'authority' },
         { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
         { name: 'test' }
-      ];
+      ]);
 
-      const result = await dataModelInstance.evaluateLeafRef(leafRefPath);
       expect(result).to.deep.equal(['testLeafRef']);
     });
 
     it('should use provided method for suggestionref evaluation', async () => {
       const dataModelInstance = getInstanceJsonOnlyMode('./data/instance.json');
-      const path = [
+      const result = await dataModelInstance.evaluateSuggestionRef([
         { name: 'authority' },
         { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
         { name: 'test' }
-      ];
+      ]);
 
-      const result = await dataModelInstance.evaluateSuggestionRef(path);
       expect(result).to.deep.equal(['testSuggestionRef']);
     });
 
     it('should still immediately return true if leaf has no applicable whens', async () => {
       const dataModelInstance = getInstanceJsonOnlyMode('./data/instance.json');
-      const path = [
+      const result = await dataModelInstance.evaluateWhenCondition([
         { name: 'authority' },
         { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
         { name: 'name' }
-      ];
+      ]);
 
-      const result = await dataModelInstance.evaluateWhenCondition(path);
       expect(result).to.equal(true);
     });
 
     it('should use provided method for when evaluation', async () => {
       const dataModelInstance = getInstanceJsonOnlyMode('./data/instance.json');
-      const path = [
+      const result = await dataModelInstance.evaluateWhenCondition([
         { name: 'authority' },
         { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
         { name: 'node', keys: [{ key: 'name', value: 'TestNode1' }] },
         { name: 'device-interface', keys: [{ key: 'name', value: '0' }] },
         { name: 'pppoe' },
         { name: 'user-name' }
-      ];
+      ]);
 
-      const result = await dataModelInstance.evaluateWhenCondition(path);
       expect(result).to.deep.equal(false);
     });
 
     it('should use provided method for leafref following', async () => {
       const dataModelInstance = getInstanceJsonOnlyMode('./data/instance.json');
-      const path = [
+      const result = await dataModelInstance.resolveLeafRefPath([
         { name: 'authority' },
         { name: 'router', keys: [{ key: 'name', value: 'Fabric128' }] },
         { name: 'test' }
-      ];
+      ]);
 
-      const result = await dataModelInstance.resolveLeafRefPath(path);
       expect(result).to.deep.equal([{ name: 'goo' }]);
     });
   });
