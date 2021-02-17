@@ -44,6 +44,21 @@ describe('List Instance', () => {
     expect(child).to.be.an.instanceOf(ListChildInstance);
   });
 
+  it('should be able to delete a child', () => {
+    const instance = new ListInstance(listModel, mockConfigXML, {} as ContainerInstance);
+
+    const newItemXML = xmlUtil.toElement(`
+      <test:peer xmlns:test="http://foo.bar">
+        <test:name>bar</test:name>
+      </test:peer>
+    `);
+
+    instance.add(newItemXML);
+    instance.delete('foo');
+
+    expect(instance.getChildren(allow).size).to.equal(1);
+  });
+
   it('should serialize to JSON', () => {
     const instance = new ListInstance(listModel, mockConfigXML, {} as ContainerInstance);
 

@@ -81,6 +81,10 @@ export default class ListInstance implements Searchable {
     this.children.set(keys, newChild);
   }
 
+  public delete(key: Key) {
+    this.children.delete(key);
+  }
+
   public toJSON(
     authorized: Authorized,
     camelCase = false,
