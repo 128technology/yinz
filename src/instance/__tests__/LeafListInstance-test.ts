@@ -36,6 +36,19 @@ describe('Leaf List Instance', () => {
     expect(instance.getValues(allow)).to.deep.equal(['foo', 'bar']);
   });
 
+  it('should be able to delete', () => {
+    const instance = new LeafListInstance(leafListModel, mockConfigXML, {} as ContainerInstance);
+
+    const newItemXML = xmlUtil.toElement(`
+      <test:vector xmlns:test="http://foo.bar">bar</test:vector>
+    `);
+
+    instance.add(newItemXML);
+    instance.delete(allow, 'foo');
+
+    expect(instance.toJSON(allow).vector).to.deep.equal(['bar']);
+  });
+
   it('should serialize to JSON', () => {
     const instance = new LeafListInstance(leafListModel, mockConfigXML, {} as ContainerInstance);
 
