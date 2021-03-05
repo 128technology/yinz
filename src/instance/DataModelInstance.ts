@@ -165,9 +165,9 @@ export default class DataModelInstance {
       while (modelRoot && modelRoot.parentModel) {
         if (modelRoot.when) {
           for (const when of modelRoot.when) {
-            const { condition, context } = when;
+            const { condition, context: whenContext } = when;
             const contextNode =
-              context === ContextNode.parent || modelRoot instanceof Choice ? instanceRoot!.parent() : instanceRoot;
+              whenContext === ContextNode.parent || modelRoot instanceof Choice ? instanceRoot!.parent() : instanceRoot;
             const result = contextNode!.get(condition, this.model.namespaces);
 
             if (!result) {
