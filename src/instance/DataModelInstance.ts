@@ -100,9 +100,9 @@ export default class DataModelInstance {
     }
   }
 
-  public async resolveLeafRefPath(path: Path) {
+  public async resolveLeafRefPath(path: Path, context?: unknown) {
     if (this.options?.jsonMode) {
-      return this.options?.jsonMode.resolveLeafRefPath(path);
+      return this.options?.jsonMode.resolveLeafRefPath(path, context);
     }
 
     const instance = this.getInstance(path) as LeafInstance;
@@ -147,14 +147,14 @@ export default class DataModelInstance {
    * doesn't matter is almost all cases because if a choice itself has a when which is false, then no case
    * can be set, and thus the children could never be displayed.
    */
-  public async evaluateWhenCondition(path: Path) {
+  public async evaluateWhenCondition(path: Path, context?: unknown) {
     const model = this.model.getModelForPath(path.map(({ name }) => name).join('.')) as Model;
     if (!model.hasWhenAncestorOrSelf) {
       return true;
     }
 
     if (this.options?.jsonMode) {
-      return this.options?.jsonMode.evaluateWhenCondition(path);
+      return this.options?.jsonMode.evaluateWhenCondition(path, context);
     }
 
     const { element, cleanUp } = this.getElementForPath(path);
@@ -165,9 +165,9 @@ export default class DataModelInstance {
       while (modelRoot && modelRoot.parentModel) {
         if (modelRoot.when) {
           for (const when of modelRoot.when) {
-            const { condition, context } = when;
+            const { condition, context: whenContext } = when;
             const contextNode =
-              context === ContextNode.parent || modelRoot instanceof Choice ? instanceRoot!.parent() : instanceRoot;
+              whenContext === ContextNode.parent || modelRoot instanceof Choice ? instanceRoot!.parent() : instanceRoot;
             const result = contextNode!.get(condition, this.model.namespaces);
 
             if (!result) {
@@ -189,9 +189,9 @@ export default class DataModelInstance {
     }
   }
 
-  public async evaluateLeafRef(path: Path) {
+  public async evaluateLeafRef(path: Path, context?: unknown) {
     if (this.options?.jsonMode) {
-      return this.options?.jsonMode.evaluateLeafRef(path);
+      return this.options?.jsonMode.evaluateLeafRef(path, context);
     }
 
     const model = this.model.getModelForPath(path.map(({ name }) => name).join('.'));
@@ -215,9 +215,9 @@ export default class DataModelInstance {
     }
   }
 
-  public async evaluateSuggestionRef(path: Path) {
+  public async evaluateSuggestionRef(path: Path, context?: unknown) {
     if (this.options?.jsonMode) {
-      return this.options?.jsonMode.evaluateSuggestionRef(path);
+      return this.options?.jsonMode.evaluateSuggestionRef(path, context);
     }
 
     const model = this.model.getModelForPath(path.map(({ name }) => name).join('.'));

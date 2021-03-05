@@ -72,10 +72,10 @@ export interface IAttribute {
 }
 
 export interface IJSONModeEvaluators {
-  evaluateWhenCondition: (path: Path) => Promise<boolean>;
-  evaluateLeafRef: (path: Path) => Promise<string[]>;
-  evaluateSuggestionRef: (path: Path) => Promise<string[]>;
-  resolveLeafRefPath: (path: Path) => Promise<Path>;
+  evaluateWhenCondition: (path: Path, context?: unknown) => Promise<boolean>;
+  evaluateLeafRef: (path: Path, context?: unknown) => Promise<string[]>;
+  evaluateSuggestionRef: (path: Path, context?: unknown) => Promise<string[]>;
+  resolveLeafRefPath: (path: Path, context?: unknown) => Promise<Path>;
 }
 
 export interface IInstanceOptions {
