@@ -32,22 +32,24 @@ export default class Container implements Statement, Whenable, WithRegistry {
   public when: Whenable['when'];
 
   public children: Map<string, Model>;
+  public camelChildren: Map<string, Model>;
   public choices: Map<string, Choice>;
-  public identities?: Identities;
-  public modelRegistry?: ModelRegistry;
   public modelType: string;
   public presence: string | null;
 
-  constructor(el: Element, parentModel?: Model, identities?: Identities, modelRegistry?: ModelRegistry) {
+  constructor(el: Element, parentModel?: Model, public identities?: Identities, public modelRegistry?: ModelRegistry) {
     this.modelType = 'container';
     this.addStatementProps(el, parentModel || null);
     this.addWhenableProps(el);
-    this.identities = identities;
-    this.modelRegistry = modelRegistry;
 
     const { children, choices } = buildChildren(el, this);
     this.children = children;
     this.choices = choices;
+
+    this.camelChildren = Array.from(children.entries()).reduce((acc, [k, v]) => {
+      acc.set(_.camelCase(k), v);
+      return acc;
+    }, new Map());
 
     this.presence = PresenceParser.parse(el);
 
@@ -67,11 +69,11 @@ export default class Container implements Statement, Whenable, WithRegistry {
   }
 
   public hasChild(name: string) {
-    return this.children.has(name);
+    return this.camelChildren.has(name) || this.children.has(name);
   }
 
   public getChild(name: string) {
-    return this.children.get(name);
+    return this.camelChildren.get(name) || this.children.get(name);
   }
 
   public getChildren() {

@@ -24,27 +24,20 @@ import { LeafListChildInstance } from './';
 import { allow } from './util';
 
 export default class LeafListInstance implements Searchable {
-  public model: LeafList;
-  public parent: Parent;
-
   public getPath: Searchable['getPath'];
   public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
 
-  private children: LeafListChildInstance[];
+  private children: LeafListChildInstance[] = [];
 
-  constructor(model: LeafList, config: Element | LeafListJSON, parent: Parent) {
-    this.model = model;
-    this.parent = parent;
-    this.children = [];
-
+  constructor(public model: LeafList, config: Element | LeafListJSON, public parent: Parent) {
     if (config instanceof Element) {
       this.add(config);
     } else {
-      config.forEach(child => {
+      for (const child of config) {
         this.add(child);
-      });
+      }
     }
   }
 

@@ -1,4 +1,5 @@
 import { Element } from 'libxmljs';
+import * as _ from 'lodash';
 
 import applyMixins from '../util/applyMixins';
 import ns from '../util/ns';
@@ -41,18 +42,19 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
   public when: Whenable['when'];
 
   public children: Map<string, Model>;
+  public camelChildren: Map<string, Model>;
   public choices: Map<string, Choice>;
-  public identities?: Identities;
   public keys: Set<string>;
   public modelType: string;
   public unique: Map<string, string[]>;
+  public keyList: string[];
 
-  constructor(el: Element, parentModel: Model, identities?: Identities) {
+  constructor(el: Element, parentModel: Model, public identities?: Identities) {
     this.modelType = 'list';
     this.addStatementProps(el, parentModel);
-    this.identities = identities;
 
     this.keys = new Set(List.getKeys(el));
+    this.keyList = List.getKeys(el);
     this.addListLikeProps(el);
     this.addWhenableProps(el);
     this.parseUnique(el);
@@ -60,6 +62,11 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
     const { children, choices } = buildChildren(el, this);
     this.children = children;
     this.choices = choices;
+
+    this.camelChildren = Array.from(children.entries()).reduce((acc, [k, v]) => {
+      acc.set(_.camelCase(k), v);
+      return acc;
+    }, new Map());
 
     this.register(parentModel, this);
   }
@@ -69,11 +76,11 @@ export default class List implements ListLike, Statement, Whenable, WithRegistry
   }
 
   public hasChild(name: string) {
-    return this.children.has(name);
+    return this.camelChildren.has(name) || this.children.has(name);
   }
 
   public getChild(name: string) {
-    return this.children.get(name);
+    return this.camelChildren.get(name) || this.children.get(name);
   }
 
   public getChildren() {

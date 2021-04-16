@@ -8,9 +8,6 @@ import { LeafJSON, Visitor, XMLSerializationOptions, Authorized } from './types'
 import { Path, LeafListInstance } from './';
 
 export default class LeafListChildInstance implements WithAttributes {
-  public model: LeafList;
-  public parent: LeafListInstance;
-
   public customAttributes: WithAttributes['customAttributes'];
   public parseAttributesFromXML: WithAttributes['parseAttributesFromXML'];
   public parseAttributesFromJSON: WithAttributes['parseAttributesFromJSON'];
@@ -24,10 +21,7 @@ export default class LeafListChildInstance implements WithAttributes {
   private config?: Element;
   private rawValue: string;
 
-  constructor(model: LeafList, config: Element | LeafJSON, parent: LeafListInstance) {
-    this.model = model;
-    this.parent = parent;
-
+  constructor(public model: LeafList, config: Element | LeafJSON, public parent: LeafListInstance) {
     if (config instanceof Element) {
       this.config = config;
       this.injestConfigXML(config);

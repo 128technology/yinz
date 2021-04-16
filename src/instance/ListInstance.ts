@@ -19,35 +19,27 @@ import {
   MapToJSONOptions
 } from './types';
 import { getDefaultMapper } from './util';
-import { Path, ListChildInstance, LeafInstance } from './';
+import { Path, ListChildInstance } from './';
 import { isKeyedSegment } from './Path';
-import { allow } from './util';
 
 // Comma separated string of key values
 export type Key = string;
 
 export default class ListInstance implements Searchable {
-  public parent: Parent;
-  public model: List;
-
   public getPath: Searchable['getPath'];
   public isTryingToMatchMe: Searchable['isTryingToMatchMe'];
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
 
-  private children: Map<Key, ListChildInstance>;
+  private children: Map<Key, ListChildInstance> = new Map();
 
-  constructor(model: List, config: Element | ListJSON, parent: Parent) {
-    this.model = model;
-    this.parent = parent;
-    this.children = new Map();
-
+  constructor(public model: List, config: Element | ListJSON, public parent: Parent) {
     if (config instanceof Element) {
       this.add(config);
     } else {
-      config.forEach(child => {
+      for (const child of config) {
         this.add(child);
-      });
+      }
     }
   }
 
@@ -66,19 +58,7 @@ export default class ListInstance implements Searchable {
   public add(config: Element | ListChildJSON) {
     const newChild = new ListChildInstance(this.model, config, this.parent, this);
 
-    const keys = [...this.model.keys]
-      .map(key => {
-        const keyLeaf = newChild.getChildren(allow).get(key);
-
-        if (keyLeaf instanceof LeafInstance) {
-          return keyLeaf.getValue(allow);
-        } else {
-          throw new Error(`Key is not a leaf. Model: ${this.model.name} Key: ${key}`);
-        }
-      })
-      .join(',');
-
-    this.children.set(keys, newChild);
+    this.children.set(newChild.keyString, newChild);
   }
 
   public delete(key: Key) {
