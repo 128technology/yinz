@@ -25,9 +25,7 @@ import { getDefaultMapper } from './util';
 import { Path, Instance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
 
 export default class ContainerInstance implements Searchable, WithAttributes {
-  public model: Container;
-  public parent: Parent | null;
-  public activeChoices: Map<string, string>;
+  public activeChoices: Map<string, string> = new Map();
 
   public customAttributes: WithAttributes['customAttributes'];
   public parseAttributesFromXML: WithAttributes['parseAttributesFromXML'];
@@ -45,14 +43,9 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public handleNoMatch: Searchable['handleNoMatch'];
 
   private config?: Element;
-  private children: Map<string, Instance>;
+  private children: Map<string, Instance> = new Map();
 
-  constructor(model: Container, config: Element | ContainerJSON, parent: Parent | null) {
-    this.model = model;
-    this.parent = parent;
-    this.children = new Map();
-    this.activeChoices = new Map();
-
+  constructor(public model: Container, config: Element | ContainerJSON, public parent: Parent | null) {
     if (config instanceof Element) {
       this.config = config;
       this.injestConfigXML(config);
