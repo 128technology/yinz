@@ -12,7 +12,9 @@ describe('With Attributes Mixin', () => {
   `;
   const mockConfigXML = xmlUtil.toElement(mockConfig);
 
-  class Test extends WithAttributes implements WithAttributes {}
+  class Test extends WithAttributes implements WithAttributes {
+    public rawAttributes: WithAttributes['rawAttributes'] = [];
+  }
 
   applyMixins(Test, [WithAttributes]);
 

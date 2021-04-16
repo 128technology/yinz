@@ -40,15 +40,13 @@ import NoDomError from '../util/noDomError';
 
 export default class DataModelInstance {
   public rawInstance: Element;
-  public root: Map<string, ContainerInstance>;
+  public root: Map<string, ContainerInstance> = new Map();
 
   constructor(
     public model: DataModel,
     instance: Element | { [rootName: string]: ContainerJSON },
     private options?: IInstanceOptions
   ) {
-    this.root = new Map();
-
     const rootName = [...model.root.keys()][0];
     const modelRoot = model.root.get(rootName)!;
 

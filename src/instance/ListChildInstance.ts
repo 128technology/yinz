@@ -22,9 +22,8 @@ import {
   JSONMapper,
   MapToJSONOptions
 } from './types';
-import { getDefaultMapper } from './util';
 import { Path, Instance, LeafInstance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
-import { allow } from './util';
+import { allow, getDefaultMapper } from './util';
 
 export type ChoiceName = string;
 export type SelectedCaseName = string;
@@ -35,10 +34,7 @@ export interface IKeys {
 }
 
 export default class ListChildInstance implements Searchable, WithAttributes {
-  public model: List;
-  public parent: Parent;
-  public listParent: ListInstance;
-  public activeChoices: Map<ChoiceName, SelectedCaseName>;
+  public activeChoices: Map<ChoiceName, SelectedCaseName> = new Map();
 
   public customAttributes: WithAttributes['customAttributes'];
   public parseAttributesFromXML: WithAttributes['parseAttributesFromXML'];
@@ -55,16 +51,15 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   public isMatch: Searchable['isMatch'];
   public handleNoMatch: Searchable['handleNoMatch'];
 
-  private instance: Map<ChildName, Instance>;
+  private instance: Map<ChildName, Instance> = new Map();
   private config?: Element;
 
-  constructor(model: List, config: Element | ListChildJSON, parent: Parent, listParent: ListInstance) {
-    this.model = model;
-    this.parent = parent;
-    this.listParent = listParent;
-    this.instance = new Map();
-    this.activeChoices = new Map();
-
+  constructor(
+    public model: List,
+    config: Element | ListChildJSON,
+    public parent: Parent,
+    public listParent: ListInstance
+  ) {
     if (config instanceof Element) {
       this.config = config;
       this.injestConfigXML(config);
@@ -111,15 +106,30 @@ export default class ListChildInstance implements Searchable, WithAttributes {
     this.instance.delete(childName);
   }
 
+  public get keyString() {
+    let result = '';
+    for (let i = 0, len = this.model.keyList.length; i < len; i++) {
+      const keyName = this.model.keyList[i];
+      const keyValue = (this.instance.get(keyName) as LeafInstance).getValue(allow)!;
+
+      if (i === len - 1) {
+        result += keyValue;
+      } else {
+        result += keyValue + ',';
+      }
+    }
+    return result;
+  }
+
   public get keys() {
-    return Array.from(this.model.keys.values()).reduce<IKeys>((acc, key) => {
+    return this.model.keyList.reduce<IKeys>((acc, key) => {
       acc[key] = (this.instance.get(key) as LeafInstance).getValue(allow)!;
       return acc;
     }, {});
   }
 
   public getKeys(authorized: Authorized) {
-    return Array.from(this.model.keys.values()).reduce<IKeys>((acc, key) => {
+    return this.model.keyList.reduce<IKeys>((acc, key) => {
       acc[key] = (this.instance.get(key) as LeafInstance).getValue(authorized)!;
       return acc;
     }, {});
@@ -128,33 +138,31 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   public injestConfigJSON(configJSON: ListChildJSON) {
     const config = this.getValueFromJSON(configJSON) as ListChildJSONValue;
 
+    // tslint:disable-next-line:forin
     for (const rawChildName in config) {
-      if (config.hasOwnProperty(rawChildName)) {
-        const childName = this.model.hasChild(rawChildName) ? rawChildName : _.kebabCase(rawChildName);
-        if (this.model.hasChild(childName)) {
-          const child = config[rawChildName];
-          const childModel = this.model.getChild(childName)!;
+      const childModel = this.model.getChild(rawChildName);
+      if (childModel) {
+        const child = config[rawChildName];
 
-          if (childModel.choiceCase) {
-            this.activeChoices.set(childModel.choiceCase.parentChoice.name, childModel.choiceCase.name);
-          }
-
-          let instance: Instance;
-
-          if (childModel instanceof Leaf) {
-            instance = childModel.buildInstance(child as LeafJSON, this);
-          } else if (childModel instanceof LeafList) {
-            instance = childModel.buildInstance(child as LeafListJSON, this);
-          } else if (childModel instanceof Container) {
-            instance = childModel.buildInstance(child as ContainerJSON, this);
-          } else if (childModel instanceof List) {
-            instance = childModel.buildInstance(child as ListJSON, this);
-          } else {
-            throw new Error(`Unknown child of type ${typeof childModel} encountered.`);
-          }
-
-          this.instance.set(childName, instance);
+        if (childModel.choiceCase) {
+          this.activeChoices.set(childModel.choiceCase.parentChoice.name, childModel.choiceCase.name);
         }
+
+        let instance: Instance;
+
+        if (childModel instanceof Leaf) {
+          instance = childModel.buildInstance(child as LeafJSON, this);
+        } else if (childModel instanceof LeafList) {
+          instance = childModel.buildInstance(child as LeafListJSON, this);
+        } else if (childModel instanceof Container) {
+          instance = childModel.buildInstance(child as ContainerJSON, this);
+        } else if (childModel instanceof List) {
+          instance = childModel.buildInstance(child as ListJSON, this);
+        } else {
+          throw new Error(`Unknown child of type ${typeof childModel} encountered.`);
+        }
+
+        this.instance.set(childModel.name, instance);
       }
     }
   }

@@ -42,12 +42,8 @@ export type JSONConfigNodeWithAttributes =
   | WithAttributes<ListChildJSONValue>
   | WithAttributes<ContainerJSONValue>;
 
-export function hasAttributes(x: JSONConfigNode): x is JSONConfigNodeWithAttributes {
-  const toCheck = x as object;
-  return (
-    _.isPlainObject(x) &&
-    ('_value' in toCheck || '_operation' in toCheck || '_position' in toCheck || '_attributes' in toCheck)
-  );
+export function hasAttributes(x: object): x is JSONConfigNodeWithAttributes {
+  return '_value' in x || '_operation' in x || '_position' in x || '_attributes' in x;
 }
 
 export type NetconfOperation = 'merge' | 'create' | 'replace' | 'delete' | 'remove';

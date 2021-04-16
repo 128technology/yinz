@@ -15,7 +15,6 @@ export default class Case implements Whenable {
   public children: Map<string, Model>;
   public modelType: string;
   public otherProps: Map<string, string | boolean> = new Map();
-  public parentChoice: Choice;
   public status: Status | null;
   public when: IWhen[];
   public visibility: Visibility | null;
@@ -23,9 +22,8 @@ export default class Case implements Whenable {
 
   public addWhenableProps: (el: Element) => void;
 
-  constructor(el: Element, parentChoice: Choice, parentModel: Model) {
+  constructor(el: Element, public parentChoice: Choice, parentModel: Model) {
     this.modelType = 'case';
-    this.parentChoice = parentChoice;
     this.name = el.attr('name')!.value();
     this.status = StatusParser.parse(el);
     this.visibility = VisibilityParser.parse(el);

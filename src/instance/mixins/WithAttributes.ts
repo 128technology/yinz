@@ -99,7 +99,7 @@ export default class WithAttributes {
   public parseAttributesFromJSON(config: JSONConfigNode) {
     this.rawAttributes = [];
 
-    if (hasAttributes(config)) {
+    if (typeof config === 'object' && config && hasAttributes(config)) {
       if (config._attributes) {
         this.rawAttributes = config._attributes;
       }
@@ -115,7 +115,7 @@ export default class WithAttributes {
   }
 
   public getValueFromJSON(config: JSONConfigNode) {
-    if (hasAttributes(config)) {
+    if (typeof config === 'object' && config && hasAttributes(config)) {
       return config._value;
     } else {
       return config;

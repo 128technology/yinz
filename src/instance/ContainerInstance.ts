@@ -25,9 +25,7 @@ import { getDefaultMapper } from './util';
 import { Path, Instance, ListInstance, LeafListInstance, LeafListChildInstance } from './';
 
 export default class ContainerInstance implements Searchable, WithAttributes {
-  public model: Container;
-  public parent: Parent | null;
-  public activeChoices: Map<string, string>;
+  public activeChoices: Map<string, string> = new Map();
 
   public customAttributes: WithAttributes['customAttributes'];
   public parseAttributesFromXML: WithAttributes['parseAttributesFromXML'];
@@ -45,14 +43,9 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   public handleNoMatch: Searchable['handleNoMatch'];
 
   private config?: Element;
-  private children: Map<string, Instance>;
+  private children: Map<string, Instance> = new Map();
 
-  constructor(model: Container, config: Element | ContainerJSON, parent: Parent | null) {
-    this.model = model;
-    this.parent = parent;
-    this.children = new Map();
-    this.activeChoices = new Map();
-
+  constructor(public model: Container, config: Element | ContainerJSON, public parent: Parent | null) {
     if (config instanceof Element) {
       this.config = config;
       this.injestConfigXML(config);
@@ -179,34 +172,32 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   private injestConfigJSON(configJSON: ContainerJSON) {
     const config = this.getValueFromJSON(configJSON) as ContainerJSONValue;
 
+    // tslint:disable-next-line:forin
     for (const rawChildName in config) {
-      if (config.hasOwnProperty(rawChildName)) {
-        const childName = this.model.hasChild(rawChildName) ? rawChildName : _.kebabCase(rawChildName);
-        if (this.model.hasChild(childName)) {
-          const child = config[rawChildName];
-          const childModel = this.model.getChild(childName)!;
+      const childModel = this.model.getChild(rawChildName);
+      if (childModel) {
+        const child = config[rawChildName];
 
-          // Note: This does not support nested choices
-          if (childModel.choiceCase) {
-            this.activeChoices.set(childModel.choiceCase.parentChoice.name, childModel.choiceCase.name);
-          }
-
-          let instance: Instance;
-
-          if (childModel instanceof Leaf) {
-            instance = childModel.buildInstance(child as LeafJSON, this);
-          } else if (childModel instanceof LeafList) {
-            instance = childModel.buildInstance(child as LeafListJSON, this);
-          } else if (childModel instanceof Container) {
-            instance = childModel.buildInstance(child as ContainerJSON, this);
-          } else if (childModel instanceof List) {
-            instance = childModel.buildInstance(child as ListJSON, this);
-          } else {
-            throw new Error(`Unknown child of type ${typeof childModel} encountered.`);
-          }
-
-          this.children.set(childName, instance);
+        // Note: This does not support nested choices
+        if (childModel.choiceCase) {
+          this.activeChoices.set(childModel.choiceCase.parentChoice.name, childModel.choiceCase.name);
         }
+
+        let instance: Instance;
+
+        if (childModel instanceof Leaf) {
+          instance = childModel.buildInstance(child as LeafJSON, this);
+        } else if (childModel instanceof LeafList) {
+          instance = childModel.buildInstance(child as LeafListJSON, this);
+        } else if (childModel instanceof Container) {
+          instance = childModel.buildInstance(child as ContainerJSON, this);
+        } else if (childModel instanceof List) {
+          instance = childModel.buildInstance(child as ListJSON, this);
+        } else {
+          throw new Error(`Unknown child of type ${typeof childModel} encountered.`);
+        }
+
+        this.children.set(childModel.name, instance);
       }
     }
   }

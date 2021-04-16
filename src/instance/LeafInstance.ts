@@ -21,9 +21,6 @@ import { getDefaultMapper } from './util';
 import { Path } from './';
 
 export default class LeafInstance implements Searchable, WithAttributes {
-  public model: Leaf;
-  public parent: Parent;
-
   public customAttributes: WithAttributes['customAttributes'];
   public parseAttributesFromXML: WithAttributes['parseAttributesFromXML'];
   public parseAttributesFromJSON: WithAttributes['parseAttributesFromJSON'];
@@ -42,10 +39,7 @@ export default class LeafInstance implements Searchable, WithAttributes {
   private config?: Element;
   private value: string | null;
 
-  constructor(model: Leaf, config: Element | LeafJSON, parent: Parent) {
-    this.model = model;
-    this.parent = parent;
-
+  constructor(public model: Leaf, config: Element | LeafJSON, public parent: Parent) {
     if (config instanceof Element) {
       this.config = config;
       this.injestConfigXML(config);
