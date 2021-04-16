@@ -124,7 +124,3 @@ export function getDefaultMapper(authorized: Authorized) {
 
   return defaultMapper;
 }
-
-export function kebabCaseModelName(str: string) {
-  return str.replace(/([a-z]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
-}

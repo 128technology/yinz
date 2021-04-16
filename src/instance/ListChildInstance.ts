@@ -138,6 +138,7 @@ export default class ListChildInstance implements Searchable, WithAttributes {
   public injestConfigJSON(configJSON: ListChildJSON) {
     const config = this.getValueFromJSON(configJSON) as ListChildJSONValue;
 
+    // tslint:disable-next-line:forin
     for (const rawChildName in config) {
       const childModel = this.model.getChild(rawChildName);
       if (childModel) {

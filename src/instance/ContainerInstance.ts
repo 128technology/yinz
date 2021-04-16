@@ -172,6 +172,7 @@ export default class ContainerInstance implements Searchable, WithAttributes {
   private injestConfigJSON(configJSON: ContainerJSON) {
     const config = this.getValueFromJSON(configJSON) as ContainerJSONValue;
 
+    // tslint:disable-next-line:forin
     for (const rawChildName in config) {
       const childModel = this.model.getChild(rawChildName);
       if (childModel) {
