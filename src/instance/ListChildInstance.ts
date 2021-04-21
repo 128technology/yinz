@@ -140,10 +140,9 @@ export default class ListChildInstance implements Searchable, WithAttributes {
 
     // tslint:disable-next-line:forin
     for (const rawChildName in config) {
+      const child = config[rawChildName];
       const childModel = this.model.getChild(rawChildName);
-      if (childModel) {
-        const child = config[rawChildName];
-
+      if (!_.isNil(child) && childModel) {
         if (childModel.choiceCase) {
           this.activeChoices.set(childModel.choiceCase.parentChoice.name, childModel.choiceCase.name);
         }
