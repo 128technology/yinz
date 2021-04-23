@@ -1,4 +1,4 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 import { expect } from 'chai';
 
 import xmlUtil, { yinNS } from '../../../__tests__/xmlUtil';

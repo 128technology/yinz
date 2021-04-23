@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import applyMixins from '../util/applyMixins';
 import { List, Leaf, Container, LeafList } from '../model';

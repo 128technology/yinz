@@ -1,11 +1,11 @@
 import * as _ from 'lodash';
-import { Element, Namespace } from 'libxmljs';
+import { Element, Namespace } from 'libxmljs2';
 
 import ns from '../../util/ns';
 import { OrderedBy, Visibility, Status } from '../../enum';
 import { enumValueOf } from '../../enum/ContextNode';
 import { tokens } from '../../util/xPathParser';
-import { isElement } from '../../util/xmlUtil';
+import { isElement, assertElement } from '../../util/xmlUtil';
 export { default as TypeParser } from '../../types/util/TypeParser';
 
 function getLocalName(name: string) {
@@ -15,28 +15,28 @@ function getLocalName(name: string) {
 export class VisibilityParser {
   public static parse(el: Element): Visibility | null {
     const visibleElem = el.get('./t128-internal:visibility', ns);
-    return visibleElem ? Visibility[visibleElem.text() as keyof typeof Visibility] : null;
+    return visibleElem ? Visibility[assertElement(visibleElem).text() as keyof typeof Visibility] : null;
   }
 }
 
 export class StatusParser {
   public static parse(el: Element) {
     const statusElem = el.get('./yin:status', ns);
-    return statusElem ? Status[statusElem.attr('value')!.value() as keyof typeof Status] : null;
+    return statusElem ? Status[assertElement(statusElem).attr('value')!.value() as keyof typeof Status] : null;
   }
 }
 
 export class MaxElementsParser {
   public static parse(el: Element) {
     const maxElemEl = el.get('./yin:max-elements', ns);
-    return maxElemEl ? parseInt(maxElemEl.attr('value')!.value(), 10) : null;
+    return maxElemEl ? parseInt(assertElement(maxElemEl).attr('value')!.value(), 10) : null;
   }
 }
 
 export class MinElementsParser {
   public static parse(el: Element) {
     const minElemEl = el.get('./yin:min-elements', ns);
-    return minElemEl ? parseInt(minElemEl.attr('value')!.value(), 10) : 0;
+    return minElemEl ? parseInt(assertElement(minElemEl).attr('value')!.value(), 10) : 0;
   }
 }
 
@@ -47,7 +47,7 @@ export class DescriptionParser {
 
   public static parse(el: Element) {
     const descriptionEl = el.get('./yin:description/yin:text', ns);
-    return descriptionEl ? DescriptionParser.convertNewlinesToSpaces(descriptionEl.text()) : null;
+    return descriptionEl ? DescriptionParser.convertNewlinesToSpaces(assertElement(descriptionEl).text()) : null;
   }
 }
 
@@ -81,14 +81,16 @@ export class ReferenceParser {
 
   public static parse(el: Element) {
     const referenceEl = el.get('./yin:reference/yin:text', ns);
-    return referenceEl ? ReferenceParser.convertNewlinesToSpaces(referenceEl.text()) : null;
+    return referenceEl ? ReferenceParser.convertNewlinesToSpaces(assertElement(referenceEl).text()) : null;
   }
 }
 
 export class OrderedByParser {
   public static parse(el: Element) {
     const orderedByEl = el.get('./yin:ordered-by', ns);
-    return orderedByEl ? OrderedBy[orderedByEl.attr('value')!.value() as keyof typeof OrderedBy] : OrderedBy.system;
+    return orderedByEl
+      ? OrderedBy[assertElement(orderedByEl).attr('value')!.value() as keyof typeof OrderedBy]
+      : OrderedBy.system;
   }
 }
 
@@ -96,7 +98,7 @@ export class MandatoryParser {
   public static parse(el: Element) {
     const mandatoryEl = el.get('./yin:mandatory', ns);
 
-    return mandatoryEl ? mandatoryEl.attr('value')!.value() === 'true' : false;
+    return mandatoryEl ? assertElement(mandatoryEl).attr('value')!.value() === 'true' : false;
   }
 }
 
@@ -104,7 +106,7 @@ export class UnitsParser {
   public static parse(el: Element) {
     const unitsEl = el.get('./yin:units', ns);
 
-    return unitsEl ? unitsEl.attr('name')!.value() : null;
+    return unitsEl ? assertElement(unitsEl).attr('name')!.value() : null;
   }
 }
 
@@ -112,7 +114,7 @@ export class DefaultParser {
   public static parse(el: Element) {
     const defaultEl = el.get('./yin:default', ns);
 
-    return defaultEl ? defaultEl.attr('value')!.value() : null;
+    return defaultEl ? assertElement(defaultEl).attr('value')!.value() : null;
   }
 }
 
@@ -120,7 +122,7 @@ export class PresenceParser {
   public static parse(el: Element) {
     const presenceEl = el.get('./yin:presence', ns);
 
-    return presenceEl ? presenceEl.attr('value')!.value() : null;
+    return presenceEl ? assertElement(presenceEl).attr('value')!.value() : null;
   }
 }
 
@@ -132,7 +134,7 @@ export class NamespacesParser {
   }
 
   public static getNamespace(el: Element): [string, string] {
-    const moduleEl = el.get('./ancestor-or-self::yin:*[@module-prefix][1]', ns)!;
+    const moduleEl = assertElement(el.get('./ancestor-or-self::yin:*[@module-prefix][1]', ns)!);
     return this.getNamespaceFromModule(moduleEl);
   }
 

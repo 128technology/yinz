@@ -13,6 +13,7 @@ import DataModelInstance, {
 } from '../';
 import { allow } from '../util';
 import { IJSONModeEvaluators } from '../types';
+import { assertElement } from '../../util/xmlUtil';
 
 export function readDataModel(filepath: string) {
   const modelText = fs.readFileSync(path.join(__dirname, filepath), 'utf-8');
@@ -40,7 +41,7 @@ describe('Data Model Instance', () => {
 
   function getInstance(instancePath: string) {
     const instance = readConfigFile(instancePath);
-    const config = instance.get('//t128:config', { t128: 'http://128technology.com/t128' })!;
+    const config = assertElement(instance.get('//t128:config', { t128: 'http://128technology.com/t128' })!);
     return new DataModelInstance(dataModel, config);
   }
 
@@ -312,10 +313,12 @@ describe('Data Model Instance', () => {
 
     describe('#getInstanceFromElement()', () => {
       it('should find an instance from the config', () => {
-        const targetXML = dataModelInstance.rawInstance.get(
-          '/t128:config/authy:authority/svc:session-type[svc:name = "HTTP"]/svc:name',
-          dataModelInstance.model.namespaces
-        )!;
+        const targetXML = assertElement(
+          dataModelInstance.rawInstance.get(
+            '/t128:config/authy:authority/svc:session-type[svc:name = "HTTP"]/svc:name',
+            dataModelInstance.model.namespaces
+          )!
+        );
 
         const match = dataModelInstance.getInstanceFromElement(targetXML);
 
@@ -390,7 +393,7 @@ describe('Data Model Instance', () => {
             t128: 'http://128technology.com/t128'
           };
           const localInstance = readConfigFile('./data/instance.xml');
-          const localConfig = localInstance.get('//t128:config', ns)!;
+          const localConfig = assertElement(localInstance.get('//t128:config', ns)!);
 
           // Drop the leafref item from the tree
           const localNode = localInstance.get(
@@ -445,7 +448,7 @@ describe('Data Model Instance', () => {
         // living under a different node. Nodes and device interfaces have unique names.
 
         const testInstance = readConfigFile('./data/instanceNonUniqueNetworkIntf.xml');
-        const testConfig = testInstance.get('//t128:config', { t128: 'http://128technology.com/t128' })!;
+        const testConfig = assertElement(testInstance.get('//t128:config', { t128: 'http://128technology.com/t128' })!);
 
         beforeEach(() => {
           dataModelInstance = new DataModelInstance(dataModel, testConfig);
@@ -521,7 +524,7 @@ describe('Data Model Instance', () => {
 
     const userModel = readDataModel('../../model/__tests__/data/consolidatedUserModel.xml');
     const instance = readConfigFile('./data/userInstance.xml');
-    const config = instance.get('//user:config', { user: 'http://128technology.com/user' })!;
+    const config = assertElement(instance.get('//user:config', { user: 'http://128technology.com/user' })!);
 
     beforeEach(() => {
       dataModelInstance = new DataModelInstance(userModel, config);

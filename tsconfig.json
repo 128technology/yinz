@@ -9,7 +9,7 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "*": ["*", "./types/*"]
+      "*": ["*"]
     },
     "noErrorTruncation": true,
     "noUnusedLocals": true,

@@ -1,4 +1,4 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import applyMixins from '../util/applyMixins';
 import { LeafListInstance, ListChildInstance, ContainerInstance } from '../instance';

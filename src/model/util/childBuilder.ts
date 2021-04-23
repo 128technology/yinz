@@ -1,7 +1,7 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import ns from '../../util/ns';
-import { isElement } from '../../util/xmlUtil';
+import { isElement, assertElement } from '../../util/xmlUtil';
 
 import { Container, Leaf, LeafList, List, Choice, Model } from '../';
 
@@ -17,7 +17,7 @@ export function buildChildren(parentEl: Element, parentModel: Model): IChildren 
     .filter(el => {
       const isConfig = el.get('./yin:config', ns);
 
-      return isConfig ? isConfig.attr('value')!.value() !== 'false' : true;
+      return isConfig ? assertElement(isConfig).attr('value')!.value() !== 'false' : true;
     })
     .reduce(
       ({ children, choices }, el) => {

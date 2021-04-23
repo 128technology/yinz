@@ -1,4 +1,4 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 import { PropertiesParser } from '../../model/parsers';
 
 export default class WithCustomProperties {

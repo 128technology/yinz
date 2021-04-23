@@ -1,4 +1,4 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import { Identities } from '../../model';
 import { Type } from '../';

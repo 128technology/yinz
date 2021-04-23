@@ -1,4 +1,4 @@
-import * as libXML from 'libxmljs';
+import * as libXML from 'libxmljs2';
 
 function toElement(xmlText: string) {
   return libXML.parseXmlString(xmlText).root()!;

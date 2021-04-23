@@ -1,8 +1,9 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import applyMixins from '../util/applyMixins';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import ns from '../util/ns';
+import { assertElement } from '../util/xmlUtil';
 
 import Range from './Range';
 import { Named, StringSerialize, WithCustomProperties } from './mixins';
@@ -32,7 +33,7 @@ export default class BinaryType implements Named, StringSerialize, WithCustomPro
     const lengthEl = el.get('./yin:length', ns);
 
     if (lengthEl) {
-      this.length = new Range(lengthEl);
+      this.length = new Range(assertElement(lengthEl));
     }
     this.addCustomProperties(el, ['length']);
   }

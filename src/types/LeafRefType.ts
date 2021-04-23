@@ -1,10 +1,11 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import applyMixins from '../util/applyMixins';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import ns from '../util/ns';
 import { Identities } from '../model';
 import { SerializationReturnType } from '../enum/SerializationType';
+import { assertElement } from '../util/xmlUtil';
 
 import TypeParser from './util/TypeParser';
 import { Named, RequiredField, WithCustomProperties } from './mixins';
@@ -34,9 +35,9 @@ export default class LeafRefType implements Named, RequiredField, WithCustomProp
   }
 
   public parseType(el: Element, identities: Identities) {
-    const typeEl = el.get('./yin:type', ns)!;
+    const typeEl = assertElement(el.get('./yin:type', ns)!);
     this.refType = TypeParser.parse(typeEl, identities);
-    this.path = el.get('./yin:path', ns)!.attr('value')!.value();
+    this.path = assertElement(el.get('./yin:path', ns)!).attr('value')!.value();
 
     this.addCustomProperties(el, ['type', 'path']);
   }

@@ -1,4 +1,4 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import { WhenParser } from '../parsers';
 import { ContextNode } from '../../enum';

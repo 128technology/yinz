@@ -1,10 +1,11 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 import * as _ from 'lodash';
 
 import applyMixins from '../util/applyMixins';
 import ns from '../util/ns';
 import { ListInstance, ListChildInstance, ContainerInstance } from '../instance';
 import { ListJSON } from '../instance/types';
+import { assertElement } from '../util/xmlUtil';
 
 import { Statement, ListLike, Whenable, WithRegistry } from './mixins';
 import { buildChildren } from './util/childBuilder';
@@ -13,7 +14,7 @@ import { UniqueParser } from './parsers';
 
 export default class List implements ListLike, Statement, Whenable, WithRegistry {
   private static getKeys(el: Element) {
-    const keyString = el.get('./yin:key', ns)!.attr('value')!.value();
+    const keyString = assertElement(el.get('./yin:key', ns)!).attr('value')!.value();
     return keyString.split(' ');
   }
 

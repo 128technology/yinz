@@ -1,8 +1,8 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 import * as _ from 'lodash';
 
 import ns from '../util/ns';
-import { isElement } from '../util/xmlUtil';
+import { isElement, assertElement } from '../util/xmlUtil';
 
 interface IMember {
   base: string;
@@ -37,8 +37,8 @@ export default class Identities {
         const baseEl = identity.get('./yin:base', ns);
 
         return {
-          base: baseEl ? _.last(baseEl.attr('name')!.value().split(':')) : undefined,
-          description: descriptionEl ? descriptionEl.text() : undefined,
+          base: baseEl ? _.last(assertElement(baseEl).attr('name')!.value().split(':')) : undefined,
+          description: descriptionEl ? assertElement(descriptionEl).text() : undefined,
           name: identity.attr('name')!.value(),
           prefix: identity.attr('module-prefix')!.value()
         };

@@ -1,4 +1,4 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 import * as _ from 'lodash';
 
 export type IRangeBound = string | number;

@@ -1,8 +1,9 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import ns from '../util/ns';
 import { Status } from '../enum';
 import * as Parsers from '../model/parsers';
+import { assertElement } from '../util/xmlUtil';
 
 export default class EnumerationMemberType {
   public readonly description: string | null;
@@ -21,6 +22,8 @@ export default class EnumerationMemberType {
 
   public parseValue(enumEl: Element) {
     const valueEl = enumEl.get('./yin:value', ns);
-    return valueEl && valueEl.attr('value') ? parseInt(valueEl.attr('value')!.value(), 10) : null;
+    return valueEl && assertElement(valueEl).attr('value')
+      ? parseInt(assertElement(valueEl).attr('value')!.value(), 10)
+      : null;
   }
 }

@@ -1,11 +1,11 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import applyMixins from '../util/applyMixins';
 import ns from '../util/ns';
 import { enumValueOf } from '../enum/BuiltInType';
 import { Identities } from '../model';
 import { SerializationReturnType } from '../enum/SerializationType';
-import { isElement } from '../util/xmlUtil';
+import { isElement, assertElement } from '../util/xmlUtil';
 
 import TypeParser from './util/TypeParser';
 import { Type, BuiltInType } from './';
@@ -28,7 +28,7 @@ export default class DerivedType implements Named, Traversable {
 
   constructor(el: Element, identities: Identities) {
     this.addNamedProps(el);
-    const typeDefEl = el.get('yin:typedef', ns)!;
+    const typeDefEl = assertElement(el.get('yin:typedef', ns)!);
 
     this.parseBaseType(el, typeDefEl, identities);
     this.parseUnits(typeDefEl);
@@ -45,7 +45,7 @@ export default class DerivedType implements Named, Traversable {
     const defaultEl = typeDefEl.get('./yin:default', ns);
 
     if (defaultEl) {
-      this.default = defaultEl.attr('value')!.value();
+      this.default = assertElement(defaultEl).attr('value')!.value();
     } else if (this.baseType instanceof DerivedType && this.baseType.default) {
       this.default = this.baseType.default;
     }
@@ -55,7 +55,7 @@ export default class DerivedType implements Named, Traversable {
     const unitsEl = typeDefEl.get('./yin:units', ns);
 
     if (unitsEl) {
-      this.units = unitsEl.attr('name')!.value();
+      this.units = assertElement(unitsEl).attr('name')!.value();
     }
   }
 
@@ -63,12 +63,12 @@ export default class DerivedType implements Named, Traversable {
     const descriptionEl = typeDefEl.get('./yin:description/yin:text', ns);
 
     if (descriptionEl) {
-      this.description = descriptionEl.text();
+      this.description = assertElement(descriptionEl).text();
     }
   }
 
   public parseBaseType(typeEl: Element, typeDefEl: Element, identities: Identities) {
-    const baseTypeEl = typeDefEl.get('./yin:type', ns)!;
+    const baseTypeEl = assertElement(typeDefEl.get('./yin:type', ns)!);
 
     // Really you only need to avoid typedef in the XPATH below, but a bug in yinsolidated
     // also copies the child type into the derived type in some cases.
@@ -85,7 +85,7 @@ export default class DerivedType implements Named, Traversable {
     const suggestionEl = typeDefEl.get('./t128ext:suggestionref', ns);
 
     if (suggestionEl) {
-      const text = suggestionEl.text();
+      const text = assertElement(suggestionEl).text();
       if (text) {
         const trimmed = text.trim();
         if (trimmed.length > 0) {

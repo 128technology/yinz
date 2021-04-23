@@ -6,6 +6,7 @@ import xmlUtil from '../../../__tests__/xmlUtil';
 import { getPathXPath, getSegmentXPath, addEmptyTree } from '../';
 import DataModel from '../../../model';
 import DataModelInstance, { ContainerInstance, ListChildInstance } from '../../';
+import { assertElement } from '../../../util/xmlUtil';
 
 describe('Instance Util', () => {
   describe('#getPathXPath()', () => {
@@ -83,7 +84,9 @@ describe('Instance Util', () => {
       rootPath: '//yin:container[@name="authority"]'
     };
     const dataModel = new DataModel(options);
-    const config = xmlUtil.toElement(instanceText).get('//t128:config', { t128: 'http://128technology.com/t128' })!;
+    const config = assertElement(
+      xmlUtil.toElement(instanceText).get('//t128:config', { t128: 'http://128technology.com/t128' })!
+    );
     const instance = new DataModelInstance(dataModel, config);
 
     it('should build out a tree with keys', () => {

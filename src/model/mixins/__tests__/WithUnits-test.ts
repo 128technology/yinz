@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import xmlUtil, { yinNS } from '../../../__tests__/xmlUtil';
 import applyMixins from '../../../util/applyMixins';

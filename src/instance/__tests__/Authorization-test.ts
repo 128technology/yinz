@@ -1,10 +1,12 @@
-import DataModelInstance from '..';
 import * as fs from 'fs';
-import { readDataModel } from './DataModelInstance-test';
 import { expect } from 'chai';
 import * as path from 'path';
+import * as _ from 'lodash';
+
+import DataModelInstance from '..';
+import { readDataModel } from './DataModelInstance-test';
 import xmlUtil from '../../__tests__/xmlUtil';
-import _ = require('lodash');
+import { assertElement } from '../../util/xmlUtil';
 
 function accessToRouter(routerName: string) {
   return (i: any) => {
@@ -25,7 +27,7 @@ describe('Authorization Test', () => {
   let dataModelInstance: DataModelInstance;
 
   beforeEach(() => {
-    dataModelInstance = new DataModelInstance(userModel, config);
+    dataModelInstance = new DataModelInstance(userModel, assertElement(config));
   });
 
   it('should be constructable from JSON', () => {
