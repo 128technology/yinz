@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { defineNamespaceOnRoot } from '../xmlUtil';
+import { defineNamespaceOnRoot, assertElement } from '../xmlUtil';
 import xmlUtil from '../../__tests__/xmlUtil';
 
 describe('XML Utility', () => {
@@ -13,7 +13,7 @@ describe('XML Utility', () => {
           </bar>
         </foo>
       `);
-      const innerEl = tree.get('//baz')!;
+      const innerEl = assertElement(tree.get('//baz')!);
       defineNamespaceOnRoot(innerEl, 'foo', 'http://foo.com');
 
       expect(tree.toString()).xml.to.equal(`

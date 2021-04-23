@@ -1,9 +1,10 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import applyMixins from '../util/applyMixins';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import ns from '../util/ns';
 import SerializationType, { convert, SerializationReturnType } from '../enum/SerializationType';
+import { assertElement } from '../util/xmlUtil';
 
 import Range from './Range';
 import { Named, WithCustomProperties } from './mixins';
@@ -43,7 +44,7 @@ export default class IntegerType implements Named, WithCustomProperties {
     const rangeEl = el.get('./yin:range', ns);
 
     if (rangeEl) {
-      this.range = new Range(rangeEl);
+      this.range = new Range(assertElement(rangeEl));
     }
     this.addCustomProperties(el, ['range']);
   }

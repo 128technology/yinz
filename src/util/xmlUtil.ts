@@ -1,8 +1,16 @@
-import { Node, Element } from 'libxmljs';
+import { Node, Element } from 'libxmljs2';
 import * as _ from 'lodash';
 
 export function isElement(node: Node): node is Element {
   return node.type() === 'element';
+}
+
+export function assertElement(node: Node): Element {
+  if (node instanceof Element) {
+    return node;
+  } else {
+    throw new Error('Expected element but got node.');
+  }
 }
 
 export function defineNamespaceSafe(el: Element, prefix: string, href: string) {

@@ -1,6 +1,7 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import ns from '../util/ns';
+import { assertElement } from '../util/xmlUtil';
 
 import { NamespacesParser } from './parsers';
 import { Container, Model, Choice, Identities, ModelRegistry, Visitor } from './';
@@ -28,7 +29,7 @@ export default class DataModel {
   constructor(options: IOptions) {
     const { modelElement, rootPath } = options;
 
-    const rootEl = rootPath ? modelElement.get(rootPath, ns)! : modelElement;
+    const rootEl = rootPath ? assertElement(modelElement.get(rootPath, ns)!) : modelElement;
 
     this.identities = new Identities(modelElement);
     this.namespaces = NamespacesParser.parse(modelElement);

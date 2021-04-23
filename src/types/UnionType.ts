@@ -1,4 +1,4 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import applyMixins from '../util/applyMixins';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';

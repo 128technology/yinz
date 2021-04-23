@@ -1,9 +1,10 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import applyMixins from '../util/applyMixins';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import ns from '../util/ns';
 import SerializationType, { convert, SerializationReturnType } from '../enum/SerializationType';
+import { assertElement } from '../util/xmlUtil';
 
 import Range from './Range';
 import { Named, RequiredField, WithCustomProperties } from './mixins';
@@ -34,10 +35,10 @@ export default class DecimalType implements Named, RequiredField, WithCustomProp
 
   public parseType(el: Element) {
     const rangeEl = el.get('./yin:range', ns);
-    const fractionDigitsEl = el.get('./yin:fraction-digits', ns)!;
+    const fractionDigitsEl = assertElement(el.get('./yin:fraction-digits', ns)!);
 
     if (rangeEl) {
-      this.range = new Range(rangeEl);
+      this.range = new Range(assertElement(rangeEl));
     }
 
     this.fractionDigits = parseInt(fractionDigitsEl.attr('value')!.value(), 10);

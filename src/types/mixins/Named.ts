@@ -1,4 +1,4 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 export default class Named {
   public type: string;

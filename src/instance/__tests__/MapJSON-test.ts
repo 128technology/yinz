@@ -6,6 +6,7 @@ import xmlUtil from '../../__tests__/xmlUtil';
 import DataModel from '../../model';
 import DataModelInstance, { LeafInstance, LeafListInstance, ListChildInstance } from '../';
 import { allow } from '../util';
+import { assertElement } from '../../util/xmlUtil';
 
 export function readDataModel(filepath: string) {
   const modelText = fs.readFileSync(path.join(__dirname, filepath), 'utf-8');
@@ -28,7 +29,7 @@ describe('Mapping Instance Data to JSON', () => {
 
   function getInstance(instancePath: string) {
     const instance = readConfigFile(instancePath);
-    const config = instance.get('//t128:config', { t128: 'http://128technology.com/t128' })!;
+    const config = assertElement(instance.get('//t128:config', { t128: 'http://128technology.com/t128' })!);
     return new DataModelInstance(dataModel, config);
   }
 

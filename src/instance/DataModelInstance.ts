@@ -1,10 +1,10 @@
-import { Element, Document } from 'libxmljs';
+import { Element, Document } from 'libxmljs2';
 import * as _ from 'lodash';
 
 import { ContextNode } from '../enum';
 import { DerivedType, LeafRefType } from '../types';
 import DataModel, { Model, List, Leaf, Choice, LeafList, Container } from '../model';
-import { isElement } from '../util/xmlUtil';
+import { isElement, assertElement } from '../util/xmlUtil';
 import Path from './Path';
 import {
   ContainerInstance,
@@ -52,7 +52,7 @@ export default class DataModelInstance {
 
     if (instance instanceof Element) {
       this.rawInstance = instance;
-      this.root.set(rootName, new ContainerInstance(modelRoot, instance.get('./*[1]')!, null));
+      this.root.set(rootName, new ContainerInstance(modelRoot, assertElement(instance.get('./*[1]')!), null));
     } else {
       this.root.set(rootName, new ContainerInstance(modelRoot, Object.values(instance)[0], null));
 
@@ -67,7 +67,7 @@ export default class DataModelInstance {
             instanceToVisit instanceof ContainerInstance
           ) {
             const xPath = getPathXPath(instanceToVisit.getPath());
-            instanceToVisit.setConfig(this.rawInstance.get(xPath, this.model.namespaces)!);
+            instanceToVisit.setConfig(assertElement(this.rawInstance.get(xPath, this.model.namespaces)!));
           }
         });
       }
@@ -266,7 +266,7 @@ export default class DataModelInstance {
       if (currentModel instanceof List) {
         const keys = Array.from(currentModel.keys).map(key => ({
           key,
-          value: currentElement.get(`*[local-name()='${key}']`)!.text()
+          value: assertElement(currentElement.get(`*[local-name()='${key}']`)!).text()
         }));
         path.push({ name: currentModel.name, keys });
       } else {

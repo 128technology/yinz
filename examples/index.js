@@ -1,10 +1,10 @@
 const util = require('util');
 
-const libXML = require('libxmljs');
+const libXML = require('libxmljs2');
 const fs = require('fs');
 const path = require('path');
 
-const { DataModel, DataModelInstance } = require('../dist');
+const { DataModel, DataModelInstance, allow } = require('../dist');
 
 const ns = {
   't128-internal': 'http://128technology.com/t128-internal-extensions',
@@ -30,7 +30,7 @@ const config = replyXMLDoc.get('//t128:config', { t128: 'http://128technology.co
 
 const timeStart = process.hrtime();
 const instance = new DataModelInstance(configModel, config);
-const instanceJSON = instance.toJSON();
+const instanceJSON = instance.toJSON(allow);
 const diff = process.hrtime(timeStart);
 
 console.log(`JSON serialization took ${diff[0] * NS_PER_SEC + diff[1]} nanoseconds`);

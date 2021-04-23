@@ -1,10 +1,11 @@
 import { expect } from 'chai';
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import xmlUtil, { yinNS, t128InternalNS } from '../../../__tests__/xmlUtil';
 import applyMixins from '../../../util/applyMixins';
 import { Visibility, Status } from '../../../enum';
 import ns from '../../../util/ns';
+import { assertElement } from '../../../util/xmlUtil';
 
 import { Statement } from '../';
 import { Leaf, Model, Case } from '../../';
@@ -293,7 +294,7 @@ dots, or dashes, and cannot exceed 253 characters (similar to domain-name).</yin
           </yin:container>
         </yin:container>
       `);
-    const statement = new Test(el.get('//yin:leaf', ns)!, null);
+    const statement = new Test(assertElement(el.get('//yin:leaf', ns)!), null);
 
     expect(statement.ns).to.deep.equal(['ps', 'http://128technology.com/t128/popsickle-sticks']);
   });

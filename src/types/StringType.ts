@@ -1,8 +1,9 @@
-import { Element } from 'libxmljs';
+import { Element } from 'libxmljs2';
 
 import applyMixins from '../util/applyMixins';
 import BuiltInType, { enumValueOf } from '../enum/BuiltInType';
 import ns from '../util/ns';
+import { assertElement } from '../util/xmlUtil';
 
 import Range from './Range';
 import { Named, StringSerialize, WithCustomProperties } from './mixins';
@@ -34,11 +35,11 @@ export default class StringType implements Named, StringSerialize, WithCustomPro
     const patternEl = el.get('./yin:pattern', ns);
 
     if (lengthEl) {
-      this.length = new Range(lengthEl);
+      this.length = new Range(assertElement(lengthEl));
     }
 
     if (patternEl) {
-      this.pattern = patternEl.attr('value')!.value();
+      this.pattern = assertElement(patternEl).attr('value')!.value();
     }
 
     this.addCustomProperties(el, ['length', 'pattern']);

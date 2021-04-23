@@ -1,4 +1,4 @@
-import { Document } from 'libxmljs';
+import { Document } from 'libxmljs2';
 import { expect } from 'chai';
 import * as fs from 'fs';
 import * as path from 'path';
