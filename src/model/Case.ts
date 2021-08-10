@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import { Element } from 'libxmljs';
 
 import applyMixins from '../util/applyMixins';
@@ -43,12 +44,10 @@ export default class Case implements Whenable {
   }
 
   public isEmpty() {
-    if (this.children.size === 1) {
-      const singleChild = Array.from(this.children.values())[0];
-      return singleChild instanceof Leaf && singleChild.getResolvedType() instanceof EmptyType;
-    } else {
-      return false;
-    }
+    return _.some(
+      Array.from(this.children.values()),
+      c => c instanceof Leaf && c.getResolvedType() instanceof EmptyType
+    );
   }
 
   get isPrototype(): boolean {
