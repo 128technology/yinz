@@ -28,7 +28,7 @@
     "netconf"
   ],
   "dependencies": {
-    "libxmljs2": "^0.26.7",
+    "libxmljs2": "^0.37.0",
     "lodash": "^4.17.15"
   },
   "devDependencies": {
